@@ -351,6 +351,12 @@
   }
 }
 
+@media (min-width: 901px) {
+  .story-nav-link {
+    font-size: clamp(0.94rem, 1.18vw, 1.12rem);
+  }
+}
+
 @media (max-width: 900px) {
   .story-nav {
     position: fixed;
