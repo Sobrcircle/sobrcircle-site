@@ -405,6 +405,7 @@
   }
 
   .story-phone-screen {
+    position: relative;
     border-radius: 26px;
     background: #eceef2;
   }
@@ -413,9 +414,17 @@
     object-fit: contain;
     object-position: top center;
     background: #eceef2;
-    transform: scale(1.012, 1.018);
-    transform-origin: top center;
-    clip-path: inset(0 0 10px 0);
+  }
+
+  .story-phone-screen::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 14px;
+    background: #eceef2;
+    pointer-events: none;
   }
 }
 
