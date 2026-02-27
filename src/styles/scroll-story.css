@@ -392,8 +392,8 @@
   }
 
   .story-phone-shell {
-    width: clamp(246px, 74vw, 330px);
-    aspect-ratio: 10 / 19.2;
+    width: clamp(230px, 64vw, 300px);
+    aspect-ratio: 9 / 19.5;
     border-radius: 34px;
     padding: 7px;
   }
@@ -407,8 +407,6 @@
     object-fit: contain;
     object-position: top center;
     background: #eceef2;
-    transform: scaleX(1.12);
-    transform-origin: top center;
   }
 }
 

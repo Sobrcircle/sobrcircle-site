@@ -90,7 +90,7 @@ const storySections: StorySection[] = [
     title: 'Beta',
     paragraphs: [
       "We're preparing to open SobrCircle publicly.",
-      "Before we do, we're inviting a small group to help shape it.",
+      "Before we do, we're inviting a small group to help shape it. Spots are limited.",
       "We're looking for people willing to test it honestly.",
       "As a beta tester, you'll receive early access to the app. In return, we ask for feedback.",
       "Tell us what broke. Tell us what feels off. Tell us what should exist but doesn't yet.",
@@ -431,6 +431,11 @@ export default function ScrollStory() {
                     </>
                   ) : paragraph === 'Connection happens on purpose.' ? (
                     <span className="story-word-connection">Connection happens on purpose.</span>
+                  ) : paragraph === "Before we do, we're inviting a small group to help shape it. Spots are limited." ? (
+                    <>
+                      Before we do, we're inviting a small group to help shape it.{' '}
+                      <span className="story-word-connection">Spots are limited.</span>
+                    </>
                   ) : paragraph ===
                     "And comments matter here. A comment isn't noise. It's an act of service. A few words can steady someone. A reminder can carry someone through a hard hour." ? (
                     <>
