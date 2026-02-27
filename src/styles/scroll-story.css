@@ -422,8 +422,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    height: 14px;
-    background: #eceef2;
+    height: 16px;
+    background: linear-gradient(to bottom, rgba(236, 238, 242, 0), #eceef2 62%, #eceef2);
     pointer-events: none;
   }
 }
