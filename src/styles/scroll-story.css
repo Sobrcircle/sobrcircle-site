@@ -414,8 +414,9 @@
     object-fit: contain;
     object-position: top center;
     background: #eceef2;
-    /* Mobile-only: trim source-image edge artifact at the very bottom. */
-    clip-path: inset(0 0 6px 0);
+    /* iOS Safari: overscan slightly so overflow cropping removes the bottom strip artifact. */
+    height: calc(100% + 10px);
+    max-height: none;
   }
 
   .story-phone-screen::after {
