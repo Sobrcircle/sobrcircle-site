@@ -410,11 +410,9 @@
   }
 
   .story-phone-screen img {
-    object-fit: contain;
+    object-fit: cover;
     object-position: top center;
     background: #eceef2;
-    transform: scaleY(1.022);
-    transform-origin: top center;
   }
 }
 
