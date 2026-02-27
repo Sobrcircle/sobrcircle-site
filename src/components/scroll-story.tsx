@@ -20,7 +20,6 @@ const storySections: StorySection[] = [
     title: 'Recovery',
     paragraphs: [
       "You don't have to recover alone.",
-      'A private space for recovery.',
       'Built for connection.',
       'Designed with intention.',
     ],
@@ -35,7 +34,7 @@ const storySections: StorySection[] = [
       "Hi, I'm Ben.",
       'I had the idea for SobrCircle after seeing someone share a screenshot of their sobriety counter. It was meaningful. But something felt incomplete.',
       "Sobriety isn't just a number. It's connection.",
-      "It's having people who understand without explanation. It's celebrating milestones together. It's not feeling alone in your progress.",
+      "It's having people who understand without explanation. It's celebrating milestones together. It's about not feeling alone in your recovery journey.",
       "I realized there wasn't a space built for that. A private circle. An intentional space. A place to show up honestly.",
       "Since I couldn't find something to fill that space. I decided to build it myself.",
     ],
@@ -64,10 +63,9 @@ const storySections: StorySection[] = [
     paragraphs: [
       "Check-Ins are moments of accountability. They're encouragement when someone else needs it. They're quiet strength when you do. Accountability through connection.",
       "Sharing where you're at doesn't just keep you accountable. It may be exactly what someone else needs to read in that moment.",
-      "And comments matter here. A comment isn't noise. It's an act of service. A few words can steady someone. A reminder can carry someone through a hard hour.",
+      "And comments matter here. A comment isn't noise. It's an act of service. A few words can steady someone.",
       'Encouragement compounds. This is a community built on support. On uplifting each other. On staying recovery-focused.',
-      "Your notifications aren't noise.",
-      "They're milestones. They're encouragement. They're a different kind of birthday.",
+      "Your notifications aren't noise. They're milestones. They're encouragement. Here we celebrate a different kind of birthday.",
     ],
     phoneImage: '/assets/3.png',
     background: '/assets/mono-4.svg',
@@ -91,7 +89,6 @@ const storySections: StorySection[] = [
     paragraphs: [
       "We're preparing to open SobrCircle publicly.",
       "Before we do, we're inviting a small group to help shape it. Spots are limited.",
-      "We're looking for people willing to test it honestly.",
       "As a beta tester, you'll receive early access to the app. In return, we ask for feedback.",
       "Tell us what broke. Tell us what feels off. Tell us what should exist but doesn't yet.",
       'Help us build this the right way.',
@@ -393,7 +390,7 @@ export default function ScrollStory() {
                     Built in recovery. For recovery.
                   </p>
                   <p className="story-status-line story-hero-line" style={{ ['--line-delay' as never]: '1220ms' }}>
-                    PRIVATE BETA BEGINS FIRST WEEK OF MARCH. PUBLIC LAUNCH IN APRIL.
+                    PRIVATE BETA OPENS IN MARCH. PUBLIC LAUNCH IN APRIL.
                   </p>
                 </div>
               )}
@@ -408,7 +405,7 @@ export default function ScrollStory() {
                 <p
                   key={index}
                   className={[
-                    paragraph === "Your notifications aren't noise." ? 'story-copy-callout' : '',
+                    paragraph === 'Your circle is intentional and invite-only.' ? 'story-copy-callout' : '',
                   ]
                     .filter(Boolean)
                     .join(' ')}
@@ -429,6 +426,8 @@ export default function ScrollStory() {
                       quiet strength when you do.{' '}
                       <span className="story-word-connection">Accountability through connection.</span>
                     </>
+                  ) : paragraph === "Sobriety isn't just a number. It's connection." ? (
+                    <span className="story-word-connection">Sobriety isn't just a number. It's connection.</span>
                   ) : paragraph === 'Connection happens on purpose.' ? (
                     <span className="story-word-connection">Connection happens on purpose.</span>
                   ) : paragraph === "Before we do, we're inviting a small group to help shape it. Spots are limited." ? (
@@ -437,13 +436,18 @@ export default function ScrollStory() {
                       <span className="story-word-connection">Spots are limited.</span>
                     </>
                   ) : paragraph ===
-                    "And comments matter here. A comment isn't noise. It's an act of service. A few words can steady someone. A reminder can carry someone through a hard hour." ? (
+                    "And comments matter here. A comment isn't noise. It's an act of service. A few words can steady someone." ? (
                     <>
                       And comments matter here. A comment isn't noise.{' '}
                       <span className="story-word-connection">
                         It's an act of service. A few words can steady someone.
-                      </span>{' '}
-                      A reminder can carry someone through a hard hour.
+                      </span>
+                    </>
+                  ) : paragraph ===
+                    "Your notifications aren't noise. They're milestones. They're encouragement. Here we celebrate a different kind of birthday." ? (
+                    <>
+                      <span className="story-word-connection">Your notifications aren't noise.</span> They're milestones.
+                      They're encouragement. Here we celebrate a different kind of birthday.
                     </>
                   ) : paragraph ===
                     "Since I couldn't find something to fill that space. I decided to build it myself." ? (
