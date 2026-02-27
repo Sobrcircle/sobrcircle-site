@@ -393,7 +393,7 @@ export default function ScrollStory() {
                     Built in recovery. For recovery.
                   </p>
                   <p className="story-status-line story-hero-line" style={{ ['--line-delay' as never]: '1220ms' }}>
-                    PRIVATE BETA BEGINS FIRST WEEK OF MARCH. PUBLIC LAUNCH IN APRIL. SPOTS ARE LIMITED.
+                    PRIVATE BETA BEGINS FIRST WEEK OF MARCH. PUBLIC LAUNCH IN APRIL.
                   </p>
                 </div>
               )}

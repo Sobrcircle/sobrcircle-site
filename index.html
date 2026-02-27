@@ -2,9 +2,27 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sc</title>
+    <link id="app-favicon" rel="icon" type="image/png" href="/assets/circle-favicon.png" />
+    <link rel="apple-touch-icon" href="/assets/circle.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f3f4f6" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000000" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>SobrCircle</title>
+    <script>
+      ;(() => {
+        const updateFavicon = (isDark) => {
+          const el = document.getElementById('app-favicon')
+          if (!el) return
+          el.setAttribute('href', isDark ? '/assets/circlewhite-favicon.png' : '/assets/circle-favicon.png')
+        }
+
+        const mq = window.matchMedia('(prefers-color-scheme: dark)')
+        updateFavicon(mq.matches)
+        mq.addEventListener('change', (event) => updateFavicon(event.matches))
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>
