@@ -413,8 +413,9 @@
     object-fit: contain;
     object-position: top center;
     background: #eceef2;
-    transform: scale(1.02, 1.022);
+    transform: scale(1.012, 1.018);
     transform-origin: top center;
+    clip-path: inset(0 0 10px 0);
   }
 }
 
