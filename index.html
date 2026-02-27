@@ -2,8 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link id="app-favicon" rel="icon" type="image/png" href="/assets/circle-favicon.png" />
-    <link rel="apple-touch-icon" href="/assets/circle.png" />
+    <link id="app-favicon" rel="icon" type="image/png" href="/assets/circle-favicon.png?v=3" />
+    <link rel="shortcut icon" href="/assets/circle-favicon.png?v=3" />
+    <link rel="apple-touch-icon" href="/assets/circle.png?v=3" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f3f4f6" />
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000000" />
@@ -15,7 +16,7 @@
         const updateFavicon = (isDark) => {
           const el = document.getElementById('app-favicon')
           if (!el) return
-          el.setAttribute('href', isDark ? '/assets/circlewhite-favicon.png' : '/assets/circle-favicon.png')
+          el.setAttribute('href', isDark ? '/assets/circlewhite-favicon.png?v=3' : '/assets/circle-favicon.png?v=3')
         }
 
         const mq = window.matchMedia('(prefers-color-scheme: dark)')
