@@ -414,6 +414,8 @@
     object-fit: contain;
     object-position: top center;
     background: #eceef2;
+    /* Mobile-only: trim source-image edge artifact at the very bottom. */
+    clip-path: inset(0 0 6px 0);
   }
 
   .story-phone-screen::after {
