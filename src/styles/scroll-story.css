@@ -399,13 +399,12 @@
 
   .story-phone-shell {
     width: clamp(230px, 64vw, 300px);
-    aspect-ratio: 9 / 19.5;
+    aspect-ratio: 9 / 18.9;
     border-radius: 34px;
     padding: 7px;
   }
 
   .story-phone-screen {
-    position: relative;
     border-radius: 26px;
     background: #eceef2;
   }
@@ -414,20 +413,6 @@
     object-fit: contain;
     object-position: top center;
     background: #eceef2;
-    position: relative;
-    z-index: 1;
-  }
-
-  .story-phone-screen::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 22px;
-    background: #eceef2;
-    pointer-events: none;
-    z-index: 2;
   }
 }
 
