@@ -513,6 +513,32 @@ export default function ScrollStory() {
           </section>
         ))}
       </main>
+
+      <footer className="story-footer">
+        <div className="story-footer-inner">
+          <div className="story-footer-brand">
+            <img className="story-footer-logo" src="/assets/circle.png" alt="SobrCircle logo" />
+            <div>
+              <p className="story-footer-name">
+                <span>Sobr</span>
+                <span>Circle</span>
+              </p>
+              <p className="story-footer-tagline">Built in recovery. For recovery.</p>
+            </div>
+          </div>
+
+          <div className="story-footer-links" aria-label="Legal and support links">
+            <a href="/support">Support</a>
+            <a href="/privacy">Privacy</a>
+            <a href="/terms">Terms</a>
+            <a href="/delete-account">Delete Account</a>
+          </div>
+
+          <p className="story-footer-note">
+            Adults 18+ only. SobrCircle is peer support, not medical care or emergency services.
+          </p>
+        </div>
+      </footer>
     </div>
   )
 }

@@ -345,6 +345,84 @@
   transition: none !important;
 }
 
+.story-footer {
+  position: relative;
+  z-index: 2;
+  padding: 0 clamp(1rem, 3vw, 3rem) clamp(2.4rem, 6vh, 4rem) clamp(6.2rem, 13vw, 12rem);
+}
+
+.story-footer-inner {
+  width: min(920px, 100%);
+  margin: 0 auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding-top: 1.3rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.story-footer-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.story-footer-logo {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  filter:
+    invert(1)
+    brightness(1.12)
+    drop-shadow(0 8px 18px rgba(0, 0, 0, 0.44));
+}
+
+.story-footer-name {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1;
+}
+
+.story-footer-name span:first-child {
+  font-weight: 700;
+}
+
+.story-footer-name span:last-child {
+  font-weight: 300;
+}
+
+.story-footer-tagline {
+  margin: 0.24rem 0 0;
+  color: rgba(236, 236, 236, 0.62);
+  font-size: 0.82rem;
+}
+
+.story-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem 1.2rem;
+}
+
+.story-footer-links a {
+  color: rgba(245, 245, 245, 0.76);
+  text-decoration: none;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.story-footer-links a:hover {
+  color: var(--story-blue);
+}
+
+.story-footer-note {
+  margin: 0;
+  max-width: 620px;
+  color: rgba(236, 236, 236, 0.6);
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
 @media (max-width: 1100px) {
   .story-copy {
     width: min(520px, calc(100% - 2.2rem));
@@ -384,6 +462,11 @@
   .story-main {
     padding-left: 1rem;
     padding-top: 3rem;
+  }
+
+  .story-footer {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 
   .story-chapter-bg,
