@@ -101,8 +101,6 @@ const storySections: StorySection[] = [
 export default function ScrollStory() {
   const rootRef = React.useRef<HTMLDivElement | null>(null)
   const guidedAnimatingRef = React.useRef(false)
-  const [betaEmail, setBetaEmail] = React.useState('')
-  const [betaStatus, setBetaStatus] = React.useState<'idle' | 'sent'>('idle')
   const [activeSectionId, setActiveSectionId] = React.useState(storySections[0]?.id ?? '')
   const [guidedUnlocked, setGuidedUnlocked] = React.useState(() => {
     if (typeof window === 'undefined') return false
@@ -324,26 +322,14 @@ export default function ScrollStory() {
     }
   }, [])
 
-  const handleBetaSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const cleanEmail = betaEmail.trim()
+  const handleBetaRequest = () => {
     const cleanSubject = 'Beta Testing Request'
-    if (!cleanEmail || !cleanEmail.includes('@')) return
-
-    const body = [
-      'We’re selecting a small group to shape the first version.',
-      '',
-      "If you’d like to be considered, tell us how you found SobrCircle, why you’d like to be part of it, and how you’d approach giving feedback.",
-      '',
-      'If you’re comfortable, share a little about yourself or your recovery journey - only what feels right.',
-    ].join('\n')
+    const body = 'Hello, I want to request access to Beta test the SobrCircle App.'
 
     const href = `mailto:ben@sobrcircle.com?subject=${encodeURIComponent(cleanSubject)}&body=${encodeURIComponent(
       body,
     )}`
     window.location.href = href
-
-    setBetaStatus('sent')
   }
 
   return (
@@ -368,7 +354,7 @@ export default function ScrollStory() {
           <section
             key={section.id}
             id={section.id}
-            className="story-chapter"
+            className={`story-chapter ${section.id === 'beta' ? 'story-chapter--beta' : ''}`}
             style={{ ['--story-bg-image' as never]: `url(${section.background})` }}
           >
             <div className="story-chapter-bg" aria-hidden="true" />
@@ -472,44 +458,32 @@ export default function ScrollStory() {
               ))}
 
               {section.id === 'beta' && (
-                <form className="story-beta-form" onSubmit={handleBetaSubmit}>
-                  <input
-                    className="story-beta-input"
-                    type="email"
-                    value={betaEmail}
-                    onChange={(event) => setBetaEmail(event.target.value)}
-                    onFocus={() => {
-                      if (betaStatus === 'sent') {
-                        setBetaEmail('')
-                        setBetaStatus('idle')
-                      }
-                    }}
-                    placeholder="Enter your email"
-                    required
-                  />
-                  <button className="story-beta-button" type="submit">
+                <div className="story-beta-form">
+                  <button className="story-beta-button" type="button" onClick={handleBetaRequest}>
                     Request Beta Access
                   </button>
-                </form>
+                </div>
               )}
             </div>
 
-            <div
-              className="story-phone-wrap"
-              aria-hidden="true"
-              style={{
-                ['--line-delay' as never]: `${Math.min(
-                  5200,
-                  (section.id === 'recovery' ? 2400 : 980) + section.paragraphs.length * 280,
-                )}ms`,
-              }}
-            >
-              <div className="story-phone-shell">
-                <div className="story-phone-screen">
-                  <img src={section.phoneImage} alt="" loading="lazy" />
+            {section.id !== 'beta' && (
+              <div
+                className="story-phone-wrap"
+                aria-hidden="true"
+                style={{
+                  ['--line-delay' as never]: `${Math.min(
+                    5200,
+                    (section.id === 'recovery' ? 2400 : 980) + section.paragraphs.length * 280,
+                  )}ms`,
+                }}
+              >
+                <div className="story-phone-shell">
+                  <div className="story-phone-screen">
+                    <img src={section.phoneImage} alt="" loading="lazy" />
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </section>
         ))}
       </main>
