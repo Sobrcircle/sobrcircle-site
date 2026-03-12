@@ -11,6 +11,7 @@
     <meta name="theme-color" content="#05070b">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="stylesheet" href="/site.css?v=20260309b">
+    <script src="/delete-account/delete-account.js" type="module" defer></script>
   </head>
   <body>
     <main class="page-shell">
@@ -23,6 +24,7 @@
           <a href="/support">Support</a>
           <a href="/privacy">Privacy</a>
           <a href="/terms">Terms</a>
+          <a href="/delete-account">Delete Account</a>
         </div>
       </nav>
 
@@ -30,14 +32,91 @@
         <p class="eyebrow">Account</p>
         <h1>Delete your SobrCircle account</h1>
         <p class="lede">
-          This page explains how to request account deletion and what happens
-          after your request is verified.
+          Submit a deletion request here if you cannot complete the signed-in
+          in-app flow. We will use the details you provide to verify ownership
+          before processing the request.
         </p>
+
+        <section class="request-shell" aria-labelledby="delete-request-title">
+          <div class="request-card">
+            <div class="request-copy">
+              <p class="eyebrow">Request form</p>
+              <h2 id="delete-request-title">Request deletion outside the app</h2>
+              <p>
+                Use the email address tied to your SobrCircle account. Optional
+                details help us verify and locate the account faster.
+              </p>
+            </div>
+
+            <form class="request-form" id="delete-request-form" novalidate>
+              <label class="field">
+                <span>Account email</span>
+                <input
+                  id="delete-email"
+                  name="email"
+                  type="email"
+                  autocomplete="email"
+                  inputmode="email"
+                  placeholder="you@example.com"
+                  required
+                >
+              </label>
+
+              <label class="field">
+                <span>Full name</span>
+                <input
+                  id="delete-name"
+                  name="name"
+                  type="text"
+                  autocomplete="name"
+                  placeholder="Your name"
+                >
+              </label>
+
+              <label class="field">
+                <span>User ID or username</span>
+                <input
+                  id="delete-account-id"
+                  name="account_id"
+                  type="text"
+                  placeholder="Optional"
+                >
+              </label>
+
+              <label class="field">
+                <span>Platform</span>
+                <select id="delete-platform" name="platform">
+                  <option value="">Select one</option>
+                  <option value="ios">iPhone / iOS</option>
+                  <option value="android">Android</option>
+                  <option value="web_request_only">Web request only</option>
+                </select>
+              </label>
+
+              <label class="field field--full">
+                <span>Anything else that helps identify the account</span>
+                <textarea
+                  id="delete-details"
+                  name="details"
+                  rows="5"
+                  placeholder="Optional: recovery date, subscription email, last sign-in method, or any other info that helps us verify the request."
+                ></textarea>
+              </label>
+
+              <div class="request-actions">
+                <button class="button-primary request-submit" type="submit">
+                  Send delete request
+                </button>
+                <p class="request-status" id="delete-request-status" role="status" aria-live="polite"></p>
+              </div>
+            </form>
+          </div>
+        </section>
 
         <h2>How to request deletion</h2>
         <p>
-          For account security, deletion requests must be verified. The current
-          supported method is the signed-in in-app flow:
+          For account security, deletion requests must be verified. The fastest
+          method is still the signed-in in-app flow:
         </p>
         <ol>
           <li>Open SobrCircle.</li>
