@@ -135,10 +135,6 @@
   overflow: visible;
 }
 
-.story-chapter--beta {
-  padding-bottom: clamp(8rem, 20vh, 12.5rem);
-}
-
 .story-chapter:first-child .story-chapter-bg,
 .story-chapter:first-child::after {
   top: 0;
@@ -436,10 +432,6 @@
   .story-footer {
     padding-left: 1rem;
     padding-right: 1rem;
-  }
-
-  .story-chapter--beta {
-    padding-bottom: clamp(6.5rem, 14vh, 9rem);
   }
 
   .story-chapter-bg,

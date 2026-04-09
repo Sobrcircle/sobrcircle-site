@@ -83,7 +83,7 @@ const storySections: StorySection[] = [
     background: '/assets/mono-5.svg',
   },
   {
-    id: 'beta',
+    id: 'supporthome',
     label: 'SUPPORT',
     title: 'Support',
     paragraphs: [
@@ -341,7 +341,7 @@ export default function ScrollStory() {
           <section
             key={section.id}
             id={section.id}
-            className={`story-chapter ${section.id === 'beta' ? 'story-chapter--beta' : ''}`}
+            className="story-chapter"
             style={{ ['--story-bg-image' as never]: `url(${section.background})` }}
           >
             <div className="story-chapter-bg" aria-hidden="true" />
@@ -440,24 +440,22 @@ export default function ScrollStory() {
               ))}
             </div>
 
-            {section.id !== 'beta' && (
-              <div
-                className="story-phone-wrap"
-                aria-hidden="true"
-                style={{
-                  ['--line-delay' as never]: `${Math.min(
-                    5200,
-                    (section.id === 'recovery' ? 2400 : 980) + section.paragraphs.length * 280,
-                  )}ms`,
-                }}
-              >
-                <div className="story-phone-shell">
-                  <div className="story-phone-screen">
-                    <img src={section.phoneImage} alt="" loading="lazy" />
-                  </div>
+            <div
+              className="story-phone-wrap"
+              aria-hidden="true"
+              style={{
+                ['--line-delay' as never]: `${Math.min(
+                  5200,
+                  (section.id === 'recovery' ? 2400 : 980) + section.paragraphs.length * 280,
+                )}ms`,
+              }}
+            >
+              <div className="story-phone-shell">
+                <div className="story-phone-screen">
+                  <img src={section.phoneImage} alt="" loading="lazy" />
                 </div>
               </div>
-            )}
+            </div>
           </section>
         ))}
       </main>
