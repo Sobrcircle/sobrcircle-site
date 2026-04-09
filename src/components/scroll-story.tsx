@@ -82,6 +82,20 @@ const storySections: StorySection[] = [
     phoneImage: '/assets/5.png',
     background: '/assets/mono-5.svg',
   },
+  {
+    id: 'beta',
+    label: 'BETA',
+    title: 'Beta',
+    paragraphs: [
+      "We're preparing to open SobrCircle publicly.",
+      "Before we do, we're inviting a small group to help shape it. Spots are limited.",
+      "As a beta tester, you'll receive early access to the app. In return, we ask for feedback.",
+      "Tell us what broke. Tell us what feels off. Tell us what should exist but doesn't yet.",
+      'Help us build this the right way.',
+    ],
+    phoneImage: '/assets/6.png',
+    background: '/assets/mono-6.svg',
+  },
 ]
 
 export default function ScrollStory() {
@@ -308,6 +322,16 @@ export default function ScrollStory() {
     }
   }, [])
 
+  const handleBetaRequest = () => {
+    const cleanSubject = 'Beta Testing Request'
+    const body = 'Hello, I want to request access to Beta test the SobrCircle App.'
+
+    const href = `mailto:ben@sobrcircle.com?subject=${encodeURIComponent(cleanSubject)}&body=${encodeURIComponent(
+      body,
+    )}`
+    window.location.href = href
+  }
+
   return (
     <div className={`story-page ${guidedUnlocked ? 'story-unlocked' : ''}`} ref={rootRef}>
       <nav className="story-nav" aria-label="Section navigation">
@@ -330,7 +354,7 @@ export default function ScrollStory() {
           <section
             key={section.id}
             id={section.id}
-            className="story-chapter"
+            className={`story-chapter ${section.id === 'beta' ? 'story-chapter--beta' : ''}`}
             style={{ ['--story-bg-image' as never]: `url(${section.background})` }}
           >
             <div className="story-chapter-bg" aria-hidden="true" />
@@ -422,29 +446,44 @@ export default function ScrollStory() {
                     <span className="story-word-connection">
                       No ads. No selling your data. No outside influence shaping the space.
                     </span>
+                  ) : paragraph ===
+                    "As a beta tester, you'll receive early access to the app. In return, we ask for feedback." ? (
+                    <span className="story-word-connection">
+                      As a beta tester, you'll receive early access to the app. In return, we ask for feedback.
+                    </span>
                   ) : (
                     paragraph
                   )}
                 </p>
               ))}
+
+              {section.id === 'beta' && (
+                <div className="story-beta-form">
+                  <button className="story-beta-button" type="button" onClick={handleBetaRequest}>
+                    Request Beta Access
+                  </button>
+                </div>
+              )}
             </div>
 
-            <div
-              className="story-phone-wrap"
-              aria-hidden="true"
-              style={{
-                ['--line-delay' as never]: `${Math.min(
-                  5200,
-                  (section.id === 'recovery' ? 2400 : 980) + section.paragraphs.length * 280,
-                )}ms`,
-              }}
-            >
-              <div className="story-phone-shell">
-                <div className="story-phone-screen">
-                  <img src={section.phoneImage} alt="" loading="lazy" />
+            {section.id !== 'beta' && (
+              <div
+                className="story-phone-wrap"
+                aria-hidden="true"
+                style={{
+                  ['--line-delay' as never]: `${Math.min(
+                    5200,
+                    (section.id === 'recovery' ? 2400 : 980) + section.paragraphs.length * 280,
+                  )}ms`,
+                }}
+              >
+                <div className="story-phone-shell">
+                  <div className="story-phone-screen">
+                    <img src={section.phoneImage} alt="" loading="lazy" />
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </section>
         ))}
       </main>
