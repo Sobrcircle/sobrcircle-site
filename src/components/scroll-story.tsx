@@ -12,7 +12,6 @@ type StorySection = {
 }
 
 const STORY_UNLOCK_KEY = 'story_scroll_unlocked'
-const SUPPORT_SECTION_ID = 'support'
 
 const storySections: StorySection[] = [
   {
@@ -83,9 +82,21 @@ const storySections: StorySection[] = [
     phoneImage: '/assets/5.png',
     background: '/assets/mono-5.svg',
   },
+  {
+    id: 'beta',
+    label: 'BETA',
+    title: 'Beta',
+    paragraphs: [
+      "We're preparing to open SobrCircle publicly.",
+      "Before we do, we're inviting a small group to help shape it. Spots are limited.",
+      "As a beta tester, you'll receive early access to the app. In return, we ask for feedback.",
+      "Tell us what broke. Tell us what feels off. Tell us what should exist but doesn't yet.",
+      'Help us build this the right way.',
+    ],
+    phoneImage: '/assets/6.png',
+    background: '/assets/mono-6.svg',
+  },
 ]
-
-const storyNavItems = [...storySections.map(({ id, label }) => ({ id, label })), { id: SUPPORT_SECTION_ID, label: 'SUPPORT' }]
 
 export default function ScrollStory() {
   const rootRef = React.useRef<HTMLDivElement | null>(null)
@@ -146,8 +157,7 @@ export default function ScrollStory() {
     const root = rootRef.current
     if (!root) return
     const chapterEls = Array.from(root.querySelectorAll<HTMLElement>('.story-chapter'))
-    const footerEl = root.querySelector<HTMLElement>(`.story-footer#${SUPPORT_SECTION_ID}`)
-    if (!chapterEls.length || !footerEl) return
+    if (!chapterEls.length) return
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     let touchStartY = 0
@@ -171,9 +181,6 @@ export default function ScrollStory() {
           }
         }
       })
-
-      const footerTop = Math.max(0, Math.floor(footerEl.getBoundingClientRect().top + window.scrollY - 24))
-      anchors.push(footerTop)
 
       return Array.from(new Set(anchors)).sort((a, b) => a - b)
     }
@@ -288,7 +295,7 @@ export default function ScrollStory() {
     const root = rootRef.current
     if (!root || typeof window.IntersectionObserver === 'undefined') return
 
-    const sectionEls = Array.from(root.querySelectorAll<HTMLElement>('.story-chapter[id], .story-footer[id]'))
+    const sectionEls = Array.from(root.querySelectorAll<HTMLElement>('.story-chapter[id]'))
     if (!sectionEls.length) return
 
     const observer = new IntersectionObserver(
@@ -315,10 +322,20 @@ export default function ScrollStory() {
     }
   }, [])
 
+  const handleBetaRequest = () => {
+    const cleanSubject = 'Beta Testing Request'
+    const body = 'Hello, I want to request access to Beta test the SobrCircle App.'
+
+    const href = `mailto:ben@sobrcircle.com?subject=${encodeURIComponent(cleanSubject)}&body=${encodeURIComponent(
+      body,
+    )}`
+    window.location.href = href
+  }
+
   return (
     <div className={`story-page ${guidedUnlocked ? 'story-unlocked' : ''}`} ref={rootRef}>
       <nav className="story-nav" aria-label="Section navigation">
-        {storyNavItems.map((section) => (
+        {storySections.map((section) => (
           <a
             key={section.id}
             href={`#${section.id}`}
@@ -337,7 +354,7 @@ export default function ScrollStory() {
           <section
             key={section.id}
             id={section.id}
-            className="story-chapter"
+            className={`story-chapter ${section.id === 'beta' ? 'story-chapter--beta' : ''}`}
             style={{ ['--story-bg-image' as never]: `url(${section.background})` }}
           >
             <div className="story-chapter-bg" aria-hidden="true" />
@@ -345,28 +362,28 @@ export default function ScrollStory() {
             <div className="story-copy">
               {section.id === 'recovery' && (
                 <div className="story-inline-hero">
-                  <p className="story-presented-by story-hero-line" style={{ ['--line-delay' as never]: '180ms' }}>
-                    Presented by Moradi Labs Inc.
-                  </p>
                   <img
                     className="story-logo story-hero-line"
-                    style={{ ['--line-delay' as never]: '520ms' }}
+                    style={{ ['--line-delay' as never]: '180ms' }}
                     src="/assets/circle.png"
                     alt="SobrCircle logo"
                   />
-                  <h1 className="story-brand story-hero-line" style={{ ['--line-delay' as never]: '860ms' }}>
+                  <h1 className="story-brand story-hero-line" style={{ ['--line-delay' as never]: '520ms' }}>
                     <span>Sobr</span>
                     <span>Circle</span>
                   </h1>
-                  <p className="story-tagline story-hero-line" style={{ ['--line-delay' as never]: '1200ms' }}>
+                  <p className="story-tagline story-hero-line" style={{ ['--line-delay' as never]: '860ms' }}>
                     Built in recovery. For recovery.
+                  </p>
+                  <p className="story-status-line story-hero-line" style={{ ['--line-delay' as never]: '1220ms' }}>
+                    PRIVATE BETA OPENS IN MARCH. PUBLIC LAUNCH IN APRIL.
                   </p>
                 </div>
               )}
 
               <h2
                 className="story-chapter-title"
-                style={{ ['--line-delay' as never]: section.id === 'recovery' ? '1560ms' : '220ms' }}
+                style={{ ['--line-delay' as never]: section.id === 'recovery' ? '1620ms' : '220ms' }}
               >
                 {section.title}
               </h2>
@@ -429,34 +446,49 @@ export default function ScrollStory() {
                     <span className="story-word-connection">
                       No ads. No selling your data. No outside influence shaping the space.
                     </span>
+                  ) : paragraph ===
+                    "As a beta tester, you'll receive early access to the app. In return, we ask for feedback." ? (
+                    <span className="story-word-connection">
+                      As a beta tester, you'll receive early access to the app. In return, we ask for feedback.
+                    </span>
                   ) : (
                     paragraph
                   )}
                 </p>
               ))}
+
+              {section.id === 'beta' && (
+                <div className="story-beta-form">
+                  <button className="story-beta-button" type="button" onClick={handleBetaRequest}>
+                    Request Beta Access
+                  </button>
+                </div>
+              )}
             </div>
 
-            <div
-              className="story-phone-wrap"
-              aria-hidden="true"
-              style={{
-                ['--line-delay' as never]: `${Math.min(
-                  5200,
-                  (section.id === 'recovery' ? 2400 : 980) + section.paragraphs.length * 280,
-                )}ms`,
-              }}
-            >
-              <div className="story-phone-shell">
-                <div className="story-phone-screen">
-                  <img src={section.phoneImage} alt="" loading="lazy" />
+            {section.id !== 'beta' && (
+              <div
+                className="story-phone-wrap"
+                aria-hidden="true"
+                style={{
+                  ['--line-delay' as never]: `${Math.min(
+                    5200,
+                    (section.id === 'recovery' ? 2400 : 980) + section.paragraphs.length * 280,
+                  )}ms`,
+                }}
+              >
+                <div className="story-phone-shell">
+                  <div className="story-phone-screen">
+                    <img src={section.phoneImage} alt="" loading="lazy" />
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </section>
         ))}
       </main>
 
-      <footer className="story-footer" id={SUPPORT_SECTION_ID}>
+      <footer className="story-footer">
         <div className="story-footer-inner">
           <div className="story-footer-brand">
             <img className="story-footer-logo" src="/assets/circle.png" alt="SobrCircle logo" />
