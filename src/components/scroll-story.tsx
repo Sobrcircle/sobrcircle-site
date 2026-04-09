@@ -12,6 +12,7 @@ type StorySection = {
 }
 
 const STORY_UNLOCK_KEY = 'story_scroll_unlocked'
+const SUPPORT_HOME_ID = 'supporthome'
 
 const storySections: StorySection[] = [
   {
@@ -83,7 +84,7 @@ const storySections: StorySection[] = [
     background: '/assets/mono-5.svg',
   },
   {
-    id: 'beta',
+    id: SUPPORT_HOME_ID,
     label: 'SUPPORT',
     title: 'Support',
     paragraphs: [
@@ -341,7 +342,7 @@ export default function ScrollStory() {
           <section
             key={section.id}
             id={section.id}
-            className={`story-chapter ${section.id === 'beta' ? 'story-chapter--beta' : ''}`}
+            className={`story-chapter ${section.id === SUPPORT_HOME_ID ? 'story-chapter--beta' : ''}`}
             style={{ ['--story-bg-image' as never]: `url(${section.background})` }}
           >
             <div className="story-chapter-bg" aria-hidden="true" />
@@ -440,7 +441,7 @@ export default function ScrollStory() {
               ))}
             </div>
 
-            {section.id !== 'beta' && (
+            {section.id !== SUPPORT_HOME_ID && (
               <div
                 className="story-phone-wrap"
                 aria-hidden="true"
