@@ -362,28 +362,28 @@ export default function ScrollStory() {
             <div className="story-copy">
               {section.id === 'recovery' && (
                 <div className="story-inline-hero">
+                  <p className="story-presented-by story-hero-line" style={{ ['--line-delay' as never]: '180ms' }}>
+                    Presented by Moradi Labs Inc.
+                  </p>
                   <img
                     className="story-logo story-hero-line"
-                    style={{ ['--line-delay' as never]: '180ms' }}
+                    style={{ ['--line-delay' as never]: '520ms' }}
                     src="/assets/circle.png"
                     alt="SobrCircle logo"
                   />
-                  <h1 className="story-brand story-hero-line" style={{ ['--line-delay' as never]: '520ms' }}>
+                  <h1 className="story-brand story-hero-line" style={{ ['--line-delay' as never]: '860ms' }}>
                     <span>Sobr</span>
                     <span>Circle</span>
                   </h1>
-                  <p className="story-tagline story-hero-line" style={{ ['--line-delay' as never]: '860ms' }}>
+                  <p className="story-tagline story-hero-line" style={{ ['--line-delay' as never]: '1200ms' }}>
                     Built in recovery. For recovery.
-                  </p>
-                  <p className="story-status-line story-hero-line" style={{ ['--line-delay' as never]: '1220ms' }}>
-                    PRIVATE BETA OPENS IN MARCH. PUBLIC LAUNCH IN APRIL.
                   </p>
                 </div>
               )}
 
               <h2
                 className="story-chapter-title"
-                style={{ ['--line-delay' as never]: section.id === 'recovery' ? '1620ms' : '220ms' }}
+                style={{ ['--line-delay' as never]: section.id === 'recovery' ? '1560ms' : '220ms' }}
               >
                 {section.title}
               </h2>

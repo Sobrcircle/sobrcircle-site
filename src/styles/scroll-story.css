@@ -33,6 +33,19 @@
   filter: invert(1) brightness(1.15) drop-shadow(0 8px 20px rgba(0, 0, 0, 0.55));
 }
 
+.story-presented-by {
+  margin: 0 0 0.35rem;
+  font-size: clamp(0.72rem, 1vw, 0.84rem);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  line-height: 1.35;
+  text-transform: uppercase;
+  color: rgba(236, 236, 236, 0.72);
+  text-shadow:
+    0 -1px 0 rgba(255, 255, 255, 0.1),
+    0 7px 16px rgba(0, 0, 0, 0.52);
+}
+
 .story-brand {
   margin: -0.5rem 0 0;
   font-size: clamp(1.32rem, 2.88vw, 2.07rem);
@@ -58,23 +71,6 @@
   text-shadow:
     0 -1px 0 rgba(255, 255, 255, 0.11),
     0 7px 16px rgba(0, 0, 0, 0.55);
-}
-
-.story-status-line {
-  margin: 1.35rem 0 0;
-  font-size: clamp(0.62rem, 0.9vw, 0.76rem);
-  font-weight: 600;
-  letter-spacing: 0.075em;
-  color: var(--story-blue);
-  text-transform: uppercase;
-  line-height: 1.35;
-  text-shadow:
-    0 -1px 0 rgba(255, 255, 255, 0.12),
-    0 7px 16px rgba(0, 0, 0, 0.56);
-}
-
-.story-copy .story-status-line {
-  color: var(--story-blue);
 }
 
 .story-nav {
