@@ -84,14 +84,11 @@ const storySections: StorySection[] = [
   },
   {
     id: 'beta',
-    label: 'BETA',
-    title: 'Beta',
+    label: 'SUPPORT',
+    title: 'Support',
     paragraphs: [
-      "We're preparing to open SobrCircle publicly.",
-      "Before we do, we're inviting a small group to help shape it. Spots are limited.",
-      "As a beta tester, you'll receive early access to the app. In return, we ask for feedback.",
-      "Tell us what broke. Tell us what feels off. Tell us what should exist but doesn't yet.",
-      'Help us build this the right way.',
+      'Need support?',
+      'Scroll down for contact information and additional resources.',
     ],
     phoneImage: '/assets/6.png',
     background: '/assets/mono-6.svg',
@@ -322,16 +319,6 @@ export default function ScrollStory() {
     }
   }, [])
 
-  const handleBetaRequest = () => {
-    const cleanSubject = 'Beta Testing Request'
-    const body = 'Hello, I want to request access to Beta test the SobrCircle App.'
-
-    const href = `mailto:ben@sobrcircle.com?subject=${encodeURIComponent(cleanSubject)}&body=${encodeURIComponent(
-      body,
-    )}`
-    window.location.href = href
-  }
-
   return (
     <div className={`story-page ${guidedUnlocked ? 'story-unlocked' : ''}`} ref={rootRef}>
       <nav className="story-nav" aria-label="Section navigation">
@@ -446,24 +433,11 @@ export default function ScrollStory() {
                     <span className="story-word-connection">
                       No ads. No selling your data. No outside influence shaping the space.
                     </span>
-                  ) : paragraph ===
-                    "As a beta tester, you'll receive early access to the app. In return, we ask for feedback." ? (
-                    <span className="story-word-connection">
-                      As a beta tester, you'll receive early access to the app. In return, we ask for feedback.
-                    </span>
                   ) : (
                     paragraph
                   )}
                 </p>
               ))}
-
-              {section.id === 'beta' && (
-                <div className="story-beta-form">
-                  <button className="story-beta-button" type="button" onClick={handleBetaRequest}>
-                    Request Beta Access
-                  </button>
-                </div>
-              )}
             </div>
 
             {section.id !== 'beta' && (
