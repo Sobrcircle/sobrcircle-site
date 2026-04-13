@@ -28,7 +28,7 @@ export default function PoemPage({
           <div className="poem-chapter-label">{chapter}</div>
           <div className="flex items-center gap-0">
             <BookmarkButton active={isBookmarked} onToggle={onToggleBookmark} />
-            <ShareButton poemId={id} poemTitle={title} theme="light" />
+            <ShareButton poemId={id} poemTitle={title} chapter={chapter} stanzas={stanzas} />
           </div>
         </div>
 

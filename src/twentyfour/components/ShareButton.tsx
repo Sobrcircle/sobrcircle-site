@@ -1,134 +1,227 @@
-import { useState, useRef, useEffect } from 'react'
-import { ExternalLink, Link, X as XIcon } from 'lucide-react'
+import { useState, useEffect, useCallback } from 'react'
+import { ArrowUpFromLine, Download, Copy, Link, X } from 'lucide-react'
+import { generateQuoteCard } from './QuoteCard'
 
 const BASE_URL = 'https://sobrcircle.com/twentyfour'
 
 export default function ShareButton({
   poemId,
   poemTitle,
-  theme,
+  chapter,
+  stanzas,
 }: {
   poemId: string
   poemTitle: string
-  theme: 'dark' | 'light'
+  chapter: string
+  stanzas: string[][]
 }) {
-  const [open, setOpen] = useState(false)
-  const [copied, setCopied] = useState(false)
-  const menuRef = useRef<HTMLDivElement>(null)
-  const isDark = theme === 'dark'
-  const iconColor = isDark ? '#e8e4df' : '#1a1a1a'
+  const [modalOpen, setModalOpen] = useState(false)
+  const [cardBlob, setCardBlob] = useState<Blob | null>(null)
+  const [cardUrl, setCardUrl] = useState<string>('')
+  const [copied, setCopied] = useState('')
+  const iconColor = '#1a1a1a'
 
   const shareUrl = `${BASE_URL}/#${poemId}`
-  const shareText = `"${poemTitle}" — twenty four, by bm`
+  const shareText = `"${poemTitle}" \u2014 twenty four, by bm`
 
-  // Close on outside click
+  // Generate card when modal opens
   useEffect(() => {
-    if (!open) return
-    const handle = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setOpen(false)
-      }
+    if (!modalOpen) return
+    let revoked = false
+    generateQuoteCard({ chapter, title: poemTitle, stanzas }).then((blob) => {
+      if (revoked) return
+      setCardBlob(blob)
+      setCardUrl(URL.createObjectURL(blob))
+    })
+    return () => {
+      revoked = true
+      if (cardUrl) URL.revokeObjectURL(cardUrl)
     }
-    document.addEventListener('mousedown', handle)
-    return () => document.removeEventListener('mousedown', handle)
-  }, [open])
+  }, [modalOpen, chapter, poemTitle, stanzas])
 
-  const handleShare = async () => {
-    // Try native share first (mobile)
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: 'twenty four', text: shareText, url: shareUrl })
-        return
-      } catch {}
+  // Clean up on unmount
+  useEffect(() => {
+    return () => { if (cardUrl) URL.revokeObjectURL(cardUrl) }
+  }, [cardUrl])
+
+  const close = useCallback(() => {
+    setModalOpen(false)
+    setCopied('')
+  }, [])
+
+  // Lock body scroll when modal open
+  useEffect(() => {
+    if (modalOpen) {
+      document.body.style.overflow = 'hidden'
+      return () => { document.body.style.overflow = '' }
     }
-    // Fallback: open menu
-    setOpen(!open)
-  }
+  }, [modalOpen])
 
-  const copyLink = async () => {
+  const handleNativeShare = async () => {
+    if (!cardBlob) return
+    const file = new File([cardBlob], `${poemId}-twentyfour.png`, { type: 'image/png' })
     try {
-      await navigator.clipboard.writeText(shareUrl)
-      setCopied(true)
-      setTimeout(() => { setCopied(false); setOpen(false) }, 1500)
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: 'twenty four', text: shareText })
+        return
+      }
+    } catch {}
+    // fallback: try share without file
+    try {
+      await navigator.share({ title: 'twenty four', text: shareText, url: shareUrl })
     } catch {}
   }
 
-  const shareToX = () => {
-    window.open(
-      `https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`,
-      '_blank',
-    )
-    setOpen(false)
+  const handleSaveImage = () => {
+    if (!cardUrl) return
+    const a = document.createElement('a')
+    a.href = cardUrl
+    a.download = `${poemId}-twentyfour.png`
+    a.click()
+    flash('saved!')
   }
 
-  const shareToFacebook = () => {
-    window.open(
-      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
-      '_blank',
-    )
-    setOpen(false)
+  const handleCopyImage = async () => {
+    if (!cardBlob) return
+    try {
+      await navigator.clipboard.write([
+        new ClipboardItem({ 'image/png': cardBlob })
+      ])
+      flash('copied!')
+    } catch {
+      // fallback to save
+      handleSaveImage()
+    }
   }
 
-  const shareToThreads = () => {
-    window.open(
-      `https://www.threads.net/intent/post?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`,
-      '_blank',
-    )
-    setOpen(false)
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrl)
+      flash('copied!')
+    } catch {}
   }
+
+  const flash = (msg: string) => {
+    setCopied(msg)
+    setTimeout(() => setCopied(''), 1500)
+  }
+
+  const openUrl = (url: string) => {
+    window.open(url, '_blank')
+  }
+
+  const handleInstagram = () => {
+    handleSaveImage()
+    flash('image saved \u2014 open instagram to post')
+  }
+
+  const handleSnapchat = () => {
+    handleSaveImage()
+    flash('image saved \u2014 open snapchat to post')
+  }
+
+  const platforms = [
+    { label: 'x / twitter', action: () => openUrl(`https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`) },
+    { label: 'facebook', action: () => openUrl(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`) },
+    { label: 'threads', action: () => openUrl(`https://www.threads.net/intent/post?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`) },
+    { label: 'whatsapp', action: () => openUrl(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`) },
+    { label: 'instagram', action: handleInstagram },
+    { label: 'snapchat', action: handleSnapchat },
+    { label: 'reddit', action: () => openUrl(`https://www.reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(shareText)}`) },
+    { label: 'email', action: () => openUrl(`mailto:?subject=${encodeURIComponent('twenty four \u2014 ' + poemTitle)}&body=${encodeURIComponent(shareText + '\n\n' + shareUrl)}`) },
+  ]
 
   return (
-    <div className="relative" ref={menuRef}>
+    <>
+      {/* Share icon button — arrow pointing straight up in box */}
       <button
-        onClick={handleShare}
-        aria-label="Share this poem"
+        onClick={() => setModalOpen(true)}
+        aria-label="share this poem"
         className="p-2 opacity-40 hover:opacity-80 transition-opacity touch-manipulation"
       >
-        <ExternalLink size={18} color={iconColor} strokeWidth={1.5} />
+        <ArrowUpFromLine size={18} color={iconColor} strokeWidth={1.5} />
       </button>
 
-      {open && (
-        <div
-          className="absolute right-0 top-full mt-2 w-48 rounded-lg overflow-hidden shadow-xl z-50"
-          style={{
-            background: 'var(--dark-bg)',
-            border: '1px solid rgba(255,255,255,0.08)',
-          }}
-        >
-          <button
-            onClick={copyLink}
-            className="w-full flex items-center gap-3 px-4 py-3 text-[0.85rem] text-left hover:bg-white/5 transition-colors"
-            style={{ color: 'var(--dark-text)' }}
+      {/* Share modal */}
+      {modalOpen && (
+        <div className="fixed inset-0 z-[300] flex items-end sm:items-center justify-center">
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-black/60" onClick={close} />
+
+          {/* Modal */}
+          <div
+            className="relative w-full max-w-[420px] max-h-[90dvh] overflow-y-auto rounded-t-2xl sm:rounded-2xl"
+            style={{ background: 'var(--dark-bg)', color: 'var(--dark-text)' }}
           >
-            <Link size={15} strokeWidth={1.5} />
-            {copied ? 'Copied!' : 'Copy link'}
-          </button>
-          <button
-            onClick={shareToX}
-            className="w-full flex items-center gap-3 px-4 py-3 text-[0.85rem] text-left hover:bg-white/5 transition-colors"
-            style={{ color: 'var(--dark-text)' }}
-          >
-            <XIcon size={15} strokeWidth={1.5} />
-            Share to X
-          </button>
-          <button
-            onClick={shareToFacebook}
-            className="w-full flex items-center gap-3 px-4 py-3 text-[0.85rem] text-left hover:bg-white/5 transition-colors"
-            style={{ color: 'var(--dark-text)' }}
-          >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-            Facebook
-          </button>
-          <button
-            onClick={shareToThreads}
-            className="w-full flex items-center gap-3 px-4 py-3 text-[0.85rem] text-left hover:bg-white/5 transition-colors"
-            style={{ color: 'var(--dark-text)' }}
-          >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.5 14.5c-1.5 1-3.5 1.5-5 .5s-2-3-.5-4.5 4-1.5 5.5 0 1.5 3 0 4z"/></svg>
-            Threads
-          </button>
+            {/* Close */}
+            <button
+              onClick={close}
+              className="absolute top-4 right-4 p-2 opacity-50 hover:opacity-100 bg-transparent border-none cursor-pointer z-10"
+              style={{ color: 'var(--dark-text)' }}
+            >
+              <X size={20} strokeWidth={1.5} />
+            </button>
+
+            <div className="p-6 pt-8">
+              {/* Card preview */}
+              <div className="mb-6 rounded-lg overflow-hidden bg-black/30 aspect-square flex items-center justify-center">
+                {cardUrl ? (
+                  <img src={cardUrl} alt="quote card" className="w-full h-full object-contain" />
+                ) : (
+                  <div className="text-[0.8rem] opacity-30">generating...</div>
+                )}
+              </div>
+
+              {/* Toast */}
+              {copied && (
+                <div className="text-center text-[0.8rem] tracking-[0.06em] mb-4" style={{ color: 'var(--accent)' }}>
+                  {copied}
+                </div>
+              )}
+
+              {/* Primary actions */}
+              <div className="space-y-1 mb-4">
+                {typeof navigator !== 'undefined' && 'share' in navigator && (
+                  <ShareAction icon={<ArrowUpFromLine size={16} strokeWidth={1.5} />} label="share" onClick={handleNativeShare} />
+                )}
+                <ShareAction icon={<Download size={16} strokeWidth={1.5} />} label="save image" onClick={handleSaveImage} />
+                <ShareAction icon={<Copy size={16} strokeWidth={1.5} />} label="copy image" onClick={handleCopyImage} />
+                <ShareAction icon={<Link size={16} strokeWidth={1.5} />} label="copy link" onClick={handleCopyLink} />
+              </div>
+
+              {/* Divider */}
+              <div className="h-px mb-4" style={{ background: 'rgba(255,255,255,0.06)' }} />
+
+              {/* Platform links */}
+              <div className="space-y-1 pb-2">
+                {platforms.map((p) => (
+                  <button
+                    key={p.label}
+                    onClick={p.action}
+                    className="block w-full text-left py-2 px-3 rounded-lg text-[0.85rem] bg-transparent border-none cursor-pointer font-[inherit] opacity-60 hover:opacity-100 hover:bg-white/5 transition-all"
+                    style={{ color: 'var(--dark-text)' }}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       )}
-    </div>
+    </>
+  )
+}
+
+function ShareAction({ icon, label, onClick }: { icon: React.ReactNode; label: string; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="w-full flex items-center gap-3 py-2.5 px-3 rounded-lg text-[0.85rem] bg-transparent border-none cursor-pointer font-[inherit] opacity-70 hover:opacity-100 hover:bg-white/5 transition-all"
+      style={{ color: 'var(--dark-text)' }}
+    >
+      {icon}
+      {label}
+    </button>
   )
 }
