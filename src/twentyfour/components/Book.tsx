@@ -58,8 +58,23 @@ export default function Book() {
       const delta = currentY - lastScrollY.current
       lastScrollY.current = currentY
 
-      // Ignore elastic bounce at top/bottom
+      // Ignore elastic bounce at top
       if (currentY <= 0) return
+
+      // Show chrome when near bottom of page (within 150px)
+      const atBottom = target.scrollHeight - currentY - target.clientHeight < 150
+      if (atBottom) {
+        setChromeHidden(false)
+        accumulatedDelta = 0
+        return
+      }
+
+      // Show chrome when at very top
+      if (currentY < 10) {
+        setChromeHidden(false)
+        accumulatedDelta = 0
+        return
+      }
 
       accumulatedDelta += delta
 
