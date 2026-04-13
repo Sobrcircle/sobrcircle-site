@@ -144,14 +144,14 @@ export default function ShareButton({
 
       {/* Share modal */}
       {modalOpen && (
-        <div className="fixed inset-0 z-[300] flex items-end sm:items-center justify-center">
+        <div className="fixed inset-0 z-[300] flex items-end sm:items-center justify-center" style={{ background: 'rgba(0,0,0,0.85)' }}>
           {/* Backdrop */}
-          <div className="absolute inset-0 bg-black/60" onClick={close} />
+          <div className="absolute inset-0" onClick={close} />
 
           {/* Modal */}
           <div
-            className="relative w-full max-w-[420px] max-h-[90dvh] overflow-y-auto rounded-t-2xl sm:rounded-2xl"
-            style={{ background: 'var(--dark-bg)', color: 'var(--dark-text)' }}
+            className="relative w-full max-w-[420px] max-h-[90dvh] overflow-y-auto rounded-t-2xl sm:rounded-2xl border border-white/5"
+            style={{ background: '#0a0a0a', color: 'var(--dark-text)' }}
           >
             {/* Close */}
             <button
@@ -164,7 +164,7 @@ export default function ShareButton({
 
             <div className="p-6 pt-8">
               {/* Card preview */}
-              <div className="mb-6 rounded-lg overflow-hidden bg-black/30 aspect-square flex items-center justify-center">
+              <div className="mb-6 rounded-lg overflow-hidden aspect-square flex items-center justify-center" style={{ background: '#000' }}>
                 {cardUrl ? (
                   <img src={cardUrl} alt="quote card" className="w-full h-full object-contain" />
                 ) : (

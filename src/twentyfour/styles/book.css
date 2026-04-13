@@ -46,7 +46,7 @@ html, body, #root {
 /* ── Each page ── */
 .book-page {
   flex: 0 0 100vw;
-  width: 100vw;
+  width: 100.5vw;  /* slightly wider to prevent sub-pixel gap bleed on iOS Safari */
   min-width: 100vw;
   height: 100dvh;
   height: 100vh;
@@ -62,14 +62,10 @@ html, body, #root {
 .book-page.dark {
   background: var(--dark-bg);
   color: var(--dark-text);
-  /* Extend bg to cover sub-pixel gaps during scroll-snap */
-  box-shadow: 60px 0 0 0 var(--dark-bg), -60px 0 0 0 var(--dark-bg);
 }
 .book-page.light {
   background: var(--light-bg);
   color: var(--light-text);
-  /* Extend bg to cover sub-pixel gaps during scroll-snap */
-  box-shadow: 60px 0 0 0 var(--light-bg), -60px 0 0 0 var(--light-bg);
 }
 
 /* ── Page inner content ── */
@@ -77,7 +73,7 @@ html, body, #root {
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 56px 24px 88px;
+  padding: 56px 24px 120px;
 }
 .page-content.centered {
   align-items: center;
@@ -150,7 +146,7 @@ html, body, #root {
 
 /* ── Mobile ── */
 @media (max-width: 640px) {
-  .page-content { padding: 48px 20px 80px; }
+  .page-content { padding: 48px 20px 110px; }
   .page-content.top { padding-top: 64px; }
   .poem-body { font-size: 0.95rem; }
   .prose-body { font-size: 0.95rem; }
