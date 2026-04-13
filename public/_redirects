@@ -1,0 +1,7 @@
+# Serve static pages directly, SPA fallback for everything else
+/twentyfour/*  /twentyfour/:splat  200
+/support/*     /support/:splat     200
+/privacy/*     /privacy/:splat     200
+/terms/*       /terms/:splat       200
+/delete-account/*  /delete-account/:splat  200
+/*             /index.html         200
