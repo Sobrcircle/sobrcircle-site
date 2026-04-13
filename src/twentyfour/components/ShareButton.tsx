@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { ArrowUpFromLine, Download, Copy, Link, X } from 'lucide-react'
+import { ArrowUpFromLine, Download, Link, X } from 'lucide-react'
 import { generateQuoteCard } from './QuoteCard'
 
 const BASE_URL = 'https://sobrcircle.com/twentyfour'
@@ -18,7 +18,7 @@ export default function ShareButton({
   const [modalOpen, setModalOpen] = useState(false)
   const [cardBlob, setCardBlob] = useState<Blob | null>(null)
   const [cardUrl, setCardUrl] = useState<string>('')
-  const [copied, setCopied] = useState('')
+  const [toast, setToast] = useState('')
   const iconColor = '#1a1a1a'
 
   const shareUrl = `${BASE_URL}/#${poemId}`
@@ -35,18 +35,17 @@ export default function ShareButton({
     })
     return () => {
       revoked = true
-      if (cardUrl) URL.revokeObjectURL(cardUrl)
     }
   }, [modalOpen, chapter, poemTitle, stanzas])
 
-  // Clean up on unmount
+  // Clean up blob URL
   useEffect(() => {
     return () => { if (cardUrl) URL.revokeObjectURL(cardUrl) }
   }, [cardUrl])
 
   const close = useCallback(() => {
     setModalOpen(false)
-    setCopied('')
+    setToast('')
   }, [])
 
   // Lock body scroll when modal open
@@ -57,7 +56,20 @@ export default function ShareButton({
     }
   }, [modalOpen])
 
-  const handleNativeShare = async () => {
+  const flash = (msg: string) => {
+    setToast(msg)
+    setTimeout(() => setToast(''), 2000)
+  }
+
+  // Native share — sends link (OG preview shows on receiving end)
+  const handleShare = async () => {
+    try {
+      await navigator.share({ title: 'twenty four', text: shareText, url: shareUrl })
+    } catch {}
+  }
+
+  // Native share with image — for social media posting
+  const handleShareImage = async () => {
     if (!cardBlob) return
     const file = new File([cardBlob], `${poemId}-twentyfour.png`, { type: 'image/png' })
     try {
@@ -66,74 +78,32 @@ export default function ShareButton({
         return
       }
     } catch {}
-    // fallback: try share without file
-    try {
-      await navigator.share({ title: 'twenty four', text: shareText, url: shareUrl })
-    } catch {}
+    // fallback: download
+    handleDownloadCard()
   }
 
-  const handleSaveImage = () => {
+  // Download the quote card image
+  const handleDownloadCard = () => {
     if (!cardUrl) return
     const a = document.createElement('a')
     a.href = cardUrl
     a.download = `${poemId}-twentyfour.png`
     a.click()
-    flash('saved!')
+    flash('saved')
   }
 
-  const handleCopyImage = async () => {
-    if (!cardBlob) return
-    try {
-      await navigator.clipboard.write([
-        new ClipboardItem({ 'image/png': cardBlob })
-      ])
-      flash('copied!')
-    } catch {
-      // fallback to save
-      handleSaveImage()
-    }
-  }
-
+  // Copy link
   const handleCopyLink = async () => {
     try {
       await navigator.clipboard.writeText(shareUrl)
-      flash('copied!')
+      flash('link copied')
     } catch {}
   }
 
-  const flash = (msg: string) => {
-    setCopied(msg)
-    setTimeout(() => setCopied(''), 1500)
-  }
-
-  const openUrl = (url: string) => {
-    window.open(url, '_blank')
-  }
-
-  const handleInstagram = () => {
-    handleSaveImage()
-    flash('image saved \u2014 open instagram to post')
-  }
-
-  const handleSnapchat = () => {
-    handleSaveImage()
-    flash('image saved \u2014 open snapchat to post')
-  }
-
-  const platforms = [
-    { label: 'x / twitter', action: () => openUrl(`https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`) },
-    { label: 'facebook', action: () => openUrl(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`) },
-    { label: 'threads', action: () => openUrl(`https://www.threads.net/intent/post?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`) },
-    { label: 'whatsapp', action: () => openUrl(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`) },
-    { label: 'instagram', action: handleInstagram },
-    { label: 'snapchat', action: handleSnapchat },
-    { label: 'reddit', action: () => openUrl(`https://www.reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(shareText)}`) },
-    { label: 'email', action: () => openUrl(`mailto:?subject=${encodeURIComponent('twenty four \u2014 ' + poemTitle)}&body=${encodeURIComponent(shareText + '\n\n' + shareUrl)}`) },
-  ]
+  const openUrl = (url: string) => window.open(url, '_blank')
 
   return (
     <>
-      {/* Share icon button — arrow pointing straight up in box */}
       <button
         onClick={() => setModalOpen(true)}
         aria-label="share this poem"
@@ -142,68 +112,65 @@ export default function ShareButton({
         <ArrowUpFromLine size={18} color={iconColor} strokeWidth={1.5} />
       </button>
 
-      {/* Share modal */}
       {modalOpen && (
-        <div className="fixed inset-0 z-[300] flex items-end sm:items-center justify-center" style={{ background: 'rgba(0,0,0,0.85)' }}>
-          {/* Backdrop */}
+        <div
+          className="fixed inset-0 z-[300] flex items-end sm:items-center justify-center"
+          style={{ background: 'rgba(0,0,0,0.88)' }}
+        >
           <div className="absolute inset-0" onClick={close} />
 
-          {/* Modal */}
           <div
             className="relative w-full max-w-[420px] max-h-[90dvh] overflow-y-auto rounded-t-2xl sm:rounded-2xl border border-white/5"
-            style={{ background: '#0a0a0a', color: 'var(--dark-text)' }}
+            style={{ background: '#0a0a0a', color: '#e8e4df' }}
           >
-            {/* Close */}
             <button
               onClick={close}
               className="absolute top-4 right-4 p-2 opacity-50 hover:opacity-100 bg-transparent border-none cursor-pointer z-10"
-              style={{ color: 'var(--dark-text)' }}
+              style={{ color: '#e8e4df' }}
             >
               <X size={20} strokeWidth={1.5} />
             </button>
 
             <div className="p-6 pt-8">
-              {/* Card preview */}
-              <div className="mb-6 rounded-lg overflow-hidden aspect-square flex items-center justify-center" style={{ background: '#000' }}>
+              {/* Quote card preview */}
+              <div className="mb-5 rounded-lg overflow-hidden aspect-square" style={{ background: '#000' }}>
                 {cardUrl ? (
                   <img src={cardUrl} alt="quote card" className="w-full h-full object-contain" />
                 ) : (
-                  <div className="text-[0.8rem] opacity-30">generating...</div>
+                  <div className="w-full h-full flex items-center justify-center text-[0.8rem] opacity-30">generating...</div>
                 )}
               </div>
 
               {/* Toast */}
-              {copied && (
-                <div className="text-center text-[0.8rem] tracking-[0.06em] mb-4" style={{ color: 'var(--accent)' }}>
-                  {copied}
+              {toast && (
+                <div className="text-center text-[0.8rem] tracking-[0.06em] mb-3" style={{ color: '#c4a882' }}>
+                  {toast}
                 </div>
               )}
 
-              {/* Primary actions */}
-              <div className="space-y-1 mb-4">
+              {/* Actions */}
+              <div className="space-y-0.5 mb-4">
                 {typeof navigator !== 'undefined' && 'share' in navigator && (
-                  <ShareAction icon={<ArrowUpFromLine size={16} strokeWidth={1.5} />} label="share" onClick={handleNativeShare} />
+                  <ActionBtn icon={<ArrowUpFromLine size={16} strokeWidth={1.5} />} label="share link" onClick={handleShare} />
                 )}
-                <ShareAction icon={<Download size={16} strokeWidth={1.5} />} label="save image" onClick={handleSaveImage} />
-                <ShareAction icon={<Copy size={16} strokeWidth={1.5} />} label="copy image" onClick={handleCopyImage} />
-                <ShareAction icon={<Link size={16} strokeWidth={1.5} />} label="copy link" onClick={handleCopyLink} />
+                {typeof navigator !== 'undefined' && 'share' in navigator && (
+                  <ActionBtn icon={<ArrowUpFromLine size={16} strokeWidth={1.5} />} label="share quote card" onClick={handleShareImage} />
+                )}
+                <ActionBtn icon={<Download size={16} strokeWidth={1.5} />} label="save quote card" onClick={handleDownloadCard} />
+                <ActionBtn icon={<Link size={16} strokeWidth={1.5} />} label="copy link" onClick={handleCopyLink} />
               </div>
 
               {/* Divider */}
-              <div className="h-px mb-4" style={{ background: 'rgba(255,255,255,0.06)' }} />
+              <div className="h-px mb-3" style={{ background: 'rgba(255,255,255,0.06)' }} />
 
-              {/* Platform links */}
-              <div className="space-y-1 pb-2">
-                {platforms.map((p) => (
-                  <button
-                    key={p.label}
-                    onClick={p.action}
-                    className="block w-full text-left py-2 px-3 rounded-lg text-[0.85rem] bg-transparent border-none cursor-pointer font-[inherit] opacity-60 hover:opacity-100 hover:bg-white/5 transition-all"
-                    style={{ color: 'var(--dark-text)' }}
-                  >
-                    {p.label}
-                  </button>
-                ))}
+              {/* Platform share links — these send the link, platform shows OG preview */}
+              <div className="space-y-0.5 pb-2">
+                <PlatformBtn label="x / twitter" onClick={() => openUrl(`https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`)} />
+                <PlatformBtn label="facebook" onClick={() => openUrl(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`)} />
+                <PlatformBtn label="threads" onClick={() => openUrl(`https://www.threads.net/intent/post?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`)} />
+                <PlatformBtn label="whatsapp" onClick={() => openUrl(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`)} />
+                <PlatformBtn label="reddit" onClick={() => openUrl(`https://www.reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(shareText)}`)} />
+                <PlatformBtn label="email" onClick={() => openUrl(`mailto:?subject=${encodeURIComponent('twenty four \u2014 ' + poemTitle)}&body=${encodeURIComponent(shareText + '\n\n' + shareUrl)}`)} />
               </div>
             </div>
           </div>
@@ -213,14 +180,26 @@ export default function ShareButton({
   )
 }
 
-function ShareAction({ icon, label, onClick }: { icon: React.ReactNode; label: string; onClick: () => void }) {
+function ActionBtn({ icon, label, onClick }: { icon: React.ReactNode; label: string; onClick: () => void }) {
   return (
     <button
       onClick={onClick}
       className="w-full flex items-center gap-3 py-2.5 px-3 rounded-lg text-[0.85rem] bg-transparent border-none cursor-pointer font-[inherit] opacity-70 hover:opacity-100 hover:bg-white/5 transition-all"
-      style={{ color: 'var(--dark-text)' }}
+      style={{ color: '#e8e4df' }}
     >
       {icon}
+      {label}
+    </button>
+  )
+}
+
+function PlatformBtn({ label, onClick }: { label: string; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="block w-full text-left py-2 px-3 rounded-lg text-[0.85rem] bg-transparent border-none cursor-pointer font-[inherit] opacity-50 hover:opacity-100 hover:bg-white/5 transition-all"
+      style={{ color: '#e8e4df' }}
+    >
       {label}
     </button>
   )

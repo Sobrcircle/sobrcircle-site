@@ -8,20 +8,14 @@ export function useBookNavigation() {
   const scrollingRef = useRef(false)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
-  // Get initial page from hash or localStorage
+  // Get initial page from hash only — no hash means start at cover
   const getInitialIndex = useCallback(() => {
     const hash = window.location.hash.slice(1)
     if (hash) {
       const idx = pages.findIndex((p) => p.id === hash)
       if (idx >= 0) return idx
     }
-    try {
-      const saved = localStorage.getItem('tf_pos')
-      if (saved) {
-        const idx = pages.findIndex((p) => p.id === saved)
-        if (idx >= 0) return idx
-      }
-    } catch {}
+    // No hash = fresh visit, always start at cover
     return 0
   }, [])
 
