@@ -11,60 +11,20 @@ const backPages = [
   { id: 'copyright', label: 'copyright' },
 ]
 
-function SidebarLink({ id, label, currentId, onGoTo, onClose }: {
-  id: string; label: string; currentId: string; onGoTo: (id: string) => void; onClose: () => void
-}) {
-  return (
-    <button
-      onClick={() => { onGoTo(id); onClose() }}
-      className={`block w-full text-left py-[6px] text-[0.85rem] bg-transparent border-none cursor-pointer font-[inherit] transition-opacity duration-150 ${
-        currentId === id ? 'opacity-100' : 'opacity-50 hover:opacity-80'
-      }`}
-      style={{ color: currentId === id ? 'var(--accent)' : 'var(--dark-muted)' }}
-    >
-      {label}
-    </button>
-  )
-}
-
 const chapters = [
-  { title: 'i. illusion', poems: ['sixteen', 'taken', 'nights', 'again', 'born', 'promises'] },
-  { title: 'ii. pattern', poems: ['enough', 'rehab', 'clear', 'bend', 'gone', 'hollow'] },
-  {
-    title: 'iii. realization',
-    poems: ['back', 'hidden', 'split', 'real', 'crash', 'last'],
-  },
-  {
-    title: 'iv. change',
-    poems: ['habit', 'phoenix', 'almost', 'finding', 'god', 'twentyfour'],
-  },
+  { id: 'ch-illusion', title: 'i. illusion', poems: ['sixteen', 'taken', 'nights', 'again', 'born', 'promises'] },
+  { id: 'ch-pattern', title: 'ii. pattern', poems: ['enough', 'rehab', 'clear', 'bend', 'gone', 'hollow'] },
+  { id: 'ch-realization', title: 'iii. realization', poems: ['back', 'hidden', 'split', 'real', 'crash', 'last'] },
+  { id: 'ch-change', title: 'iv. change', poems: ['habit', 'phoenix', 'almost', 'finding', 'god', 'twentyfour'] },
 ]
 
 const poemTitles: Record<string, string> = {
-  sixteen: 'sixteen',
-  taken: 'taken',
-  nights: 'nights',
-  again: 'again',
-  born: 'born',
-  promises: 'promises',
-  enough: 'enough',
-  rehab: 'rehab',
-  clear: 'clear',
-  bend: 'bend',
-  gone: 'gone',
-  hollow: 'hollow',
-  back: 'back',
-  hidden: 'hidden',
-  split: 'split',
-  real: 'real',
-  crash: 'crash',
-  last: 'last',
-  habit: 'habit',
-  phoenix: 'phoenix',
-  almost: 'almost',
-  finding: 'finding',
-  god: 'god',
-  twentyfour: 'twenty four',
+  sixteen: 'sixteen', taken: 'taken', nights: 'nights', again: 'again',
+  born: 'born', promises: 'promises', enough: 'enough', rehab: 'rehab',
+  clear: 'clear', bend: 'bend', gone: 'gone', hollow: 'hollow',
+  back: 'back', hidden: 'hidden', split: 'split', real: 'real',
+  crash: 'crash', last: 'last', habit: 'habit', phoenix: 'phoenix',
+  almost: 'almost', finding: 'finding', god: 'god', twentyfour: 'twenty four',
 }
 
 export default function TOCSidebar({
@@ -110,24 +70,36 @@ export default function TOCSidebar({
           &times;
         </button>
 
-        <h2 className="text-[1.1rem] font-normal tracking-[0.08em] mb-7 lowercase">contents</h2>
+        <h2 className="text-[1.1rem] font-normal italic tracking-[0.08em] mb-7">twenty four</h2>
 
         {/* Front matter */}
         <div className="mb-5">
           {frontPages.map((p) => (
-            <SidebarLink key={p.id} id={p.id} label={p.label} currentId={currentId} onGoTo={onGoTo} onClose={onClose} />
+            <button
+              key={p.id}
+              onClick={() => { onGoTo(p.id); onClose() }}
+              className={`block w-full text-left py-[6px] text-[0.85rem] bg-transparent border-none cursor-pointer font-[inherit] transition-opacity duration-150 ${
+                currentId === p.id ? 'opacity-100' : 'opacity-70 hover:opacity-100'
+              }`}
+              style={{ color: currentId === p.id ? 'var(--accent)' : 'var(--dark-text)' }}
+            >
+              {p.label}
+            </button>
           ))}
         </div>
 
         {/* Chapters + poems */}
         {chapters.map((ch) => (
           <div key={ch.title} className="mb-5">
-            <div
-              className="italic text-[0.85rem] tracking-[0.03em] mb-2"
-              style={{ color: 'var(--dark-muted)' }}
+            <button
+              onClick={() => { onGoTo(ch.id); onClose() }}
+              className={`block w-full text-left italic text-[0.85rem] tracking-[0.03em] mb-2 bg-transparent border-none cursor-pointer font-[inherit] transition-opacity duration-150 hover:opacity-100 ${
+                currentId === ch.id ? 'opacity-100' : 'opacity-70'
+              }`}
+              style={{ color: currentId === ch.id ? 'var(--accent)' : 'var(--dark-muted)' }}
             >
               {ch.title}
-            </div>
+            </button>
             {ch.poems.map((poemId) => (
               <button
                 key={poemId}
@@ -159,7 +131,16 @@ export default function TOCSidebar({
         {/* Back matter */}
         <div className="mt-6 pt-5" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
           {backPages.map((p) => (
-            <SidebarLink key={p.id} id={p.id} label={p.label} currentId={currentId} onGoTo={onGoTo} onClose={onClose} />
+            <button
+              key={p.id}
+              onClick={() => { onGoTo(p.id); onClose() }}
+              className={`block w-full text-left py-[6px] text-[0.85rem] bg-transparent border-none cursor-pointer font-[inherit] transition-opacity duration-150 ${
+                currentId === p.id ? 'opacity-100' : 'opacity-70 hover:opacity-100'
+              }`}
+              style={{ color: currentId === p.id ? 'var(--accent)' : 'var(--dark-text)' }}
+            >
+              {p.label}
+            </button>
           ))}
         </div>
       </div>

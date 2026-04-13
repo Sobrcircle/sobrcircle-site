@@ -62,6 +62,8 @@ html, body, #root {
 .book-page.dark {
   background: var(--dark-bg);
   color: var(--dark-text);
+  /* Prevent light page bleed on edges during scroll-snap transitions */
+  box-shadow: 40px 0 0 0 var(--dark-bg), -40px 0 0 0 var(--dark-bg);
 }
 .book-page.light {
   background: var(--light-bg);
