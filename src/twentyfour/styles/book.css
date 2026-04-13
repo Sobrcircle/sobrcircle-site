@@ -36,7 +36,8 @@ html, body, #root {
   height: 100vh;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior-x: none;
+  overscroll-behavior: none;
+  background: var(--dark-bg);
 }
 .book-container::-webkit-scrollbar {
   display: none;
@@ -50,10 +51,12 @@ html, body, #root {
   height: 100dvh;
   height: 100vh;
   scroll-snap-align: start;
+  scroll-snap-stop: always;
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   position: relative;
+  overscroll-behavior: contain;
 }
 
 .book-page.dark {

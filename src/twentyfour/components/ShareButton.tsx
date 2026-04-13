@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Share2, Link, X as XIcon } from 'lucide-react'
+import { ExternalLink, Link, X as XIcon } from 'lucide-react'
 
 const BASE_URL = 'https://sobrcircle.com/twentyfour'
 
@@ -84,7 +84,7 @@ export default function ShareButton({
         aria-label="Share this poem"
         className="p-2 opacity-40 hover:opacity-80 transition-opacity touch-manipulation"
       >
-        <Share2 size={18} color={iconColor} strokeWidth={1.5} />
+        <ExternalLink size={18} color={iconColor} strokeWidth={1.5} />
       </button>
 
       {open && (

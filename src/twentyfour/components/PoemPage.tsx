@@ -62,10 +62,7 @@ export default function PoemPage({
         ))}
 
         {/* Author signature */}
-        <div
-          className="mt-10 italic text-[0.85rem] tracking-[0.08em]"
-          style={{ color: 'var(--light-muted)' }}
-        >
+        <div className="mt-10 italic font-bold text-[0.85rem] tracking-[0.08em]">
           bm
         </div>
       </div>
