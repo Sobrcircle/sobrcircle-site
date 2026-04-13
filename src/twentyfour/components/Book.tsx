@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Menu } from 'lucide-react'
 import { pages } from '../data/pages'
 import { useBookNavigation } from '../hooks/useBookNavigation'
@@ -17,6 +17,8 @@ export default function Book() {
     useBookNavigation()
   const { isBookmarked, toggleBookmark, bookmarks } = useBookmarks()
   const [tocOpen, setTocOpen] = useState(false)
+  const [chromeHidden, setChromeHidden] = useState(false)
+  const lastScrollY = useRef(0)
 
   const currentPage = pages[currentIndex]
   const isDark = currentPage.theme === 'dark'
@@ -39,6 +41,37 @@ export default function Book() {
     window.addEventListener('keydown', handle)
     return () => window.removeEventListener('keydown', handle)
   }, [tocOpen])
+
+  // Auto-hide nav/TOC on vertical scroll (Facebook-style)
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+
+    const handleScroll = (e: Event) => {
+      const target = e.target as HTMLElement
+      if (!target.classList.contains('book-page')) return
+      const currentY = target.scrollTop
+      const delta = currentY - lastScrollY.current
+
+      if (delta > 8) {
+        // Scrolling down — hide chrome
+        setChromeHidden(true)
+      } else if (delta < -8) {
+        // Scrolling up — show chrome
+        setChromeHidden(false)
+      }
+      lastScrollY.current = currentY
+    }
+
+    container.addEventListener('scroll', handleScroll, { passive: true, capture: true })
+    return () => container.removeEventListener('scroll', handleScroll, true)
+  }, [containerRef])
+
+  // Reset chrome visibility on page change
+  useEffect(() => {
+    setChromeHidden(false)
+    lastScrollY.current = 0
+  }, [currentIndex])
 
   const renderPage = useCallback((page: (typeof pages)[number]) => {
     switch (page.type) {
@@ -86,11 +119,13 @@ export default function Book() {
     <>
       <ProgressBar current={currentIndex} total={totalPages} />
 
-      {/* TOC toggle button */}
+      {/* TOC toggle button — auto-hides on scroll */}
       <button
         onClick={() => setTocOpen(true)}
         aria-label="Table of contents"
-        className="fixed top-4 left-4 z-[90] p-2 bg-transparent border-none cursor-pointer opacity-50 hover:opacity-100 transition-opacity touch-manipulation"
+        className={`fixed top-4 left-4 z-[90] p-2 bg-transparent border-none cursor-pointer opacity-50 hover:opacity-100 transition-all duration-300 touch-manipulation book-chrome-top ${
+          chromeHidden ? 'translate-y-[-100%] opacity-0 pointer-events-none' : ''
+        }`}
       >
         <Menu size={22} strokeWidth={1.5} color={isDark ? '#e8e4df' : '#1a1a1a'} />
       </button>
@@ -116,16 +151,21 @@ export default function Book() {
         ))}
       </div>
 
-      <Navigation
-        label={currentPage.label}
-        theme={currentPage.theme}
-        onPrev={goToPrev}
-        onNext={goToNext}
-        hasPrev={currentIndex > 0}
-        hasNext={currentIndex < totalPages - 1}
-        currentPage={currentIndex}
-        totalPages={totalPages}
-      />
+      {/* Navigation — auto-hides on scroll */}
+      <div className={`transition-all duration-300 ${
+        chromeHidden ? 'translate-y-full opacity-0 pointer-events-none' : ''
+      }`}>
+        <Navigation
+          label={currentPage.label}
+          theme={currentPage.theme}
+          onPrev={goToPrev}
+          onNext={goToNext}
+          hasPrev={currentIndex > 0}
+          hasNext={currentIndex < totalPages - 1}
+          currentPage={currentIndex}
+          totalPages={totalPages}
+        />
+      </div>
     </>
   )
 }

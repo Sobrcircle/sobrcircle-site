@@ -120,7 +120,7 @@ export default function ShareButton({
           <div className="absolute inset-0" onClick={close} />
 
           <div
-            className="relative w-full max-w-[420px] max-h-[90dvh] overflow-y-auto rounded-t-2xl sm:rounded-2xl border border-white/5"
+            className="relative w-full max-w-[420px] max-h-[78dvh] max-h-[78vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl border border-white/5 share-modal-scroll"
             style={{ background: '#0a0a0a', color: '#e8e4df' }}
           >
             <button
@@ -164,7 +164,7 @@ export default function ShareButton({
               <div className="h-px mb-3" style={{ background: 'rgba(255,255,255,0.06)' }} />
 
               {/* Platform share links — these send the link, platform shows OG preview */}
-              <div className="space-y-0.5 pb-2">
+              <div className="space-y-0.5 pb-6">
                 <PlatformBtn label="x / twitter" onClick={() => openUrl(`https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`)} />
                 <PlatformBtn label="facebook" onClick={() => openUrl(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`)} />
                 <PlatformBtn label="threads" onClick={() => openUrl(`https://www.threads.net/intent/post?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`)} />

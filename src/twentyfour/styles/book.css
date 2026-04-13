@@ -57,6 +57,7 @@ html, body, #root {
   -webkit-overflow-scrolling: touch;
   position: relative;
   overscroll-behavior: contain;
+  touch-action: pan-y; /* prioritize vertical scroll, reduce accidental horizontal page changes */
 }
 
 .book-page.dark {
@@ -137,6 +138,25 @@ html, body, #root {
 .book-page.dark::-webkit-scrollbar { width: 3px; }
 .book-page.dark::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
 .book-page.dark::-webkit-scrollbar-track { background: transparent; }
+
+/* ── Share modal scrollbar ── */
+.share-modal-scroll::-webkit-scrollbar { width: 3px; }
+.share-modal-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
+.share-modal-scroll::-webkit-scrollbar-track { background: transparent; }
+.share-modal-scroll { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.12) transparent; }
+
+/* ── Auto-hide chrome on scroll ── */
+.chrome-hidden .book-chrome {
+  transform: translateY(100%);
+  opacity: 0;
+}
+.chrome-hidden .book-chrome-top {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+.book-chrome, .book-chrome-top {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
 
 /* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
