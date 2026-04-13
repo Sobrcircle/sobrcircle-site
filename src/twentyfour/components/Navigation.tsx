@@ -26,11 +26,9 @@ export default function Navigation({
 
   return (
     <div
-      className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3 sm:px-5 sm:py-4"
+      className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3 sm:px-5 sm:py-4 transition-colors duration-200"
       style={{
-        background: isDark
-          ? 'linear-gradient(transparent, rgba(10,10,10,0.6))'
-          : 'linear-gradient(transparent, rgba(250,248,245,0.8))',
+        background: 'transparent',
       }}
     >
       <button

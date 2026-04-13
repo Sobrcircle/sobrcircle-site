@@ -37,7 +37,7 @@ html, body, #root {
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: none;
-  background: var(--dark-bg);
+  background: transparent;
 }
 .book-container::-webkit-scrollbar {
   display: none;
@@ -62,12 +62,14 @@ html, body, #root {
 .book-page.dark {
   background: var(--dark-bg);
   color: var(--dark-text);
-  /* Prevent light page bleed on edges during scroll-snap transitions */
-  box-shadow: 40px 0 0 0 var(--dark-bg), -40px 0 0 0 var(--dark-bg);
+  /* Extend bg to cover sub-pixel gaps during scroll-snap */
+  box-shadow: 60px 0 0 0 var(--dark-bg), -60px 0 0 0 var(--dark-bg);
 }
 .book-page.light {
   background: var(--light-bg);
   color: var(--light-text);
+  /* Extend bg to cover sub-pixel gaps during scroll-snap */
+  box-shadow: 60px 0 0 0 var(--light-bg), -60px 0 0 0 var(--light-bg);
 }
 
 /* ── Page inner content ── */
