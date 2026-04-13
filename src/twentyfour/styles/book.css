@@ -22,7 +22,8 @@ html, body, #root {
   font-family: Georgia, "Times New Roman", Times, serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: var(--dark-bg);
+  background: var(--dark-bg); /* dark canvas prevents white flash between pages */
+  color: var(--dark-text);
 }
 
 /* ── Scroll-snap container ── */
@@ -35,6 +36,7 @@ html, body, #root {
   height: 100vh;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: none;
 }
 .book-container::-webkit-scrollbar {
   display: none;

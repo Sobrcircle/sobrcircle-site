@@ -43,11 +43,13 @@ export default function TOCSidebar({
   onClose,
   currentId,
   onGoTo,
+  bookmarks = [],
 }: {
   open: boolean
   onClose: () => void
   currentId: string
   onGoTo: (id: string) => void
+  bookmarks?: string[]
 }) {
   return (
     <>
@@ -103,7 +105,15 @@ export default function TOCSidebar({
                   color: currentId === poemId ? 'var(--accent)' : 'var(--dark-text)',
                 }}
               >
-                {poemTitles[poemId]}
+                <span className="flex items-center gap-2">
+                  {poemTitles[poemId]}
+                  {bookmarks.includes(poemId) && (
+                    <span
+                      className="inline-block w-[5px] h-[5px] rounded-full flex-shrink-0"
+                      style={{ background: 'var(--accent)' }}
+                    />
+                  )}
+                </span>
               </button>
             ))}
           </div>

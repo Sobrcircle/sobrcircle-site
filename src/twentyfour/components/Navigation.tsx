@@ -8,6 +8,8 @@ export default function Navigation({
   onNext,
   hasPrev,
   hasNext,
+  currentPage,
+  totalPages,
 }: {
   label: string
   theme: Theme
@@ -15,9 +17,12 @@ export default function Navigation({
   onNext: () => void
   hasPrev: boolean
   hasNext: boolean
+  currentPage: number
+  totalPages: number
 }) {
   const isDark = theme === 'dark'
   const iconColor = isDark ? '#e8e4df' : '#1a1a1a'
+  const textColor = isDark ? '#e8e4df' : '#1a1a1a'
 
   return (
     <div
@@ -37,11 +42,21 @@ export default function Navigation({
         <ChevronLeft size={22} color={iconColor} strokeWidth={1.5} />
       </button>
 
-      <div
-        className="text-[0.7rem] tracking-[0.08em] opacity-45 text-center max-w-[60%] truncate"
-        style={{ color: isDark ? '#e8e4df' : '#1a1a1a' }}
-        dangerouslySetInnerHTML={{ __html: label }}
-      />
+      <div className="text-center max-w-[60%]">
+        {label && (
+          <div
+            className="text-[0.7rem] tracking-[0.08em] opacity-45 truncate"
+            style={{ color: textColor }}
+            dangerouslySetInnerHTML={{ __html: label }}
+          />
+        )}
+        <div
+          className="text-[0.6rem] tracking-[0.06em] opacity-25 mt-[2px]"
+          style={{ color: textColor }}
+        >
+          {currentPage + 1} of {totalPages}
+        </div>
+      </div>
 
       <button
         onClick={onNext}

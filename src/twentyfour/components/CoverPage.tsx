@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 
-export default function CoverPage({ onTap }: { onTap: () => void }) {
+export default function CoverPage() {
   const titleRef = useRef<HTMLDivElement>(null)
   const authorRef = useRef<HTMLDivElement>(null)
 
@@ -21,18 +21,15 @@ export default function CoverPage({ onTap }: { onTap: () => void }) {
   }, [])
 
   return (
-    <div className="page-content centered" onClick={onTap}>
+    <div className="page-content centered">
       <div
         ref={titleRef}
-        className="text-[clamp(2rem,5vw,3.2rem)] font-normal tracking-[0.06em] mb-3"
+        className="text-[clamp(2rem,5vw,3.2rem)] font-normal italic tracking-[0.06em] mb-3"
       >
         twenty four
       </div>
-      <div ref={authorRef} className="text-[0.95rem] tracking-[0.15em] opacity-60">
+      <div ref={authorRef} className="text-[0.95rem] italic tracking-[0.15em] opacity-60">
         bm
-      </div>
-      <div className="absolute bottom-10 text-[0.75rem] tracking-[0.1em] opacity-30 animate-pulse">
-        tap to begin
       </div>
     </div>
   )

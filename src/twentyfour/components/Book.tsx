@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Menu } from 'lucide-react'
 import { pages } from '../data/pages'
 import { useBookNavigation } from '../hooks/useBookNavigation'
+import { useBookmarks } from '../hooks/useBookmarks'
 import CoverPage from './CoverPage'
 import ChapterPage from './ChapterPage'
 import PoemPage from './PoemPage'
@@ -14,6 +15,7 @@ import TOCSidebar from './TOCSidebar'
 export default function Book() {
   const { containerRef, currentIndex, totalPages, goToNext, goToPrev, goToPage } =
     useBookNavigation()
+  const { isBookmarked, toggleBookmark, bookmarks } = useBookmarks()
   const [tocOpen, setTocOpen] = useState(false)
 
   const currentPage = pages[currentIndex]
@@ -41,7 +43,7 @@ export default function Book() {
   const renderPage = useCallback((page: (typeof pages)[number]) => {
     switch (page.type) {
       case 'cover':
-        return <CoverPage onTap={() => {}} />
+        return <CoverPage />
       case 'copyright':
         return (
           <ProsePage
@@ -57,15 +59,20 @@ export default function Book() {
           />
         )
       case 'toc':
-        return <TOCContent onGoTo={goToPage} />
+        return <TOCContent onGoTo={goToPage} bookmarks={bookmarks} />
       case 'chapter':
         return <ChapterPage title={page.title || ''} />
       case 'poem':
         return (
           <PoemPage
+            id={page.id}
             chapter={page.chapter || ''}
             title={page.title || ''}
             stanzas={page.stanzas || []}
+            poemIndex={page.poemIndex ?? 0}
+            chapterPoemCount={page.chapterPoemCount ?? 6}
+            isBookmarked={isBookmarked(page.id)}
+            onToggleBookmark={() => toggleBookmark(page.id)}
           />
         )
       case 'closing':
@@ -73,7 +80,7 @@ export default function Book() {
       default:
         return null
     }
-  }, [goToPage])
+  }, [goToPage, isBookmarked, toggleBookmark, bookmarks])
 
   return (
     <>
@@ -93,6 +100,7 @@ export default function Book() {
         onClose={() => setTocOpen(false)}
         currentId={currentPage.id}
         onGoTo={goToPage}
+        bookmarks={bookmarks}
       />
 
       {/* Scroll-snap book container */}
@@ -115,13 +123,15 @@ export default function Book() {
         onNext={goToNext}
         hasPrev={currentIndex > 0}
         hasNext={currentIndex < totalPages - 1}
+        currentPage={currentIndex}
+        totalPages={totalPages}
       />
     </>
   )
 }
 
 // Inline TOC content page component
-function TOCContent({ onGoTo }: { onGoTo: (id: string) => void }) {
+function TOCContent({ onGoTo, bookmarks }: { onGoTo: (id: string) => void; bookmarks: string[] }) {
   const chapters = [
     { title: 'i. illusion', poems: [
       { id: 'sixteen', name: 'sixteen' }, { id: 'taken', name: 'taken' },
@@ -159,9 +169,15 @@ function TOCContent({ onGoTo }: { onGoTo: (id: string) => void }) {
                 <p
                   key={poem.id}
                   onClick={() => onGoTo(poem.id)}
-                  className="pl-6 mb-[2px] cursor-pointer hover:opacity-70 transition-opacity"
+                  className="pl-6 mb-[2px] cursor-pointer hover:opacity-70 transition-opacity flex items-center gap-2"
                 >
                   {poem.name}
+                  {bookmarks.includes(poem.id) && (
+                    <span
+                      className="inline-block w-[5px] h-[5px] rounded-full"
+                      style={{ background: 'var(--accent)' }}
+                    />
+                  )}
                 </p>
               ))}
             </div>

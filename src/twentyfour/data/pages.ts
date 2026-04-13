@@ -11,6 +11,8 @@ export type BookPage = {
   stanzas?: string[][]
   paragraphs?: Array<{ text: string; italic?: boolean; className?: string }>
   centered?: boolean
+  poemIndex?: number // 0-based position within chapter (0-5)
+  chapterPoemCount?: number // total poems in chapter (always 6)
 }
 
 export const pages: BookPage[] = [
@@ -19,7 +21,7 @@ export const pages: BookPage[] = [
     id: 'cover',
     type: 'cover',
     theme: 'dark',
-    label: '',
+    label: 'twenty four',
   },
 
   // ── COPYRIGHT ──
@@ -109,6 +111,8 @@ export const pages: BookPage[] = [
     theme: 'light',
     label: 'sixteen \u2014 i. illusion',
     chapter: 'i. illusion',
+    poemIndex: 0,
+    chapterPoemCount: 6,
     title: 'sixteen',
     stanzas: [
       ['i didn\u2019t know what it was', 'until it hit my lips', 'and then i did'],
@@ -145,6 +149,8 @@ export const pages: BookPage[] = [
     theme: 'light',
     label: 'taken \u2014 i. illusion',
     chapter: 'i. illusion',
+    poemIndex: 1,
+    chapterPoemCount: 6,
     title: 'taken',
     stanzas: [
       ['it happened before i understood it'],
@@ -181,6 +187,8 @@ export const pages: BookPage[] = [
     theme: 'light',
     label: 'nights \u2014 i. illusion',
     chapter: 'i. illusion',
+    poemIndex: 2,
+    chapterPoemCount: 6,
     title: 'nights',
     stanzas: [
       ['the moment it became legal', 'everything changed'],
@@ -217,6 +225,8 @@ export const pages: BookPage[] = [
     theme: 'light',
     label: 'again \u2014 i. illusion',
     chapter: 'i. illusion',
+    poemIndex: 3,
+    chapterPoemCount: 6,
     title: 'again',
     stanzas: [
       ['with women', 'i didn\u2019t call it an addiction', 'i called it a choice', 'and there\u2019s a difference'],
@@ -253,6 +263,8 @@ export const pages: BookPage[] = [
     theme: 'light',
     label: 'born \u2014 i. illusion',
     chapter: 'i. illusion',
+    poemIndex: 4,
+    chapterPoemCount: 6,
     title: 'born',
     stanzas: [
       ['i saw her from across the room', 'and something stopped'],
@@ -289,6 +301,8 @@ export const pages: BookPage[] = [
     theme: 'light',
     label: 'promises \u2014 i. illusion',
     chapter: 'i. illusion',
+    poemIndex: 5,
+    chapterPoemCount: 6,
     title: 'promises',
     stanzas: [
       ['i meant every one of them'],
@@ -336,6 +350,8 @@ export const pages: BookPage[] = [
     theme: 'light',
     label: 'enough \u2014 ii. pattern',
     chapter: 'ii. pattern',
+    poemIndex: 0,
+    chapterPoemCount: 6,
     title: 'enough',
     stanzas: [
       ['i needed something close enough', 'to not feel alone'],
@@ -372,6 +388,8 @@ export const pages: BookPage[] = [
     theme: 'light',
     label: 'rehab \u2014 ii. pattern',
     chapter: 'ii. pattern',
+    poemIndex: 1,
+    chapterPoemCount: 6,
     title: 'rehab',
     stanzas: [
       ['i didn\u2019t think i belonged there'],
@@ -408,6 +426,8 @@ export const pages: BookPage[] = [
     theme: 'light',
     label: 'clear \u2014 ii. pattern',
     chapter: 'ii. pattern',
+    poemIndex: 2,
+    chapterPoemCount: 6,
     title: 'clear',
     stanzas: [
       ['i walked out different', 'not fixed', 'but different'],
@@ -444,6 +464,8 @@ export const pages: BookPage[] = [
     theme: 'light',
     label: 'bend \u2014 ii. pattern',
     chapter: 'ii. pattern',
+    poemIndex: 3,
+    chapterPoemCount: 6,
     title: 'bend',
     stanzas: [
       ['i wasn\u2019t looking for anything', 'specially that night'],
@@ -480,6 +502,8 @@ export const pages: BookPage[] = [
     theme: 'light',
     label: 'gone \u2014 ii. pattern',
     chapter: 'ii. pattern',
+    poemIndex: 4,
+    chapterPoemCount: 6,
     title: 'gone',
     stanzas: [
       ['we left everything we knew', 'and called it a fresh start'],
@@ -516,6 +540,8 @@ export const pages: BookPage[] = [
     theme: 'light',
     label: 'hollow \u2014 ii. pattern',
     chapter: 'ii. pattern',
+    poemIndex: 5,
+    chapterPoemCount: 6,
     title: 'hollow',
     stanzas: [
       ['there are things that happen', 'that are hard to put in the right words'],
@@ -563,6 +589,8 @@ export const pages: BookPage[] = [
     theme: 'light',
     label: 'back \u2014 iii. realization',
     chapter: 'iii. realization',
+    poemIndex: 0,
+    chapterPoemCount: 6,
     title: 'back',
     stanzas: [
       ['i knew the chairs before i sat in them'],
@@ -599,6 +627,8 @@ export const pages: BookPage[] = [
     theme: 'light',
     label: 'hidden \u2014 iii. realization',
     chapter: 'iii. realization',
+    poemIndex: 1,
+    chapterPoemCount: 6,
     title: 'hidden',
     stanzas: [
       ['i found out the way you find out things', 'that were never meant for you to know'],
@@ -635,6 +665,8 @@ export const pages: BookPage[] = [
     theme: 'light',
     label: 'split \u2014 iii. realization',
     chapter: 'iii. realization',
+    poemIndex: 2,
+    chapterPoemCount: 6,
     title: 'split',
     stanzas: [
       ['i made a promise to myself', 'and i meant every word of it'],
@@ -671,6 +703,8 @@ export const pages: BookPage[] = [
     theme: 'light',
     label: 'real \u2014 iii. realization',
     chapter: 'iii. realization',
+    poemIndex: 3,
+    chapterPoemCount: 6,
     title: 'real',
     stanzas: [
       ['i had never pursued someone', 'in that world before'],
@@ -707,6 +741,8 @@ export const pages: BookPage[] = [
     theme: 'light',
     label: 'crash \u2014 iii. realization',
     chapter: 'iii. realization',
+    poemIndex: 4,
+    chapterPoemCount: 6,
     title: 'crash',
     stanzas: [
       ['she picked up first'],
@@ -743,6 +779,8 @@ export const pages: BookPage[] = [
     theme: 'light',
     label: 'last \u2014 iii. realization',
     chapter: 'iii. realization',
+    poemIndex: 5,
+    chapterPoemCount: 6,
     title: 'last',
     stanzas: [
       ['i was on the couch', 'with a bottle', 'and she was right there', 'passed out beside me'],
@@ -790,6 +828,8 @@ export const pages: BookPage[] = [
     theme: 'light',
     label: 'habit \u2014 iv. change',
     chapter: 'iv. change',
+    poemIndex: 0,
+    chapterPoemCount: 6,
     title: 'habit',
     stanzas: [
       ['i had put the bottle down', 'and picked up everything else'],
@@ -826,6 +866,8 @@ export const pages: BookPage[] = [
     theme: 'light',
     label: 'phoenix \u2014 iv. change',
     chapter: 'iv. change',
+    poemIndex: 1,
+    chapterPoemCount: 6,
     title: 'phoenix',
     stanzas: [
       ['i wasn\u2019t looking'],
@@ -862,6 +904,8 @@ export const pages: BookPage[] = [
     theme: 'light',
     label: 'almost \u2014 iv. change',
     chapter: 'iv. change',
+    poemIndex: 2,
+    chapterPoemCount: 6,
     title: 'almost',
     stanzas: [
       ['i stopped reaching out', 'not because i didn\u2019t want to', 'but because i didn\u2019t know', 'if silence was what was needed', 'or just what i gave'],
@@ -898,6 +942,8 @@ export const pages: BookPage[] = [
     theme: 'light',
     label: 'finding \u2014 iv. change',
     chapter: 'iv. change',
+    poemIndex: 3,
+    chapterPoemCount: 6,
     title: 'finding',
     stanzas: [
       ['she didn\u2019t hurt me', 'the way i expected to be hurt'],
@@ -934,6 +980,8 @@ export const pages: BookPage[] = [
     theme: 'light',
     label: 'god \u2014 iv. change',
     chapter: 'iv. change',
+    poemIndex: 4,
+    chapterPoemCount: 6,
     title: 'god',
     stanzas: [
       ['she was the first partner', 'i ever went to church with'],
@@ -968,6 +1016,8 @@ export const pages: BookPage[] = [
     theme: 'light',
     label: 'twenty four \u2014 iv. change',
     chapter: 'iv. change',
+    poemIndex: 5,
+    chapterPoemCount: 6,
     title: 'twenty four',
     stanzas: [
       ['you get twenty four hours', 'every single day'],
