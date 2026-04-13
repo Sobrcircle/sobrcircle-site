@@ -43,24 +43,38 @@ export default function Book() {
   }, [tocOpen])
 
   // Auto-hide nav/TOC on vertical scroll (Facebook-style)
+  // 20px threshold + 100ms debounce to prevent bouncy behavior
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
+
+    let ticking = false
+    let accumulatedDelta = 0
 
     const handleScroll = (e: Event) => {
       const target = e.target as HTMLElement
       if (!target.classList.contains('book-page')) return
       const currentY = target.scrollTop
       const delta = currentY - lastScrollY.current
-
-      if (delta > 3) {
-        // Scrolling down — hide chrome (triggers fast)
-        setChromeHidden(true)
-      } else if (delta < -3) {
-        // Scrolling up — show chrome
-        setChromeHidden(false)
-      }
       lastScrollY.current = currentY
+
+      // Ignore elastic bounce at top/bottom
+      if (currentY <= 0) return
+
+      accumulatedDelta += delta
+
+      if (!ticking) {
+        ticking = true
+        setTimeout(() => {
+          if (accumulatedDelta > 20) {
+            setChromeHidden(true)
+          } else if (accumulatedDelta < -20) {
+            setChromeHidden(false)
+          }
+          accumulatedDelta = 0
+          ticking = false
+        }, 100)
+      }
     }
 
     container.addEventListener('scroll', handleScroll, { passive: true, capture: true })
