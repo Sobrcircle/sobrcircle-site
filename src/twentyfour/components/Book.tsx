@@ -53,10 +53,10 @@ export default function Book() {
       const currentY = target.scrollTop
       const delta = currentY - lastScrollY.current
 
-      if (delta > 8) {
-        // Scrolling down — hide chrome
+      if (delta > 3) {
+        // Scrolling down — hide chrome (triggers fast)
         setChromeHidden(true)
-      } else if (delta < -8) {
+      } else if (delta < -3) {
         // Scrolling up — show chrome
         setChromeHidden(false)
       }
@@ -123,8 +123,8 @@ export default function Book() {
       <button
         onClick={() => setTocOpen(true)}
         aria-label="Table of contents"
-        className={`fixed top-4 left-4 z-[90] p-2 bg-transparent border-none cursor-pointer opacity-50 hover:opacity-100 transition-all duration-300 touch-manipulation book-chrome-top ${
-          chromeHidden ? 'translate-y-[-100%] opacity-0 pointer-events-none' : ''
+        className={`fixed top-4 left-4 z-[90] p-2 bg-transparent border-none cursor-pointer hover:opacity-100 transition-all duration-300 ease-out touch-manipulation ${
+          chromeHidden ? 'opacity-0 pointer-events-none -translate-y-12' : 'opacity-50'
         }`}
       >
         <Menu size={22} strokeWidth={1.5} color={isDark ? '#e8e4df' : '#1a1a1a'} />
@@ -152,8 +152,8 @@ export default function Book() {
       </div>
 
       {/* Navigation — auto-hides on scroll */}
-      <div className={`transition-all duration-300 ${
-        chromeHidden ? 'translate-y-full opacity-0 pointer-events-none' : ''
+      <div className={`transition-all duration-300 ease-out ${
+        chromeHidden ? 'translate-y-12 opacity-0 pointer-events-none' : ''
       }`}>
         <Navigation
           label={currentPage.label}
