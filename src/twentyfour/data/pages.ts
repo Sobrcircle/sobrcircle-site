@@ -24,24 +24,6 @@ export const pages: BookPage[] = [
     label: 'twenty four',
   },
 
-  // ── COPYRIGHT ──
-  {
-    id: 'copyright',
-    type: 'copyright',
-    theme: 'light',
-    label: '',
-    centered: true,
-    paragraphs: [
-      { text: 'copyright \u00A9 2026 by ben moradi' },
-      { text: 'all rights reserved.\nno part of this book may be reproduced or transmitted\nin any form without written permission from the author.' },
-      { text: 'this is a work of personal nonfiction.\nsome details have been changed to protect the privacy of others.' },
-      { text: 'first edition, 2026' },
-      { text: 'cover and interior design by the author' },
-      { text: 'printed in canada' },
-      { text: 'www.moradilabs.com' },
-    ],
-  },
-
   // ── A NOTE BEFORE YOU BEGIN ──
   {
     id: 'note',
@@ -1092,6 +1074,24 @@ export const pages: BookPage[] = [
     centered: true,
     paragraphs: [
       { text: 'there are twenty four hours in a day.\n\nwhat you do inside them is everything.' },
+    ],
+  },
+
+  // ── COPYRIGHT (last page) ──
+  {
+    id: 'copyright',
+    type: 'copyright',
+    theme: 'light',
+    label: '',
+    centered: true,
+    paragraphs: [
+      { text: 'copyright \u00A9 2026 by ben moradi' },
+      { text: 'all rights reserved.\nno part of this book may be reproduced or transmitted\nin any form without written permission from the author.' },
+      { text: 'this is a work of personal nonfiction.\nsome details have been changed to protect the privacy of others.' },
+      { text: 'first edition, 2026' },
+      { text: 'cover and interior design by the author' },
+      { text: 'printed in canada' },
+      { text: 'www.moradilabs.com' },
     ],
   },
 ]
