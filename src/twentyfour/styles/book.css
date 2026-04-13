@@ -1,0 +1,149 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --dark-bg: #0a0a0a;
+  --dark-text: #e8e4df;
+  --dark-muted: #6b6560;
+  --light-bg: #faf8f5;
+  --light-text: #1a1a1a;
+  --light-muted: #8a8580;
+  --accent: #c4a882;
+  --max-w: 520px;
+}
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100dvh;
+  height: 100vh; /* fallback */
+  overflow: hidden;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--dark-bg);
+}
+
+/* ── Scroll-snap container ── */
+.book-container {
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  height: 100dvh;
+  height: 100vh;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.book-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Each page ── */
+.book-page {
+  flex: 0 0 100vw;
+  width: 100vw;
+  min-width: 100vw;
+  height: 100dvh;
+  height: 100vh;
+  scroll-snap-align: start;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+}
+
+.book-page.dark {
+  background: var(--dark-bg);
+  color: var(--dark-text);
+}
+.book-page.light {
+  background: var(--light-bg);
+  color: var(--light-text);
+}
+
+/* ── Page inner content ── */
+.page-content {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 56px 24px 88px;
+}
+.page-content.centered {
+  align-items: center;
+  justify-content: center;
+}
+.page-content.top {
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 80px;
+}
+
+/* ── Poem typography ── */
+.poem-body {
+  max-width: var(--max-w);
+  width: 100%;
+  line-height: 1.8;
+  font-size: 1rem;
+}
+.poem-chapter-label {
+  font-style: italic;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  color: var(--light-muted);
+  margin-bottom: 6px;
+}
+.poem-title {
+  font-size: 1.35rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  margin-bottom: 28px;
+}
+.stanza {
+  margin-bottom: 1.5em;
+}
+.stanza .line {
+  display: block;
+}
+
+/* ── Prose typography ── */
+.prose-body {
+  max-width: var(--max-w);
+  width: 100%;
+  line-height: 1.85;
+  font-size: 1rem;
+}
+.prose-body p {
+  margin-bottom: 1.2em;
+}
+.prose-body h2 {
+  font-size: 1.1rem;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 0.04em;
+  margin-bottom: 24px;
+}
+
+/* ── Thin scrollbar for poem pages ── */
+.book-page.light::-webkit-scrollbar { width: 3px; }
+.book-page.light::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 3px; }
+.book-page.light::-webkit-scrollbar-track { background: transparent; }
+.book-page.dark::-webkit-scrollbar { width: 3px; }
+.book-page.dark::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
+.book-page.dark::-webkit-scrollbar-track { background: transparent; }
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .book-container { scroll-behavior: auto !important; }
+  * { animation: none !important; transition-duration: 0s !important; }
+}
+
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  .page-content { padding: 48px 20px 80px; }
+  .page-content.top { padding-top: 64px; }
+  .poem-body { font-size: 0.95rem; }
+  .prose-body { font-size: 0.95rem; }
+  .poem-title { font-size: 1.2rem; margin-bottom: 22px; }
+}

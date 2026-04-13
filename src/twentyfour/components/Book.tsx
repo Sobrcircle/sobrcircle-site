@@ -1,0 +1,173 @@
+import { useCallback, useEffect, useState } from 'react'
+import { Menu } from 'lucide-react'
+import { pages } from '../data/pages'
+import { useBookNavigation } from '../hooks/useBookNavigation'
+import CoverPage from './CoverPage'
+import ChapterPage from './ChapterPage'
+import PoemPage from './PoemPage'
+import ProsePage from './ProsePage'
+import ClosingPage from './ClosingPage'
+import Navigation from './Navigation'
+import ProgressBar from './ProgressBar'
+import TOCSidebar from './TOCSidebar'
+
+export default function Book() {
+  const { containerRef, currentIndex, totalPages, goToNext, goToPrev, goToPage } =
+    useBookNavigation()
+  const [tocOpen, setTocOpen] = useState(false)
+
+  const currentPage = pages[currentIndex]
+  const isDark = currentPage.theme === 'dark'
+
+  // Update theme-color meta tag
+  useEffect(() => {
+    const meta = document.querySelector('meta[name="theme-color"]')
+    if (meta) {
+      meta.setAttribute('content', isDark ? '#0a0a0a' : '#faf8f5')
+    }
+  }, [isDark])
+
+  // Escape key closes TOC
+  useEffect(() => {
+    const handle = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && tocOpen) {
+        setTocOpen(false)
+      }
+    }
+    window.addEventListener('keydown', handle)
+    return () => window.removeEventListener('keydown', handle)
+  }, [tocOpen])
+
+  const renderPage = useCallback((page: (typeof pages)[number]) => {
+    switch (page.type) {
+      case 'cover':
+        return <CoverPage onTap={() => {}} />
+      case 'copyright':
+        return (
+          <ProsePage
+            paragraphs={page.paragraphs || []}
+            centered
+          />
+        )
+      case 'prose':
+        return (
+          <ProsePage
+            title={page.title}
+            paragraphs={page.paragraphs || []}
+          />
+        )
+      case 'toc':
+        return <TOCContent onGoTo={goToPage} />
+      case 'chapter':
+        return <ChapterPage title={page.title || ''} />
+      case 'poem':
+        return (
+          <PoemPage
+            chapter={page.chapter || ''}
+            title={page.title || ''}
+            stanzas={page.stanzas || []}
+          />
+        )
+      case 'closing':
+        return <ClosingPage />
+      default:
+        return null
+    }
+  }, [goToPage])
+
+  return (
+    <>
+      <ProgressBar current={currentIndex} total={totalPages} />
+
+      {/* TOC toggle button */}
+      <button
+        onClick={() => setTocOpen(true)}
+        aria-label="Table of contents"
+        className="fixed top-4 left-4 z-[90] p-2 bg-transparent border-none cursor-pointer opacity-50 hover:opacity-100 transition-opacity touch-manipulation"
+      >
+        <Menu size={22} strokeWidth={1.5} color={isDark ? '#e8e4df' : '#1a1a1a'} />
+      </button>
+
+      <TOCSidebar
+        open={tocOpen}
+        onClose={() => setTocOpen(false)}
+        currentId={currentPage.id}
+        onGoTo={goToPage}
+      />
+
+      {/* Scroll-snap book container */}
+      <div ref={containerRef} className="book-container">
+        {pages.map((page) => (
+          <div
+            key={page.id}
+            className={`book-page ${page.theme}`}
+            data-page-id={page.id}
+          >
+            {renderPage(page)}
+          </div>
+        ))}
+      </div>
+
+      <Navigation
+        label={currentPage.label}
+        theme={currentPage.theme}
+        onPrev={goToPrev}
+        onNext={goToNext}
+        hasPrev={currentIndex > 0}
+        hasNext={currentIndex < totalPages - 1}
+      />
+    </>
+  )
+}
+
+// Inline TOC content page component
+function TOCContent({ onGoTo }: { onGoTo: (id: string) => void }) {
+  const chapters = [
+    { title: 'i. illusion', poems: [
+      { id: 'sixteen', name: 'sixteen' }, { id: 'taken', name: 'taken' },
+      { id: 'nights', name: 'nights' }, { id: 'again', name: 'again' },
+      { id: 'born', name: 'born' }, { id: 'promises', name: 'promises' },
+    ]},
+    { title: 'ii. pattern', poems: [
+      { id: 'enough', name: 'enough' }, { id: 'rehab', name: 'rehab' },
+      { id: 'clear', name: 'clear' }, { id: 'bend', name: 'bend' },
+      { id: 'gone', name: 'gone' }, { id: 'hollow', name: 'hollow' },
+    ]},
+    { title: 'iii. realization', poems: [
+      { id: 'back', name: 'back' }, { id: 'hidden', name: 'hidden' },
+      { id: 'split', name: 'split' }, { id: 'real', name: 'real' },
+      { id: 'crash', name: 'crash' }, { id: 'last', name: 'last' },
+    ]},
+    { title: 'iv. change', poems: [
+      { id: 'habit', name: 'habit' }, { id: 'phoenix', name: 'phoenix' },
+      { id: 'almost', name: 'almost' }, { id: 'finding', name: 'finding' },
+      { id: 'god', name: 'god' }, { id: 'twentyfour', name: 'twenty four' },
+    ]},
+  ]
+
+  return (
+    <div className="page-content top">
+      <div className="prose-body text-center">
+        <h2 className="!not-italic !tracking-[0.1em] !mb-9 !font-normal">Contents</h2>
+        <div className="text-left max-w-[280px] mx-auto">
+          {chapters.map((ch) => (
+            <div key={ch.title} className="mb-4">
+              <p className="italic mb-1 text-[0.9rem]" style={{ color: 'var(--light-muted)' }}>
+                {ch.title}
+              </p>
+              {ch.poems.map((poem) => (
+                <p
+                  key={poem.id}
+                  onClick={() => onGoTo(poem.id)}
+                  className="pl-6 mb-[2px] cursor-pointer hover:opacity-70 transition-opacity"
+                >
+                  {poem.name}
+                </p>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
