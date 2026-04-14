@@ -23,20 +23,18 @@ export function useScrollAnimation(booted: boolean = true) {
     animElements.forEach((el) => {
       const delay = parseFloat(el.dataset.delay || '0')
 
-      gsap.set(el, { opacity: 0, y: 48, filter: 'blur(4px)' })
+      gsap.set(el, { opacity: 0 })
 
       gsap.to(el, {
         scrollTrigger: {
           trigger: el,
-          start: 'top 78%',
+          start: 'top 82%',
           toggleActions: 'play none none none',
         },
         opacity: 1,
-        y: 0,
-        filter: 'blur(0px)',
-        duration: 1.3,
+        duration: 1.0,
         delay,
-        ease: 'power3.out',
+        ease: 'power2.out',
       })
     })
 
