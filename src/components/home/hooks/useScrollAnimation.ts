@@ -16,51 +16,61 @@ export function useScrollAnimation(booted: boolean = true) {
       return
     }
 
-    // ── Fade-up reveals for text elements ──
-    // Trigger later (top 75%) so each section visibly populates as the user
-    // scrolls into it rather than already being settled when it appears.
+    // ── Fade-in reveals for text/phone blocks ──
+    // IntersectionObserver (not ScrollTrigger) so it fires reliably on mobile
+    // regardless of Lenis smooth-scroll state or touch event handling.
     const animElements = document.querySelectorAll<HTMLElement>('[data-animate]')
-    animElements.forEach((el) => {
-      const delay = parseFloat(el.dataset.delay || '0')
+    animElements.forEach((el) => { gsap.set(el, { opacity: 0 }) })
 
-      gsap.set(el, { opacity: 0 })
-
-      gsap.to(el, {
-        scrollTrigger: {
-          trigger: el,
-          start: 'top 82%',
-          toggleActions: 'play none none none',
-        },
-        opacity: 1,
-        duration: 1.0,
-        delay,
-        ease: 'power2.out',
-      })
-    })
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+          const el = entry.target as HTMLElement
+          const delay = parseFloat(el.dataset.delay || '0')
+          gsap.to(el, {
+            opacity: 1,
+            duration: 1.0,
+            delay,
+            ease: 'power2.out',
+          })
+          io.unobserve(el)
+        })
+      },
+      { rootMargin: '0px 0px -18% 0px', threshold: 0.01 }
+    )
+    animElements.forEach((el) => io.observe(el))
 
     // ── Phone mockups: scroll parallax + 3D tilt on wrap, breathing on shell ──
     // Splitting across elements so no two tweens fight over the same property.
     const isMobile = window.innerWidth < 700
     const phones = document.querySelectorAll<HTMLElement>('.home-phone-wrap')
 
+    const phoneIo = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+          const el = entry.target as HTMLElement
+          gsap.to(el, {
+            opacity: 1,
+            scale: 1,
+            duration: 1.3,
+            ease: 'power3.out',
+          })
+          phoneIo.unobserve(el)
+        })
+      },
+      { rootMargin: '0px 0px -18% 0px', threshold: 0.01 }
+    )
+
     phones.forEach((phone, i) => {
       const shell = phone.querySelector<HTMLElement>('.home-phone-shell')
       gsap.set(phone, { transformPerspective: 1200, opacity: 0, scale: 0.92 })
 
-      // Populate reveal — phone fades + scales in when the section enters view,
-      // matching the rest of the section's staged reveal rather than crossfading
-      // across the whole scroll.
-      gsap.to(phone, {
-        scrollTrigger: {
-          trigger: phone,
-          start: 'top 78%',
-          toggleActions: 'play none none none',
-        },
-        opacity: 1,
-        scale: 1,
-        duration: 1.3,
-        ease: 'power3.out',
-      })
+      // Populate reveal — phone fades + scales in when the section enters view.
+      // IntersectionObserver for mobile reliability (Lenis's touch passthrough
+      // can leave ScrollTrigger idle).
+      phoneIo.observe(phone)
 
       // Scroll-driven parallax + gentle 3D tilt — desktop/tablet only
       // Amplitudes kept small so the image never crops inside the shell.
@@ -108,6 +118,8 @@ export function useScrollAnimation(booted: boolean = true) {
 
     return () => {
       ScrollTrigger.getAll().forEach((t) => t.kill())
+      io.disconnect()
+      phoneIo.disconnect()
     }
   }, [])
 
