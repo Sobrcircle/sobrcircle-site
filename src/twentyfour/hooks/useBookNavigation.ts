@@ -1,6 +1,23 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { pages } from '../data/pages'
 
+const BASE_PATH = '/twentyfour'
+
+// Extract a page id from a pathname like /twentyfour/sixteen → "sixteen"
+function pageIdFromPath(pathname: string): string {
+  let p = pathname
+  if (p.startsWith(BASE_PATH)) p = p.slice(BASE_PATH.length)
+  p = p.replace(/^\/+/, '').replace(/\/+$/, '')
+  // Strip trailing "index.html" just in case
+  p = p.replace(/\/?index\.html$/, '')
+  return p
+}
+
+function pathForPage(id: string): string {
+  if (!id || id === 'cover') return `${BASE_PATH}/`
+  return `${BASE_PATH}/${id}`
+}
+
 export function useBookNavigation() {
   const containerRef = useRef<HTMLDivElement>(null)
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -8,14 +25,24 @@ export function useBookNavigation() {
   const scrollingRef = useRef(false)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
-  // Get initial page from hash only — no hash means start at cover
+  // Get initial page from URL path (with legacy hash fallback)
   const getInitialIndex = useCallback(() => {
+    // Real-path routing first
+    const idFromPath = pageIdFromPath(window.location.pathname)
+    if (idFromPath) {
+      const idx = pages.findIndex((p) => p.id === idFromPath)
+      if (idx >= 0) return idx
+    }
+    // Legacy hash fallback so old shared links still work
     const hash = window.location.hash.slice(1)
     if (hash) {
       const idx = pages.findIndex((p) => p.id === hash)
-      if (idx >= 0) return idx
+      if (idx >= 0) {
+        // Rewrite hash URL to real path
+        window.history.replaceState(null, '', pathForPage(hash))
+        return idx
+      }
     }
-    // No hash = fresh visit, always start at cover
     return 0
   }, [])
 
@@ -30,15 +57,12 @@ export function useBookNavigation() {
         left: i * el.clientWidth,
         behavior: smooth ? 'smooth' : 'instant',
       })
-      // Update immediately for responsiveness
       setCurrentIndex(i)
-      // Save position
       const page = pages[i]
-      window.history.replaceState(null, '', '#' + page.id)
+      window.history.replaceState(null, '', pathForPage(page.id))
       try {
         localStorage.setItem('tf_pos', page.id)
       } catch {}
-      // Clear scrolling flag after animation
       clearTimeout(timeoutRef.current)
       timeoutRef.current = setTimeout(() => {
         scrollingRef.current = false
@@ -72,7 +96,7 @@ export function useBookNavigation() {
         setCurrentIndex((prev) => {
           if (prev !== clamped) {
             const page = pages[clamped]
-            window.history.replaceState(null, '', '#' + page.id)
+            window.history.replaceState(null, '', pathForPage(page.id))
             try {
               localStorage.setItem('tf_pos', page.id)
             } catch {}
@@ -115,24 +139,25 @@ export function useBookNavigation() {
     return () => window.removeEventListener('resize', handle)
   }, [currentIndex])
 
-  // Hash change from external navigation
+  // Back/forward buttons — sync to URL
   useEffect(() => {
     const handle = () => {
-      const hash = window.location.hash.slice(1)
-      if (hash) {
-        const idx = pages.findIndex((p) => p.id === hash)
+      const id = pageIdFromPath(window.location.pathname)
+      if (id) {
+        const idx = pages.findIndex((p) => p.id === id)
         if (idx >= 0 && idx !== currentIndex) goToIndex(idx)
+      } else if (currentIndex !== 0) {
+        goToIndex(0)
       }
     }
-    window.addEventListener('hashchange', handle)
-    return () => window.removeEventListener('hashchange', handle)
+    window.addEventListener('popstate', handle)
+    return () => window.removeEventListener('popstate', handle)
   }, [currentIndex, goToIndex])
 
   // Initial scroll on mount
   useEffect(() => {
     const idx = getInitialIndex()
     if (idx > 0) {
-      // Delay to ensure container is rendered
       requestAnimationFrame(() => {
         goToIndex(idx, false)
       })

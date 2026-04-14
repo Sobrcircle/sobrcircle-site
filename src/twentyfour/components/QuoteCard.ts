@@ -61,8 +61,8 @@ export async function generateQuoteCard(opts: {
     y += stanzaGap
   }
 
-  // Footer — accent dot + "twenty four — bm"
-  const footerY = CARD_SIZE - 70
+  // Footer — accent dot + "twenty four — bm" + url
+  const footerY = CARD_SIZE - 90
   ctx.fillStyle = ACCENT
   ctx.beginPath()
   ctx.arc(CARD_SIZE / 2, footerY - 24, 3, 0, Math.PI * 2)
@@ -73,6 +73,12 @@ export async function generateQuoteCard(opts: {
   const footerText = 'twenty four \u2014 bm'
   const footerWidth = ctx.measureText(footerText).width
   ctx.fillText(footerText, (CARD_SIZE - footerWidth) / 2, footerY)
+
+  // URL below — so screenshots still drive traffic
+  ctx.font = 'italic 20px ' + FONT
+  const urlText = 'sobrcircle.com/twentyfour'
+  const urlWidth = ctx.measureText(urlText).width
+  ctx.fillText(urlText, (CARD_SIZE - urlWidth) / 2, footerY + 36)
 
   return new Promise<Blob>((resolve, reject) => {
     canvas.toBlob(

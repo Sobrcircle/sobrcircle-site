@@ -1,16 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 
-const KEY = 'sobr.preloader.seen'
-
 /**
  * One line of verse, a beat of silence, then a curtain lift into the site.
- * Skipped on repeat visits (sessionStorage) and reduced-motion.
+ * Shows on every visit; skipped only for reduced-motion.
  */
 export default function Preloader({ onDone }: { onDone: () => void }) {
   const [visible, setVisible] = useState(() => {
     if (typeof window === 'undefined') return false
-    if (sessionStorage.getItem(KEY)) return false
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false
     return true
   })
@@ -29,7 +26,6 @@ export default function Preloader({ onDone }: { onDone: () => void }) {
 
     const tl = gsap.timeline({
       onComplete: () => {
-        sessionStorage.setItem(KEY, '1')
         document.body.style.overflow = prevOverflow
         setVisible(false)
         onDone()

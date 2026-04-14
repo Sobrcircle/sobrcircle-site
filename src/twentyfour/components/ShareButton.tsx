@@ -21,7 +21,7 @@ export default function ShareButton({
   const [toast, setToast] = useState('')
   const iconColor = '#1a1a1a'
 
-  const shareUrl = `${BASE_URL}/#${poemId}`
+  const shareUrl = `${BASE_URL}/${poemId}`
   const shareText = `"${poemTitle}" \u2014 twenty four, by bm`
 
   // Generate card when modal opens
