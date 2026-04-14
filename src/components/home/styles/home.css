@@ -66,12 +66,9 @@
   gap: clamp(1rem, 2.5vw, 1.8rem);
 }
 
-.home-nav-group--left {
-  justify-content: flex-end;
-}
-
+.home-nav-group--left,
 .home-nav-group--right {
-  justify-content: flex-start;
+  justify-content: center;
 }
 
 .home-nav-group a {

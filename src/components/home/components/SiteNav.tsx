@@ -14,8 +14,8 @@ export default function SiteNav() {
         <img src="/assets/circle.png" alt="" className="home-nav-logo" />
       </a>
       <div className="home-nav-group home-nav-group--right">
-        <a href="#story" onClick={scrollTo('story')}>Story</a>
-        <a href="#twentyfour" onClick={scrollTo('twentyfour')}>Book</a>
+        <a href="#story" onClick={scrollTo('story')}>Our Story</a>
+        <a href="#twentyfour" onClick={scrollTo('twentyfour')}>Twenty Four</a>
       </div>
     </nav>
   )
