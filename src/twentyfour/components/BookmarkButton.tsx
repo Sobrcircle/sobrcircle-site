@@ -11,7 +11,7 @@ export default function BookmarkButton({
     <button
       onClick={onToggle}
       aria-label={active ? 'Remove bookmark' : 'Bookmark this poem'}
-      className="p-2 transition-all duration-200 touch-manipulation"
+      className="poem-icon-btn p-2 transition-all duration-200 touch-manipulation"
       style={{ opacity: active ? 1 : 0.35 }}
     >
       <Bookmark

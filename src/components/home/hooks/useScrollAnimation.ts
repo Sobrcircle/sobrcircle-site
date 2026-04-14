@@ -37,22 +37,25 @@ export function useScrollAnimation() {
       })
     })
 
-    // ── Phone mockup parallax float ──
-    const phones = document.querySelectorAll<HTMLElement>('.home-phone-wrap')
-    phones.forEach((phone) => {
-      gsap.set(phone, { y: 30 })
+    // ── Phone mockup parallax float (desktop/tablet only) ──
+    const isMobile = window.innerWidth < 700
+    if (!isMobile) {
+      const phones = document.querySelectorAll<HTMLElement>('.home-phone-wrap')
+      phones.forEach((phone) => {
+        gsap.set(phone, { y: 10 })
 
-      gsap.to(phone, {
-        scrollTrigger: {
-          trigger: phone,
-          start: 'top 95%',
-          end: 'top 25%',
-          scrub: 1.5,
-        },
-        y: -10,
-        ease: 'none',
+        gsap.to(phone, {
+          scrollTrigger: {
+            trigger: phone,
+            start: 'top 95%',
+            end: 'top 35%',
+            scrub: 1.5,
+          },
+          y: -4,
+          ease: 'none',
+        })
       })
-    })
+    }
 
     // ── Hero branding special entrance ──
     const heroLogo = document.querySelector('.home-logo')

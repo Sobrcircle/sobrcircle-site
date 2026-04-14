@@ -107,7 +107,7 @@ export default function ShareButton({
       <button
         onClick={() => setModalOpen(true)}
         aria-label="share this poem"
-        className="p-2 opacity-40 hover:opacity-80 transition-opacity touch-manipulation"
+        className="poem-icon-btn p-2 opacity-40 hover:opacity-80 transition-opacity touch-manipulation"
       >
         <ArrowUpFromLine size={18} color={iconColor} strokeWidth={1.5} />
       </button>

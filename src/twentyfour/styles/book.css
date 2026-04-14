@@ -139,6 +139,31 @@ html, body, #root {
 .book-page.dark::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
 .book-page.dark::-webkit-scrollbar-track { background: transparent; }
 
+/* ── Poem icon buttons (share, bookmark) glow ── */
+.poem-icon-btn {
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+}
+.poem-icon-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(196, 168, 130, 0.22) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 250ms ease;
+  pointer-events: none;
+  z-index: -1;
+}
+.poem-icon-btn:hover::before,
+.poem-icon-btn:focus-visible::before {
+  opacity: 1;
+}
+
 /* ── Share modal scrollbar ── */
 .share-modal-scroll::-webkit-scrollbar { width: 3px; }
 .share-modal-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }

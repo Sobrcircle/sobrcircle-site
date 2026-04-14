@@ -33,6 +33,12 @@
 /site.css
   Cache-Control: no-cache
 
+/favicon-dark-64.png
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/apple-touch-icon.png
+  Cache-Control: public, max-age=3600, must-revalidate
+
 /assets/*.png
   Cache-Control: public, max-age=3600, must-revalidate
 
