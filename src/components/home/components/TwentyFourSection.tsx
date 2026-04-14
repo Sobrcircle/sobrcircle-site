@@ -1,3 +1,4 @@
+import { useMagnetic } from '../hooks/useMagnetic'
 import type { HomeSection, TextSpan } from '../data/sections'
 
 function renderSpan(span: TextSpan, key: number) {
@@ -12,6 +13,7 @@ function renderSpan(span: TextSpan, key: number) {
 type Props = { section: HomeSection }
 
 export default function TwentyFourSection({ section }: Props) {
+  const magnetRef = useMagnetic<HTMLAnchorElement>({ strength: 0.4, radius: 140 })
   return (
     <section id={section.id} className="home-section home-twentyfour">
       <div className="home-section-bg" aria-hidden="true" />
@@ -19,7 +21,7 @@ export default function TwentyFourSection({ section }: Props) {
 
       {/* Title + author above the layout */}
       <div className="home-twentyfour-header" data-animate data-delay="0.1">
-        <h2 className="home-title home-title--book">{section.title}</h2>
+        <h2 className="home-title home-title--book" data-split>{section.title}</h2>
         <p className="home-book-author">bm</p>
       </div>
 
@@ -105,8 +107,9 @@ export default function TwentyFourSection({ section }: Props) {
           </blockquote>
 
           <a
+            ref={magnetRef}
             href="/twentyfour/"
-            className="home-cta-book"
+            className="home-cta-book home-cta-book--magnetic"
             data-animate
             data-delay="0.8"
           >

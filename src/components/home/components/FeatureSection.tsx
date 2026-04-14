@@ -27,7 +27,7 @@ export default function FeatureSection({ section, reverse }: Props) {
 
       <div className={hasPhone ? 'home-split' : 'home-copy'}>
         <div className={hasPhone ? 'home-split-text' : undefined}>
-          <h2 className="home-title" data-animate data-delay="0.1">{section.title}</h2>
+          <h2 className="home-title" data-split data-animate data-delay="0.1">{section.title}</h2>
 
           {section.content.map((paragraph, i) => (
             <p

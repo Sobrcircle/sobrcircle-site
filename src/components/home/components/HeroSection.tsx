@@ -33,7 +33,7 @@ export default function HeroSection({ section }: Props) {
             <span>Sobr</span>
             <span>Circle</span>
           </h1>
-          <p className="home-tagline">Recover Together</p>
+          <p className="home-tagline" data-split data-split-delay="0.2">Recover Together</p>
         </div>
 
         <div className="home-hero-divider" aria-hidden="true" />
