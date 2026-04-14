@@ -6,6 +6,42 @@
   Permissions-Policy: camera=(), microphone=(), geolocation=()
   Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://formsubmit.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self' mailto:; upgrade-insecure-requests
 
+/
+  Cache-Control: no-cache
+
+/index.html
+  Cache-Control: no-cache
+
+/twentyfour/
+  Cache-Control: no-cache
+
+/twentyfour/index.html
+  Cache-Control: no-cache
+
+/support/
+  Cache-Control: no-cache
+
+/privacy/
+  Cache-Control: no-cache
+
+/terms/
+  Cache-Control: no-cache
+
+/delete-account/
+  Cache-Control: no-cache
+
+/site.css
+  Cache-Control: no-cache
+
+/assets/*.png
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/assets/*.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/*.css
+  Cache-Control: public, max-age=31536000, immutable
+
 /badges/manifest.json
   Cache-Control: public, max-age=300
 

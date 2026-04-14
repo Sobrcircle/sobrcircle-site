@@ -40,16 +40,16 @@ export function useScrollAnimation() {
     // ── Phone mockup parallax float ──
     const phones = document.querySelectorAll<HTMLElement>('.home-phone-wrap')
     phones.forEach((phone) => {
-      gsap.set(phone, { y: 50 })
+      gsap.set(phone, { y: 30 })
 
       gsap.to(phone, {
         scrollTrigger: {
           trigger: phone,
           start: 'top 95%',
-          end: 'top 20%',
+          end: 'top 25%',
           scrub: 1.5,
         },
-        y: -15,
+        y: -10,
         ease: 'none',
       })
     })
@@ -60,22 +60,28 @@ export function useScrollAnimation() {
     const heroTagline = document.querySelector('.home-tagline')
 
     if (heroLogo && heroBrand && heroTagline) {
-      const heroTl = gsap.timeline({ delay: 0.2 })
+      const heroTl = gsap.timeline({ delay: 0.3 })
 
+      // Logo: dramatic scale up then settle back
       heroTl
         .fromTo(heroLogo,
-          { opacity: 0, scale: 0.85 },
-          { opacity: 1, scale: 1, duration: 1.2, ease: 'power2.out' }
+          { opacity: 0, scale: 0 },
+          { opacity: 1, scale: 1.35, duration: 1, ease: 'power2.out' }
         )
+        .to(heroLogo,
+          { scale: 1, duration: 0.8, ease: 'power2.inOut' }
+        )
+        // Brand text starts appearing during the logo overshoot
         .fromTo(heroBrand,
-          { opacity: 0, y: 14 },
+          { opacity: 0, y: 16 },
           { opacity: 1, y: 0, duration: 1, ease: 'power2.out' },
-          '-=0.7'
+          0.6 // absolute time — starts while logo is still big
         )
+        // Tagline fades in as logo settles
         .fromTo(heroTagline,
           { opacity: 0 },
-          { opacity: 1, duration: 0.8, ease: 'power2.out' },
-          '-=0.5'
+          { opacity: 1, duration: 0.9, ease: 'power2.out' },
+          1.1
         )
     }
 

@@ -16,8 +16,8 @@
 html, body, #root {
   margin: 0;
   padding: 0;
-  height: 100dvh;
-  height: 100vh; /* fallback */
+  height: 100vh;
+  height: 100dvh; /* preferred: accounts for mobile browser toolbar */
   overflow: hidden;
   font-family: 'Times New Roman', Times, serif;
   -webkit-font-smoothing: antialiased;
@@ -32,8 +32,8 @@ html, body, #root {
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
-  height: 100dvh;
   height: 100vh;
+  height: 100dvh;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: none;
@@ -48,8 +48,8 @@ html, body, #root {
   flex: 0 0 100vw;
   width: 100.5vw;  /* slightly wider to prevent sub-pixel gap bleed on iOS Safari */
   min-width: 100vw;
-  height: 100dvh;
   height: 100vh;
+  height: 100dvh;
   scroll-snap-align: start;
   scroll-snap-stop: always;
   overflow-y: auto;

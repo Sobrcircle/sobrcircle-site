@@ -26,9 +26,10 @@ export default function Navigation({
 
   return (
     <div
-      className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3 sm:px-5 sm:py-4 transition-colors duration-200"
+      className="fixed left-0 right-0 z-50 flex items-center justify-between px-4 py-3 sm:px-5 sm:py-4 transition-colors duration-200"
       style={{
         background: 'transparent',
+        bottom: 'env(safe-area-inset-bottom, 0px)',
       }}
     >
       <button

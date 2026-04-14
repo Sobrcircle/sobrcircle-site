@@ -23,7 +23,7 @@ export const sections: HomeSection[] = [
       [{ type: 'accent', text: 'You don\u2019t have to be.' }],
       [{ type: 'plain', text: 'A private space for the people who show up.' }],
     ],
-    phoneImage: '/assets/1.png',
+    phoneImage: '/assets/1.png?v=2',
   },
   {
     id: 'circles',
@@ -37,7 +37,7 @@ export const sections: HomeSection[] = [
         { type: 'accent', text: 'Your circle grows with you.' },
       ],
     ],
-    phoneImage: '/assets/3.png',
+    phoneImage: '/assets/3.png?v=2',
   },
   {
     id: 'checkin',
@@ -54,7 +54,7 @@ export const sections: HomeSection[] = [
         { type: 'plain', text: '.' },
       ],
     ],
-    phoneImage: '/assets/4.png',
+    phoneImage: '/assets/4.png?v=2',
   },
   {
     id: 'map',
@@ -67,7 +67,7 @@ export const sections: HomeSection[] = [
       ],
       [{ type: 'accent', text: 'Your next meeting is a tap away.' }],
     ],
-    phoneImage: '/assets/6.png',
+    phoneImage: '/assets/6.png?v=2',
   },
   {
     id: 'journal',
@@ -80,7 +80,7 @@ export const sections: HomeSection[] = [
         { type: 'accent', text: 'Never visible to anyone.' },
       ],
     ],
-    phoneImage: '/assets/5.png',
+    phoneImage: '/assets/5.png?v=2',
   },
   {
     id: 'story',
@@ -100,7 +100,7 @@ export const sections: HomeSection[] = [
       ],
       [{ type: 'plain', text: 'No ads. No data selling. No outside influences deciding what this becomes.' }],
     ],
-    phoneImage: '/assets/2.png',
+    phoneImage: '/assets/2.png?v=2',
   },
   {
     id: 'twentyfour',

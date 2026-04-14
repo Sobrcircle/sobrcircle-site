@@ -54,7 +54,7 @@ export const pages: BookPage[] = [
     id: 'dedication',
     type: 'prose',
     theme: 'light',
-    label: '',
+    label: 'dedication',
     paragraphs: [
       { text: 'i want to acknowledge my daughters. i haven\u2019t always been the father i needed to be. i\u2019m still working on that. but i love them more than this book could ever say, and everything i\u2019m becoming is for them.' },
       { text: 'to my three daughters.', italic: true },
@@ -82,7 +82,7 @@ export const pages: BookPage[] = [
     id: 'ch-illusion',
     type: 'chapter',
     theme: 'dark',
-    label: '',
+    label: 'i. illusion',
     title: 'i. illusion',
   },
 
@@ -321,7 +321,7 @@ export const pages: BookPage[] = [
     id: 'ch-pattern',
     type: 'chapter',
     theme: 'dark',
-    label: '',
+    label: 'ii. pattern',
     title: 'ii. pattern',
   },
 
@@ -560,7 +560,7 @@ export const pages: BookPage[] = [
     id: 'ch-realization',
     type: 'chapter',
     theme: 'dark',
-    label: '',
+    label: 'iii. realization',
     title: 'iii. realization',
   },
 
@@ -799,7 +799,7 @@ export const pages: BookPage[] = [
     id: 'ch-change',
     type: 'chapter',
     theme: 'dark',
-    label: '',
+    label: 'iv. change',
     title: 'iv. change',
   },
 
@@ -1070,10 +1070,10 @@ export const pages: BookPage[] = [
     id: 'closing',
     type: 'closing',
     theme: 'dark',
-    label: '',
+    label: 'closing',
     centered: true,
     paragraphs: [
-      { text: 'there are twenty four hours in a day.\n\nwhat you do inside them is everything.' },
+      { text: 'if you\u2019re still here, you\u2019re not too late.\nand you don\u2019t have to do it alone.' },
     ],
   },
 
@@ -1082,7 +1082,7 @@ export const pages: BookPage[] = [
     id: 'copyright',
     type: 'copyright',
     theme: 'light',
-    label: '',
+    label: 'copyright',
     centered: true,
     paragraphs: [
       { text: 'copyright \u00A9 2026 by ben moradi' },
