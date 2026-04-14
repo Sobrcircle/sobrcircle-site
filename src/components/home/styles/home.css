@@ -92,6 +92,8 @@
 /* ─── Main content ─── */
 .home-main {
   padding: 0 clamp(1.5rem, 4vw, 4rem);
+  position: relative;
+  z-index: 1;
 }
 
 /* ─── Section base ─── */
@@ -919,7 +921,7 @@ html {
   margin-top: -210px;
   border-radius: 50%;
   pointer-events: none;
-  z-index: 6;
+  z-index: 0;
   background: radial-gradient(
     circle,
     rgba(196, 168, 130, 0.13) 0%,
