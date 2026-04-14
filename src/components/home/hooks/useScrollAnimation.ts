@@ -17,23 +17,26 @@ export function useScrollAnimation() {
     }
 
     // ── Fade-up reveals for text elements ──
+    // Trigger later (top 75%) so each section visibly populates as the user
+    // scrolls into it rather than already being settled when it appears.
     const animElements = document.querySelectorAll<HTMLElement>('[data-animate]')
     animElements.forEach((el) => {
       const delay = parseFloat(el.dataset.delay || '0')
 
-      gsap.set(el, { opacity: 0, y: 32 })
+      gsap.set(el, { opacity: 0, y: 48, filter: 'blur(4px)' })
 
       gsap.to(el, {
         scrollTrigger: {
           trigger: el,
-          start: 'top 88%',
+          start: 'top 78%',
           toggleActions: 'play none none none',
         },
         opacity: 1,
         y: 0,
-        duration: 1.2,
+        filter: 'blur(0px)',
+        duration: 1.3,
         delay,
-        ease: 'power2.out',
+        ease: 'power3.out',
       })
     })
 
@@ -44,19 +47,21 @@ export function useScrollAnimation() {
 
     phones.forEach((phone, i) => {
       const shell = phone.querySelector<HTMLElement>('.home-phone-shell')
-      gsap.set(phone, { transformPerspective: 1200, opacity: 0 })
+      gsap.set(phone, { transformPerspective: 1200, opacity: 0, scale: 0.92 })
 
-      // Fade phone in as it scrolls into view — prevents the shell's rounded
-      // top edge from rendering as a visible arc at section seams.
+      // Populate reveal — phone fades + scales in when the section enters view,
+      // matching the rest of the section's staged reveal rather than crossfading
+      // across the whole scroll.
       gsap.to(phone, {
         scrollTrigger: {
           trigger: phone,
-          start: 'top 92%',
-          end: 'top 55%',
-          scrub: 1,
+          start: 'top 78%',
+          toggleActions: 'play none none none',
         },
         opacity: 1,
-        ease: 'none',
+        scale: 1,
+        duration: 1.3,
+        ease: 'power3.out',
       })
 
       // Scroll-driven parallax + gentle 3D tilt — desktop/tablet only

@@ -51,7 +51,7 @@ export function useSplitReveal(enabled: boolean = true) {
         gsap.to(chars, {
           scrollTrigger: {
             trigger: el,
-            start: 'top 85%',
+            start: 'top 78%',
             toggleActions: 'play none none none',
           },
           opacity: 1,
