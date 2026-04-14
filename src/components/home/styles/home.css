@@ -775,6 +775,15 @@
 
   .cursor-glow {
     top: 23px;
+    /* Mobile Safari is flaky with mix-blend-mode on fixed elements — render
+       the halo as a solid warm glow with bumped alpha instead. */
+    mix-blend-mode: normal;
+    background: radial-gradient(
+      circle,
+      rgba(196, 168, 130, 0.22) 0%,
+      rgba(196, 168, 130, 0.08) 40%,
+      transparent 70%
+    );
   }
 
   .home-nav-group {
