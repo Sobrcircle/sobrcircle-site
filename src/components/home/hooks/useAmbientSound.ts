@@ -36,15 +36,20 @@ export function useAmbientSound() {
     master.connect(ctx.destination)
     droneGainRef.current = master
 
-    // Two detuned sine oscillators — warm low drone around A1/E2
-    const freqs = [55, 82.4] // A1, E2
-    const oscs = freqs.map((f) => {
+    // Warm pad — A2 (110 Hz) fundamental + E3 fifth + A3 octave so laptop
+    // speakers and phone speakers can actually reproduce it.
+    const voices: Array<{ f: number; g: number; type: OscillatorType }> = [
+      { f: 110,   g: 0.30, type: 'sine'     },
+      { f: 164.8, g: 0.22, type: 'sine'     },
+      { f: 220,   g: 0.14, type: 'triangle' },
+    ]
+    const oscs = voices.map(({ f, g, type }) => {
       const o = ctx.createOscillator()
-      o.type = 'sine'
+      o.type = type
       o.frequency.value = f
-      const g = ctx.createGain()
-      g.gain.value = 0.35
-      o.connect(g).connect(master)
+      const gain = ctx.createGain()
+      gain.gain.value = g
+      o.connect(gain).connect(master)
       o.start()
       return o
     })
@@ -59,7 +64,7 @@ export function useAmbientSound() {
     lfo.start()
 
     // Fade in
-    master.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 2.5)
+    master.gain.linearRampToValueAtTime(0.14, ctx.currentTime + 2.5)
     nodesRef.current = { osc: oscs, lfo }
   }, [ensureContext])
 

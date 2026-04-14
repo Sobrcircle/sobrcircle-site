@@ -125,16 +125,17 @@
   z-index: 0;
 }
 
-/* Section overlay — simple fade for depth */
+/* Section overlay — soft atmospheric fade only; edges stay transparent so
+   consecutive sections blend instead of stacking into a dark seam. */
 .home-section-overlay {
   position: absolute;
   inset: -40px;
   background: linear-gradient(
     180deg,
-    rgba(10, 10, 10, 1) 0%,
-    transparent 18%,
-    transparent 82%,
-    rgba(10, 10, 10, 1) 100%
+    rgba(10, 10, 10, 0.35) 0%,
+    transparent 22%,
+    transparent 78%,
+    rgba(10, 10, 10, 0.35) 100%
   );
   z-index: 1;
 }
