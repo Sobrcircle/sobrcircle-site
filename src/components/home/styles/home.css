@@ -1137,17 +1137,7 @@ html {
   transform: translateX(4px);
 }
 
-/* ── Ken Burns on phone mockup images ── */
-.home-phone-screen img {
-  transition: transform 12s ease-out;
-  will-change: transform;
-}
-.home-phone-wrap.is-in-view .home-phone-screen img {
-  transform: scale(1.06);
-}
-@media (prefers-reduced-motion: reduce) {
-  .home-phone-wrap.is-in-view .home-phone-screen img { transform: none; }
-}
+/* (Ken Burns removed — zoom cropped the phone image edges) */
 
 /* ── Tap ripple on CTAs / icon buttons (mobile) ── */
 @media (hover: none) {
