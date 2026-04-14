@@ -12,7 +12,6 @@ import FilmGrain from './FilmGrain'
 import CursorGlow from './CursorGlow'
 import Preloader from './Preloader'
 import ScrollProgress from './ScrollProgress'
-import SoundToggle from './SoundToggle'
 import RouteCurtain from './RouteCurtain'
 import '../styles/home.css'
 
@@ -35,7 +34,6 @@ export default function HomePage() {
       <RouteCurtain />
 
       <SiteNav />
-      <SoundToggle />
       <div className="home-vignette" aria-hidden="true" />
 
       <main className="home-main">
