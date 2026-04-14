@@ -11,6 +11,10 @@ import SiteFooter from './SiteFooter'
 import FilmGrain from './FilmGrain'
 import CursorGlow from './CursorGlow'
 import Preloader from './Preloader'
+import ScrollProgress from './ScrollProgress'
+import AmbientParticles from './AmbientParticles'
+import SoundToggle from './SoundToggle'
+import RouteCurtain from './RouteCurtain'
 import '../styles/home.css'
 
 export default function HomePage() {
@@ -27,9 +31,13 @@ export default function HomePage() {
       <Preloader onDone={() => setBooted(true)} />
 
       <FilmGrain />
+      <AmbientParticles />
       <CursorGlow />
+      <ScrollProgress />
+      <RouteCurtain />
 
       <SiteNav />
+      <SoundToggle />
       <div className="home-vignette" aria-hidden="true" />
 
       <main className="home-main">

@@ -39,11 +39,13 @@ export function useScrollAnimation() {
 
     // ── Phone mockup parallax float (desktop/tablet only) ──
     const isMobile = window.innerWidth < 700
-    if (!isMobile) {
-      const phones = document.querySelectorAll<HTMLElement>('.home-phone-wrap')
-      phones.forEach((phone) => {
-        gsap.set(phone, { y: 10 })
+    const phones = document.querySelectorAll<HTMLElement>('.home-phone-wrap')
 
+    if (!isMobile) {
+      phones.forEach((phone) => {
+        gsap.set(phone, { y: 10, transformPerspective: 1000 })
+
+        // Scroll-linked vertical drift
         gsap.to(phone, {
           scrollTrigger: {
             trigger: phone,
@@ -54,8 +56,48 @@ export function useScrollAnimation() {
           y: -4,
           ease: 'none',
         })
+
+        // Scroll-linked 3D tilt — phone tilts subtly as you scroll past it
+        gsap.fromTo(
+          phone,
+          { rotateX: 6, rotateY: -3 },
+          {
+            scrollTrigger: {
+              trigger: phone,
+              start: 'top 90%',
+              end: 'bottom 20%',
+              scrub: 2,
+            },
+            rotateX: -4,
+            rotateY: 3,
+            ease: 'none',
+          }
+        )
       })
     }
+
+    // ── Ken Burns: add .is-in-view when phone enters viewport ──
+    phones.forEach((phone) => {
+      ScrollTrigger.create({
+        trigger: phone,
+        start: 'top 85%',
+        end: 'bottom 15%',
+        onEnter: () => phone.classList.add('is-in-view'),
+        onEnterBack: () => phone.classList.add('is-in-view'),
+      })
+    })
+
+    // ── Gentle breathing float on phones (all sizes) ──
+    phones.forEach((phone, i) => {
+      gsap.to(phone, {
+        y: `+=${isMobile ? 4 : 6}`,
+        duration: 5.5 + i * 0.3,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        delay: i * 0.4,
+      })
+    })
 
     // ── Hero branding special entrance ──
     const heroLogo = document.querySelector('.home-logo')

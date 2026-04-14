@@ -990,3 +990,215 @@ html {
 .home-cta-book--magnetic:hover::before {
   opacity: 1;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   WAVE 2 + 3: motion & sensory layer
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Scroll progress bar (thin gold rail at very top) ── */
+.home-scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 60;
+  background: rgba(255, 255, 255, 0.04);
+  pointer-events: none;
+}
+.home-scroll-progress-bar {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(196, 168, 130, 0.3) 0%,
+    rgba(214, 190, 156, 0.9) 50%,
+    rgba(196, 168, 130, 0.3) 100%
+  );
+  transform-origin: left center;
+  transform: scaleX(0);
+  box-shadow: 0 0 10px rgba(214, 190, 156, 0.4);
+}
+
+/* ── Ambient particles (canvas) ── */
+.home-particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0.55;
+  mix-blend-mode: screen;
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-particles { display: none; }
+}
+
+/* ── Sound toggle (bottom-right, subtle) ── */
+.home-sound-toggle {
+  position: fixed;
+  bottom: clamp(1rem, 3vw, 1.6rem);
+  right: clamp(1rem, 3vw, 1.6rem);
+  z-index: 50;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(196, 168, 130, 0.25);
+  background: rgba(10, 10, 10, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 300ms ease, background 300ms ease, transform 300ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.home-sound-toggle:hover {
+  border-color: rgba(214, 190, 156, 0.6);
+  background: rgba(20, 18, 14, 0.7);
+  transform: scale(1.05);
+}
+.home-sound-toggle-bars {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  height: 14px;
+}
+.home-sound-toggle-bars span {
+  display: block;
+  width: 2px;
+  height: 4px;
+  background: rgba(214, 190, 156, 0.6);
+  border-radius: 1px;
+  transition: background 300ms ease;
+}
+.home-sound-toggle.is-on .home-sound-toggle-bars span {
+  background: rgba(214, 190, 156, 1);
+  animation: soundBars 1.2s ease-in-out infinite;
+}
+.home-sound-toggle.is-on .home-sound-toggle-bars span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.home-sound-toggle.is-on .home-sound-toggle-bars span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+@keyframes soundBars {
+  0%, 100% { height: 4px; }
+  50%      { height: 12px; }
+}
+@media (max-width: 700px) {
+  .home-sound-toggle { width: 36px; height: 36px; }
+}
+
+/* ── Route curtain (fade to black on internal navigation) ── */
+.home-route-curtain {
+  position: fixed;
+  inset: 0;
+  background: #0a0a0a;
+  z-index: 90;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 500ms cubic-bezier(0.7, 0, 0.3, 1);
+}
+.home-route-curtain.is-leaving {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ── Link underline draw-in on paragraphs ── */
+.home-paragraph a,
+.home-hero-line a {
+  position: relative;
+  color: var(--home-accent, #c4a882);
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size 420ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+.home-paragraph a:hover,
+.home-hero-line a:hover {
+  background-size: 100% 1px;
+}
+
+/* ── Arrow CTA slide on hover ── */
+.home-cta-book-icon {
+  display: inline-block;
+  transition: transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.home-cta-book:hover .home-cta-book-icon:first-of-type,
+.home-cta-book--magnetic:hover .home-cta-book-icon:first-of-type {
+  transform: translateX(-4px);
+}
+.home-cta-book:hover .home-cta-book-icon:last-of-type,
+.home-cta-book--magnetic:hover .home-cta-book-icon:last-of-type {
+  transform: translateX(4px);
+}
+
+/* ── Ken Burns on phone mockup images ── */
+.home-phone-screen img {
+  transition: transform 12s ease-out;
+  will-change: transform;
+}
+.home-phone-wrap.is-in-view .home-phone-screen img {
+  transform: scale(1.06);
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-phone-wrap.is-in-view .home-phone-screen img { transform: none; }
+}
+
+/* ── Tap ripple on CTAs / icon buttons (mobile) ── */
+@media (hover: none) {
+  .home-cta-book,
+  .home-sound-toggle {
+    overflow: hidden;
+    position: relative;
+  }
+  .home-cta-book::after,
+  .home-sound-toggle::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(214, 190, 156, 0.4);
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .home-cta-book:active::after,
+  .home-sound-toggle:active::after {
+    animation: tapRipple 500ms ease-out;
+  }
+}
+@keyframes tapRipple {
+  0%   { transform: scale(0);  opacity: 0.6; }
+  100% { transform: scale(40); opacity: 0; }
+}
+
+/* ── Custom cursor state: scale for interactive elements (wired via CursorGlow) ── */
+.cursor-glow.is-over-interactive {
+  transform: translate(var(--x, 0px), var(--y, 0px)) scale(1.6);
+}
+
+/* ── 3D phone tilt perspective support ── */
+.home-phone-wrap {
+  transform-style: preserve-3d;
+  perspective: 1200px;
+}
+
+/* ── Phone subtle glow on hover (desktop) ── */
+@media (hover: hover) {
+  .home-phone-shell {
+    transition: box-shadow 600ms ease, transform 600ms ease;
+  }
+  .home-phone-wrap:hover .home-phone-shell {
+    box-shadow:
+      0 30px 80px rgba(0, 0, 0, 0.6),
+      0 0 60px rgba(196, 168, 130, 0.12);
+  }
+}
