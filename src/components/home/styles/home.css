@@ -526,7 +526,7 @@
 
 /* ─── Poem rendered inside phone mockup ─── */
 .home-poem-phone {
-  padding: clamp(28px, 8%, 48px) clamp(16px, 5%, 24px) 0;
+  padding: clamp(36px, 10%, 56px) clamp(16px, 5%, 24px) clamp(24px, 6%, 36px);
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -538,7 +538,7 @@
 }
 
 .home-poem-phone-chapter {
-  margin: 0 0 6px;
+  margin: 0 0 clamp(8px, 2.5%, 14px);
   font-size: clamp(0.5rem, 1.8vw, 0.65rem);
   font-style: italic;
   letter-spacing: 0.04em;
@@ -546,7 +546,7 @@
 }
 
 .home-poem-phone-title {
-  margin: 0 0 clamp(10px, 3%, 18px);
+  margin: 0 0 clamp(14px, 4%, 22px);
   font-size: clamp(0.75rem, 2.5vw, 1rem);
   font-weight: 400;
   letter-spacing: 0.02em;
@@ -556,7 +556,7 @@
 .home-poem-phone-dots {
   display: flex;
   gap: 5px;
-  margin-bottom: clamp(12px, 4%, 22px);
+  margin-bottom: clamp(18px, 5%, 28px);
 }
 
 .home-poem-phone-dot {
@@ -573,6 +573,7 @@
 .home-poem-phone-stanzas {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: clamp(0.8em, 3%, 1.2em);
   flex: 1;
 }
