@@ -339,18 +339,25 @@
   perspective: 1200px;
 }
 
-/* Warm halo behind the phone — always visible, with a gentle breathing swell
-   on top so the presence is constant and the feel is alive. */
+/* Warm halo around the phone.
+   The halo pseudo-elements sit AROUND the shell (inset positive into the
+   center) so the gradient's bright core is hidden behind the opaque shell
+   and only the blurred falloff spills outside. This prevents the halo from
+   peeking through the shell's transparent rounded-corner zones. */
 .home-phone-wrap::before {
   content: '';
   position: absolute;
-  inset: -8% -18%;
+  /* Extend well past the phone so the RING of the gradient sits outside the
+     shell. Center of gradient is fully transparent, so nothing ever renders
+     "behind" the phone — only a warm bloom around its perimeter. */
+  inset: -18% -28%;
   background: radial-gradient(
     ellipse at center,
-    rgba(214, 190, 156, 0.45) 0%,
-    rgba(196, 168, 130, 0.22) 30%,
-    rgba(196, 168, 130, 0.08) 55%,
-    transparent 75%
+    transparent 0%,
+    transparent 52%,
+    rgba(214, 190, 156, 0.38) 62%,
+    rgba(196, 168, 130, 0.18) 75%,
+    transparent 100%
   );
   filter: blur(28px);
   pointer-events: none;
@@ -360,27 +367,29 @@
   will-change: opacity, transform;
 }
 
-/* Second, wider halo for softer ambient spill — steady, no animation. */
+/* Wider ambient spill ring — steady, no animation. */
 .home-phone-wrap::after {
   content: '';
   position: absolute;
-  inset: -14% -28%;
+  inset: -30% -45%;
   background: radial-gradient(
     ellipse at center,
-    rgba(196, 168, 130, 0.18) 0%,
-    rgba(196, 168, 130, 0.05) 50%,
-    transparent 80%
+    transparent 0%,
+    transparent 48%,
+    rgba(196, 168, 130, 0.18) 60%,
+    rgba(196, 168, 130, 0.05) 78%,
+    transparent 100%
   );
   filter: blur(50px);
   pointer-events: none;
   z-index: -2;
-  opacity: 0.9;
+  opacity: 0.95;
 }
 
-/* Breathing swell — never dips below full visibility, just swells warmer. */
+/* Breathing swell — never dips below full visibility. */
 @keyframes phoneGlow {
   0%, 100% { opacity: 0.85; transform: scale(1); }
-  50%      { opacity: 1;    transform: scale(1.06); }
+  50%      { opacity: 1;    transform: scale(1.08); }
 }
 
 /* Stagger the breathing so adjacent phones don't pulse in lockstep */
@@ -391,28 +400,31 @@
   .home-phone-wrap::before { animation: none; opacity: 1; }
 }
 
-/* Mobile — crank the halo a touch more since phones dominate the viewport */
+/* Mobile — bump the halo intensity since phones dominate the viewport. */
 @media (max-width: 700px) {
   .home-phone-wrap::before {
-    inset: -6% -22%;
+    inset: -14% -30%;
     background: radial-gradient(
       ellipse at center,
-      rgba(214, 190, 156, 0.55) 0%,
-      rgba(196, 168, 130, 0.28) 30%,
-      rgba(196, 168, 130, 0.1) 55%,
-      transparent 75%
+      transparent 0%,
+      transparent 50%,
+      rgba(214, 190, 156, 0.5) 62%,
+      rgba(196, 168, 130, 0.22) 76%,
+      transparent 100%
     );
-    filter: blur(34px);
+    filter: blur(32px);
   }
   .home-phone-wrap::after {
-    inset: -12% -34%;
+    inset: -26% -48%;
     background: radial-gradient(
       ellipse at center,
-      rgba(196, 168, 130, 0.22) 0%,
-      rgba(196, 168, 130, 0.06) 50%,
-      transparent 80%
+      transparent 0%,
+      transparent 46%,
+      rgba(196, 168, 130, 0.22) 60%,
+      rgba(196, 168, 130, 0.06) 78%,
+      transparent 100%
     );
-    filter: blur(60px);
+    filter: blur(55px);
   }
 }
 
