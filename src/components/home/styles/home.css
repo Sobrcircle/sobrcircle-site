@@ -56,7 +56,7 @@
   width: 28px;
   height: 28px;
   object-fit: contain;
-  filter: invert(1) brightness(0.75) drop-shadow(0 0 10px rgba(196, 168, 130, 0.35)) drop-shadow(0 0 18px rgba(196, 168, 130, 0.14));
+  filter: invert(1) brightness(0.75);
   opacity: 0.9;
 }
 
@@ -339,93 +339,28 @@
   perspective: 1200px;
 }
 
-/* Warm halo around the phone.
-   The halo pseudo-elements sit AROUND the shell (inset positive into the
-   center) so the gradient's bright core is hidden behind the opaque shell
-   and only the blurred falloff spills outside. This prevents the halo from
-   peeking through the shell's transparent rounded-corner zones. */
+/* Subtle warm glow behind phone — breathing.
+   Restored to the pre-cinematic feel: a soft, low-alpha bloom contained
+   within the phone footprint (positive inset) so nothing spills into
+   neighboring sections. */
 .home-phone-wrap::before {
   content: '';
   position: absolute;
-  /* Extend well past the phone so the RING of the gradient sits outside the
-     shell. Center of gradient is fully transparent, so nothing ever renders
-     "behind" the phone — only a warm bloom around its perimeter. */
-  inset: -18% -28%;
-  background: radial-gradient(
-    ellipse at center,
-    transparent 0%,
-    transparent 52%,
-    rgba(214, 190, 156, 0.38) 62%,
-    rgba(196, 168, 130, 0.18) 75%,
-    transparent 100%
-  );
-  filter: blur(28px);
+  inset: 10% 15%;
+  background: radial-gradient(ellipse at center, rgba(196, 168, 130, 0.075) 0%, transparent 70%);
+  filter: blur(40px);
   pointer-events: none;
   z-index: -1;
-  opacity: 1;
-  animation: phoneGlow 5.5s ease-in-out infinite;
-  will-change: opacity, transform;
+  animation: phoneGlow 6s ease-in-out infinite;
 }
 
-/* Wider ambient spill ring — steady, no animation. */
-.home-phone-wrap::after {
-  content: '';
-  position: absolute;
-  inset: -30% -45%;
-  background: radial-gradient(
-    ellipse at center,
-    transparent 0%,
-    transparent 48%,
-    rgba(196, 168, 130, 0.18) 60%,
-    rgba(196, 168, 130, 0.05) 78%,
-    transparent 100%
-  );
-  filter: blur(50px);
-  pointer-events: none;
-  z-index: -2;
-  opacity: 0.95;
-}
-
-/* Breathing swell — never dips below full visibility. */
 @keyframes phoneGlow {
-  0%, 100% { opacity: 0.85; transform: scale(1); }
-  50%      { opacity: 1;    transform: scale(1.08); }
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.08); }
 }
-
-/* Stagger the breathing so adjacent phones don't pulse in lockstep */
-.home-section:nth-of-type(even) .home-phone-wrap::before { animation-delay: -1.8s; }
-.home-section:nth-of-type(3n)    .home-phone-wrap::before { animation-delay: -3.2s; }
 
 @media (prefers-reduced-motion: reduce) {
-  .home-phone-wrap::before { animation: none; opacity: 1; }
-}
-
-/* Mobile — bump the halo intensity since phones dominate the viewport. */
-@media (max-width: 700px) {
-  .home-phone-wrap::before {
-    inset: -14% -30%;
-    background: radial-gradient(
-      ellipse at center,
-      transparent 0%,
-      transparent 50%,
-      rgba(214, 190, 156, 0.5) 62%,
-      rgba(196, 168, 130, 0.22) 76%,
-      transparent 100%
-    );
-    filter: blur(32px);
-  }
-  .home-phone-wrap::after {
-    inset: -26% -48%;
-    background: radial-gradient(
-      ellipse at center,
-      transparent 0%,
-      transparent 46%,
-      rgba(196, 168, 130, 0.22) 60%,
-      rgba(196, 168, 130, 0.06) 78%,
-      transparent 100%
-    );
-    filter: blur(55px);
-  }
+  .home-phone-wrap::before { animation: none; opacity: 0.8; }
 }
 
 .home-phone-shell {
@@ -437,7 +372,9 @@
   box-shadow:
     0 4px 8px rgba(0, 0, 0, 0.3),
     0 16px 32px rgba(0, 0, 0, 0.4),
-    0 32px 64px rgba(0, 0, 0, 0.3);
+    0 32px 64px rgba(0, 0, 0, 0.3),
+    0 0 60px rgba(196, 168, 130, 0.075),
+    0 0 120px rgba(196, 168, 130, 0.0375);
   padding: 8px;
   transform: rotateX(2deg);
   transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
@@ -836,6 +773,10 @@
     height: 26px;
   }
 
+  .cursor-glow {
+    top: 23px;
+  }
+
   .home-nav-group {
     gap: 0.9rem;
   }
@@ -974,11 +915,13 @@ html {
   height: 100%;
 }
 
-/* ── Cursor glow (desktop only; hidden on touch via media query) ── */
+/* ── Top-anchored warm halo (desktop + mobile).
+   Sits just above/behind the logo line — content scrolls underneath it
+   so sections light up as they pass through the halo. ── */
 .cursor-glow {
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 27px;
+  left: 50%;
   width: 420px;
   height: 420px;
   margin-left: -210px;
@@ -993,9 +936,8 @@ html {
     transparent 70%
   );
   mix-blend-mode: screen;
-  will-change: transform;
 }
-@media (hover: none), (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) {
   .cursor-glow { display: none; }
 }
 
@@ -1234,11 +1176,6 @@ html {
 @keyframes tapRipple {
   0%   { transform: scale(0);  opacity: 0.6; }
   100% { transform: scale(40); opacity: 0; }
-}
-
-/* ── Custom cursor state: scale for interactive elements (wired via CursorGlow) ── */
-.cursor-glow.is-over-interactive {
-  transform: translate(var(--x, 0px), var(--y, 0px)) scale(1.6);
 }
 
 /* ── 3D phone tilt perspective support ── */
