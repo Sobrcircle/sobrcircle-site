@@ -33,15 +33,15 @@ export default function FeatureSection({ section, reverse }: Props) {
             <p
               key={i}
               className={`home-paragraph ${paragraph.length === 1 && paragraph[0].type === 'callout' ? 'home-paragraph--callout' : ''}`}
-              data-split
-              data-split-delay={`${0.1 + i * 0.08}`}
+              data-animate
+              data-delay={`${0.25 + i * 0.12}`}
             >
               {paragraph.map((span, j) => renderSpan(span, j))}
             </p>
           ))}
 
           {section.id === 'story' && (
-            <p className="home-signature" data-split data-split-delay="0.3">— Ben, Founder</p>
+            <p className="home-signature" data-animate data-delay="0.9">— Ben, Founder</p>
           )}
         </div>
 
