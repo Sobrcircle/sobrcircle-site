@@ -17,8 +17,15 @@ export default function Book() {
     useBookNavigation()
   const { isBookmarked, toggleBookmark, bookmarks } = useBookmarks()
   const [tocOpen, setTocOpen] = useState(false)
-  const [chromeHidden, setChromeHidden] = useState(false)
-  const lastScrollY = useRef(0)
+  const [chromeVisible, setChromeVisible] = useState(true)
+  const scrollState = useRef({
+    lastY: 0,
+    velocity: 0,       // smoothed scroll velocity
+    intent: 0,         // accumulated directional intent (-1 to 1 scale)
+    hidden: false,      // current hide state (avoids re-renders)
+    settled: true,      // true when user hasn't scrolled recently
+    settleTimer: 0 as ReturnType<typeof setTimeout> | number,
+  })
 
   const currentPage = pages[currentIndex]
   const isDark = currentPage.theme === 'dark'
@@ -42,64 +49,107 @@ export default function Book() {
     return () => window.removeEventListener('keydown', handle)
   }, [tocOpen])
 
-  // Auto-hide nav/TOC on vertical scroll (Facebook-style)
-  // 20px threshold + 100ms debounce to prevent bouncy behavior
+  // Apple-quality auto-hide chrome on vertical scroll
+  // Uses velocity smoothing, directional intent accumulation, and hysteresis
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
 
-    let ticking = false
-    let accumulatedDelta = 0
+    const s = scrollState.current
+
+    const setHidden = (hide: boolean) => {
+      if (s.hidden === hide) return
+      s.hidden = hide
+      setChromeVisible(!hide)
+    }
 
     const handleScroll = (e: Event) => {
       const target = e.target as HTMLElement
       if (!target.classList.contains('book-page')) return
+
       const currentY = target.scrollTop
-      const delta = currentY - lastScrollY.current
-      lastScrollY.current = currentY
+      const delta = currentY - s.lastY
+      s.lastY = currentY
 
-      // Ignore elastic bounce at top
+      // ── iOS elastic overscroll: ignore entirely ──
       if (currentY <= 0) return
+      const maxScroll = target.scrollHeight - target.clientHeight
+      if (currentY >= maxScroll) return
 
-      // Show chrome when near bottom of page (within 150px)
-      const atBottom = target.scrollHeight - currentY - target.clientHeight < 150
-      if (atBottom) {
-        setChromeHidden(false)
-        accumulatedDelta = 0
+      // ── At very top of page: always show ──
+      if (currentY < 20) {
+        s.intent = 0
+        s.velocity = 0
+        setHidden(false)
         return
       }
 
-      // Show chrome when at very top
-      if (currentY < 10) {
-        setChromeHidden(false)
-        accumulatedDelta = 0
-        return
+      // ── Near bottom: gradually reveal ──
+      // Instead of a binary flip, ease chrome in over the last 200px
+      const distFromBottom = target.scrollHeight - currentY - target.clientHeight
+      if (distFromBottom < 200) {
+        // Progress from 0 (at 200px away) to 1 (at bottom)
+        const progress = 1 - distFromBottom / 200
+        if (progress > 0.3) {
+          s.intent = 0
+          s.velocity = 0
+          setHidden(false)
+          return
+        }
       }
 
-      accumulatedDelta += delta
+      // ── Smooth velocity (exponential moving average) ──
+      // α = 0.3 gives responsive but smooth tracking
+      s.velocity = s.velocity * 0.7 + delta * 0.3
 
-      if (!ticking) {
-        ticking = true
-        setTimeout(() => {
-          if (accumulatedDelta > 20) {
-            setChromeHidden(true)
-          } else if (accumulatedDelta < -20) {
-            setChromeHidden(false)
-          }
-          accumulatedDelta = 0
-          ticking = false
-        }, 100)
+      // ── Accumulate directional intent ──
+      // This creates "stickiness" — you need sustained scrolling to trigger
+      if (s.velocity > 1.5) {
+        // Scrolling down — accumulate hide intent
+        s.intent = Math.min(1, s.intent + 0.06)
+      } else if (s.velocity < -1.5) {
+        // Scrolling up — accumulate show intent (faster to show than hide)
+        s.intent = Math.max(-1, s.intent - 0.09)
+      } else {
+        // Nearly stopped — decay intent toward 0 (neutral)
+        s.intent *= 0.95
       }
+
+      // ── Hysteresis thresholds ──
+      // Higher threshold to hide (0.6) than to show (0.4)
+      // This means quick flicks don't trigger, only deliberate scrolls
+      if (s.intent > 0.6) {
+        setHidden(true)
+      } else if (s.intent < -0.4) {
+        setHidden(false)
+      }
+
+      // ── Settle detection: show chrome when scrolling stops ──
+      clearTimeout(s.settleTimer as ReturnType<typeof setTimeout>)
+      s.settled = false
+      s.settleTimer = setTimeout(() => {
+        s.settled = true
+        s.velocity = 0
+        s.intent *= 0.5 // soften intent on settle, don't fully reset
+      }, 300)
     }
 
     container.addEventListener('scroll', handleScroll, { passive: true, capture: true })
-    return () => container.removeEventListener('scroll', handleScroll, true)
+    return () => {
+      container.removeEventListener('scroll', handleScroll, true)
+      clearTimeout(s.settleTimer as ReturnType<typeof setTimeout>)
+    }
   }, [containerRef])
 
   // Reset chrome visibility on page change
   useEffect(() => {
-    setChromeHidden(false)
-    lastScrollY.current = 0
+    setChromeVisible(true)
+    const s = scrollState.current
+    s.lastY = 0
+    s.velocity = 0
+    s.intent = 0
+    s.hidden = false
+    s.settled = true
   }, [currentIndex])
 
   const renderPage = useCallback((page: (typeof pages)[number]) => {
@@ -152,9 +202,12 @@ export default function Book() {
       <button
         onClick={() => setTocOpen(true)}
         aria-label="Table of contents"
-        className={`fixed top-4 left-4 z-[90] p-2 bg-transparent border-none cursor-pointer hover:opacity-100 transition-all duration-300 ease-out touch-manipulation ${
-          chromeHidden ? 'opacity-0 pointer-events-none -translate-y-12' : 'opacity-50'
+        className={`fixed top-4 left-4 z-[90] p-2 bg-transparent border-none cursor-pointer hover:opacity-100 touch-manipulation ${
+          chromeVisible
+            ? 'opacity-50 translate-y-0'
+            : 'opacity-0 pointer-events-none -translate-y-3'
         }`}
+        style={{ transition: 'opacity 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)' }}
       >
         <Menu size={22} strokeWidth={1.5} color={isDark ? '#e8e4df' : '#1a1a1a'} />
       </button>
@@ -181,9 +234,13 @@ export default function Book() {
       </div>
 
       {/* Navigation — auto-hides on scroll */}
-      <div className={`transition-all duration-300 ease-out ${
-        chromeHidden ? 'translate-y-12 opacity-0 pointer-events-none' : ''
-      }`}>
+      <div
+        className={chromeVisible
+          ? 'translate-y-0 opacity-100'
+          : 'translate-y-3 opacity-0 pointer-events-none'
+        }
+        style={{ transition: 'opacity 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)' }}
+      >
         <Navigation
           label={currentPage.label}
           theme={currentPage.theme}

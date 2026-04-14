@@ -62,15 +62,26 @@ export default function TOCSidebar({
           padding: '48px 28px 28px',
         }}
       >
-        <button
-          onClick={onClose}
-          className="absolute top-3 right-3 text-[1.4rem] opacity-50 hover:opacity-100 p-2 bg-transparent border-none cursor-pointer"
-          style={{ color: 'var(--dark-text)' }}
-        >
-          &times;
-        </button>
+        <div className="flex items-center justify-between mb-6" style={{ margin: '-24px -4px 24px 0' }}>
+          <a
+            href="/"
+            className="italic text-[0.95rem] tracking-[0.03em] opacity-70 hover:opacity-100 transition-opacity duration-150 no-underline flex items-center gap-[6px]"
+            style={{ color: 'var(--dark-muted)' }}
+          >
+            <span className="not-italic text-[1.1rem] opacity-60" style={{ lineHeight: 1 }}>&#x2039;</span>
+            sobrcircle.com
+          </a>
+          <button
+            onClick={onClose}
+            className="text-[1.4rem] opacity-50 hover:opacity-100 p-2 bg-transparent border-none cursor-pointer"
+            style={{ color: 'var(--dark-text)' }}
+          >
+            &times;
+          </button>
+        </div>
 
-        <h2 className="text-[1.1rem] font-normal italic tracking-[0.08em] mb-7">twenty four</h2>
+        <h2 className="text-[1.1rem] font-normal italic tracking-[0.08em] mb-1" style={{ fontFamily: "'Times New Roman', Times, serif" }}>twenty four</h2>
+        <p className="text-[0.85rem] italic tracking-[0.15em] opacity-40 mb-7" style={{ fontFamily: "'Times New Roman', Times, serif" }}>bm</p>
 
         {/* Front matter */}
         <div className="mb-5">
@@ -78,7 +89,7 @@ export default function TOCSidebar({
             <button
               key={p.id}
               onClick={() => { onGoTo(p.id); onClose() }}
-              className={`block w-full text-left py-[6px] text-[0.85rem] bg-transparent border-none cursor-pointer font-[inherit] transition-opacity duration-150 ${
+              className={`block w-full text-left py-[6px] text-[0.95rem] bg-transparent border-none cursor-pointer font-[inherit] transition-opacity duration-150 ${
                 currentId === p.id ? 'opacity-100' : 'opacity-70 hover:opacity-100'
               }`}
               style={{ color: currentId === p.id ? 'var(--accent)' : 'var(--dark-text)' }}
@@ -93,7 +104,7 @@ export default function TOCSidebar({
           <div key={ch.title} className="mb-5">
             <button
               onClick={() => { onGoTo(ch.id); onClose() }}
-              className={`block w-full text-left italic text-[0.85rem] tracking-[0.03em] mb-2 bg-transparent border-none cursor-pointer font-[inherit] transition-opacity duration-150 hover:opacity-100 ${
+              className={`block w-full text-left italic text-[0.95rem] tracking-[0.03em] mb-2 bg-transparent border-none cursor-pointer font-[inherit] transition-opacity duration-150 hover:opacity-100 ${
                 currentId === ch.id ? 'opacity-100' : 'opacity-70'
               }`}
               style={{ color: currentId === ch.id ? 'var(--accent)' : 'var(--dark-muted)' }}
@@ -134,7 +145,7 @@ export default function TOCSidebar({
             <button
               key={p.id}
               onClick={() => { onGoTo(p.id); onClose() }}
-              className={`block w-full text-left py-[6px] text-[0.85rem] bg-transparent border-none cursor-pointer font-[inherit] transition-opacity duration-150 ${
+              className={`block w-full text-left py-[6px] text-[0.95rem] bg-transparent border-none cursor-pointer font-[inherit] transition-opacity duration-150 ${
                 currentId === p.id ? 'opacity-100' : 'opacity-70 hover:opacity-100'
               }`}
               style={{ color: currentId === p.id ? 'var(--accent)' : 'var(--dark-text)' }}
@@ -143,6 +154,7 @@ export default function TOCSidebar({
             </button>
           ))}
         </div>
+
       </div>
     </>
   )

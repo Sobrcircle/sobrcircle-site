@@ -9,7 +9,7 @@ export default function ClosingPage() {
       </div>
       <div className="text-[0.9rem] tracking-[0.12em] text-center opacity-60 mb-2">bm</div>
       <div className="text-[0.75rem] tracking-[0.08em] text-center opacity-35">
-        www.moradilabs.com
+        sobrcircle.com
       </div>
     </div>
   )

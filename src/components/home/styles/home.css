@@ -1,0 +1,869 @@
+/* ─────────────────────────────────────────────
+   SobrCircle Homepage — matches /twentyfour/ palette
+   ───────────────────────────────────────────── */
+
+/* ─── Page ─── */
+.home-page {
+  --home-text: #e8e4df;
+  --home-muted: #6b6560;
+  --home-accent: #c4a882;
+  --home-bg: #0a0a0a;
+  background: var(--home-bg);
+  color: var(--home-text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Vignette overlay ─── */
+.home-vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 18;
+  background: linear-gradient(to top, rgba(10, 10, 10, 0.35) 0%, rgba(10, 10, 10, 0.08) 12%, transparent 30%);
+}
+
+/* ─── Navigation: top bar ─── */
+.home-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem clamp(1.5rem, 4vw, 3rem);
+  overflow: hidden;
+  background: rgba(10, 10, 10, 0.88);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.home-nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  text-decoration: none;
+  color: var(--home-text);
+  flex-shrink: 0;
+}
+
+.home-nav-logo {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  filter: invert(1) brightness(0.7) drop-shadow(0 0 8px rgba(196, 168, 130, 0.3)) drop-shadow(0 0 16px rgba(196, 168, 130, 0.12));
+  opacity: 0.75;
+}
+
+.home-nav-wordmark {
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: rgba(232, 228, 223, 0.65);
+}
+
+.home-nav-wordmark-bold {
+  font-weight: 700;
+}
+
+.home-nav-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.2rem, 3vw, 2.2rem);
+}
+
+.home-nav-links a {
+  color: rgba(232, 228, 223, 0.45);
+  text-decoration: none;
+  font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  transition: color 300ms ease;
+}
+
+.home-nav-links a:hover {
+  color: var(--home-accent);
+}
+
+/* ─── Main content ─── */
+.home-main {
+  padding: 0 clamp(1.5rem, 4vw, 4rem);
+}
+
+/* ─── Section base ─── */
+.home-section {
+  position: relative;
+  padding: clamp(5rem, 12vh, 10rem) 0;
+  display: grid;
+  justify-items: center;
+  gap: clamp(2rem, 5vh, 4rem);
+  overflow: visible;
+}
+
+.home-section:first-child {
+  padding-top: clamp(5rem, 10vh, 8rem);
+  padding-bottom: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.5rem, 4vh, 3rem);
+}
+
+/* Section background — subtle warm glow, no SVG textures */
+.home-section-bg {
+  position: absolute;
+  inset: -100px 0;
+  background: radial-gradient(ellipse 60% 40% at 50% 50%, rgba(196, 168, 130, 0.015) 0%, transparent 70%);
+  z-index: 0;
+}
+
+/* Section overlay — simple fade for depth */
+.home-section-overlay {
+  position: absolute;
+  inset: -40px;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 10, 10, 1) 0%,
+    transparent 18%,
+    transparent 82%,
+    rgba(10, 10, 10, 1) 100%
+  );
+  z-index: 1;
+}
+
+/* ─── Copy container (centered, text-only sections) ─── */
+.home-copy {
+  position: relative;
+  z-index: 2;
+  width: min(560px, calc(100% - 2.4rem));
+  text-align: center;
+  margin-inline: auto;
+}
+
+/* ─── Split layout (text + phone side by side) ─── */
+.home-split {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5rem);
+  width: min(1060px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.home-section--split {
+  gap: 0;
+}
+
+.home-split-text {
+  text-align: left;
+}
+
+.home-split-phone {
+  display: grid;
+  place-items: center;
+}
+
+/* Reverse: phone on left, text on right */
+.home-section--reverse .home-split-text {
+  order: 2;
+}
+
+.home-section--reverse .home-split-phone {
+  order: 1;
+}
+
+/* ─── Hero branding ─── */
+.home-hero-branding {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  margin-bottom: clamp(1.2rem, 3vh, 2.5rem);
+}
+
+.home-logo {
+  width: clamp(68px, 9vw, 100px);
+  height: clamp(68px, 9vw, 100px);
+  object-fit: contain;
+  filter: invert(1) brightness(0.75) drop-shadow(0 0 20px rgba(196, 168, 130, 0.25)) drop-shadow(0 0 40px rgba(196, 168, 130, 0.1)) drop-shadow(0 12px 32px rgba(0, 0, 0, 0.6));
+  margin-bottom: 0.3rem;
+}
+
+.home-brand {
+  margin: 0;
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  color: rgba(232, 228, 223, 0.7);
+}
+
+.home-brand span:first-child {
+  font-weight: 700;
+}
+
+.home-brand span:last-child {
+  font-weight: 300;
+}
+
+.home-tagline {
+  margin: 0.5rem 0 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-size: clamp(0.85rem, 1.2vw, 1rem);
+  color: var(--home-muted);
+  letter-spacing: 0.03em;
+}
+
+/* Hero divider */
+.home-hero-divider {
+  width: 64px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(196, 168, 130, 0.35), transparent);
+  margin: 0 auto clamp(1.2rem, 3vh, 2rem);
+  animation: dividerReveal 2s ease-out 1.2s both;
+}
+
+@keyframes dividerReveal {
+  from { width: 0; opacity: 0; }
+  to { width: 64px; opacity: 1; }
+}
+
+/* Hero copy lines */
+.home-hero-line {
+  margin: 0 0 0.5rem;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+  font-weight: 400;
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+  color: rgba(232, 228, 223, 0.6);
+}
+
+/* Scroll hint */
+.home-scroll-hint {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  padding-top: 0;
+}
+
+.home-scroll-hint-line {
+  width: min(80px, 16vw);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(196, 168, 130, 0.35), transparent);
+  animation: scrollPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.3; transform: scaleY(0.7); }
+  50% { opacity: 0.7; transform: scaleY(1); }
+}
+
+/* ─── Section titles ─── */
+.home-title {
+  margin: 0 0 1.4rem;
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: clamp(0.72rem, 1vw, 0.85rem);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  line-height: 1.05;
+  text-transform: uppercase;
+  color: var(--home-accent);
+  text-shadow: 0 0 30px rgba(196, 168, 130, 0.1);
+}
+
+.home-title--book {
+  font-family: 'Times New Roman', Times, serif;
+  font-style: italic;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0.06em;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  color: var(--home-accent);
+  text-shadow: 0 0 30px rgba(196, 168, 130, 0.1);
+}
+
+/* ─── Paragraphs ─── */
+.home-paragraph {
+  margin: 0 0 1.1rem;
+  font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-size: clamp(0.92rem, 1.05vw, 1.02rem);
+  font-weight: 400;
+  line-height: 1.85;
+  letter-spacing: 0.01em;
+  color: rgba(232, 228, 223, 0.72);
+}
+
+.home-paragraph--callout {
+  color: var(--home-accent);
+  font-weight: 500;
+}
+
+/* ─── Accent & callout spans ─── */
+.home-accent {
+  color: var(--home-accent);
+  font-weight: 500;
+  text-shadow: 0 0 20px rgba(196, 168, 130, 0.2);
+}
+
+.home-callout {
+  color: var(--home-accent);
+  font-weight: 500;
+  text-shadow: 0 0 20px rgba(196, 168, 130, 0.2);
+}
+
+/* ─── Signature ─── */
+.home-signature {
+  margin: 1.2rem 0 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-size: 0.9rem;
+  color: var(--home-muted);
+  letter-spacing: 0.03em;
+}
+
+/* ─── Phone mockup ─── */
+.home-phone-wrap {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  perspective: 1200px;
+}
+
+/* Subtle warm glow behind phone — breathing */
+.home-phone-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 10% 15%;
+  background: radial-gradient(ellipse at center, rgba(196, 168, 130, 0.06) 0%, transparent 70%);
+  filter: blur(40px);
+  pointer-events: none;
+  z-index: -1;
+  animation: phoneGlow 6s ease-in-out infinite;
+}
+
+@keyframes phoneGlow {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
+.home-phone-shell {
+  width: clamp(240px, 28vw, 310px);
+  max-width: 100%;
+  aspect-ratio: 9 / 19.5;
+  border-radius: 44px;
+  background: linear-gradient(165deg, #151518 0%, #0c0c0e 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.3),
+    0 16px 32px rgba(0, 0, 0, 0.4),
+    0 32px 64px rgba(0, 0, 0, 0.3),
+    0 0 60px rgba(196, 168, 130, 0.06),
+    0 0 120px rgba(196, 168, 130, 0.03),
+    0 0 0 0.5px rgba(255, 255, 255, 0.04) inset,
+    0 1px 0 rgba(255, 255, 255, 0.05) inset;
+  padding: 8px;
+  transform: rotateX(2deg);
+  transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.home-phone-shell:hover {
+  transform: rotateX(0deg) translateY(-4px);
+  border-color: rgba(196, 168, 130, 0.12);
+}
+
+.home-phone-screen {
+  width: 100%;
+  height: 100%;
+  border-radius: 36px;
+  overflow: hidden;
+  background: #0a0a0a;
+}
+
+.home-phone-screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Split layout phone: subtle tilt toward text */
+.home-section--split:not(.home-section--reverse) .home-phone-shell {
+  transform: rotateY(-4deg) rotateX(2deg);
+}
+.home-section--split:not(.home-section--reverse) .home-phone-shell:hover {
+  transform: rotateY(-1deg) rotateX(0deg) translateY(-4px);
+}
+
+.home-section--reverse .home-phone-shell {
+  transform: rotateY(4deg) rotateX(2deg);
+}
+.home-section--reverse .home-phone-shell:hover {
+  transform: rotateY(1deg) rotateX(0deg) translateY(-4px);
+}
+
+/* ─── Twenty Four section ─── */
+.home-twentyfour {
+  padding-bottom: clamp(4rem, 10vh, 8rem);
+}
+
+.home-twentyfour-header {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  width: min(1060px, calc(100% - 2rem));
+  margin-inline: auto;
+  margin-bottom: clamp(1.5rem, 4vh, 2.5rem);
+}
+
+.home-twentyfour-header .home-title--book {
+  margin-bottom: 0.4rem;
+}
+
+.home-twentyfour-header .home-book-author {
+  margin: 0;
+}
+
+.home-twentyfour-layout {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5rem);
+  width: min(1060px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.home-twentyfour-text {
+  text-align: left;
+}
+
+.home-twentyfour-phone {
+  display: grid;
+  place-items: center;
+}
+
+/* Poem teaser block */
+.home-poem-teaser {
+  margin: 1.5rem 0;
+  padding-left: 1.2rem;
+  border-left: 1px solid rgba(196, 168, 130, 0.2);
+}
+
+.home-poem-teaser-line:nth-child(2) { transition-delay: 0.1s; }
+.home-poem-teaser-line:nth-child(3) { transition-delay: 0.2s; }
+.home-poem-teaser-line:nth-child(4) { transition-delay: 0.3s; }
+
+.home-poem-teaser-line {
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-size: 0.92rem;
+  line-height: 1.9;
+  color: rgba(232, 228, 223, 0.45);
+  letter-spacing: 0.02em;
+}
+
+/* Author mark */
+.home-book-author {
+  margin: -0.2rem 0 1.2rem;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  letter-spacing: 0.15em;
+  color: rgba(232, 228, 223, 0.4);
+}
+
+/* CTA: book-style link */
+.home-cta-book {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding: 0.75rem 1.6rem;
+  text-decoration: none;
+  color: var(--home-accent);
+  border: 1px solid rgba(196, 168, 130, 0.2);
+  border-radius: 2px;
+  transition: all 400ms ease;
+}
+
+.home-cta-book:hover {
+  border-color: rgba(196, 168, 130, 0.5);
+  background: rgba(196, 168, 130, 0.04);
+  box-shadow: 0 0 24px rgba(196, 168, 130, 0.08);
+}
+
+.home-cta-book-text {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+}
+
+.home-cta-book-icon {
+  font-size: 0.65rem;
+  opacity: 0.4;
+  transition: opacity 400ms ease;
+}
+
+.home-cta-book:hover .home-cta-book-icon {
+  opacity: 0.8;
+}
+
+/* ─── Poem rendered inside phone mockup ─── */
+.home-poem-phone {
+  padding: clamp(28px, 8%, 48px) clamp(16px, 5%, 24px) 0;
+  min-height: 100%;
+  overflow: hidden;
+  background: #faf8f5;
+  color: #1a1a1a;
+  font-family: Georgia, 'Times New Roman', serif;
+  display: flex;
+  flex-direction: column;
+}
+
+.home-poem-phone-chapter {
+  margin: 0 0 6px;
+  font-size: clamp(0.5rem, 1.8vw, 0.65rem);
+  font-style: italic;
+  letter-spacing: 0.04em;
+  color: #8a8580;
+}
+
+.home-poem-phone-title {
+  margin: 0 0 clamp(10px, 3%, 18px);
+  font-size: clamp(0.75rem, 2.5vw, 1rem);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: #1a1a1a;
+}
+
+.home-poem-phone-dots {
+  display: flex;
+  gap: 5px;
+  margin-bottom: clamp(12px, 4%, 22px);
+}
+
+.home-poem-phone-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(138, 133, 128, 0.25);
+}
+
+.home-poem-phone-dot--active {
+  background: #c4a882;
+}
+
+.home-poem-phone-stanzas {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.8em, 3%, 1.2em);
+  flex: 1;
+}
+
+.home-poem-phone-stanza p {
+  margin: 0;
+  font-size: clamp(0.55rem, 1.9vw, 0.75rem);
+  line-height: 1.75;
+  color: #1a1a1a;
+}
+
+/* ─── Section divider ─── */
+.home-section + .home-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(80px, 16vw);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+  z-index: 3;
+}
+
+/* Hide scroll hint since section dividers handle transitions */
+.home-scroll-hint {
+  display: none;
+}
+
+/* ─── Footer ─── */
+.home-footer {
+  position: relative;
+  z-index: 2;
+  padding: clamp(2rem, 6vh, 4rem) clamp(1rem, 3vw, 3rem) clamp(2.4rem, 6vh, 4rem);
+}
+
+.home-footer-inner {
+  width: min(800px, 100%);
+  margin: 0 auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 1.6rem;
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+  text-align: center;
+}
+
+.home-footer-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.home-footer-logo {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  filter: invert(1) brightness(0.7) drop-shadow(0 0 14px rgba(196, 168, 130, 0.2)) drop-shadow(0 0 28px rgba(196, 168, 130, 0.08)) drop-shadow(0 6px 14px rgba(0, 0, 0, 0.4));
+  opacity: 0.7;
+}
+
+.home-footer-name {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1;
+  color: rgba(232, 228, 223, 0.55);
+}
+
+.home-footer-name span:first-child {
+  font-weight: 700;
+}
+
+.home-footer-name span:last-child {
+  font-weight: 300;
+}
+
+.home-footer-tagline {
+  margin: 0.2rem 0 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  color: rgba(232, 228, 223, 0.35);
+  font-size: 0.75rem;
+  letter-spacing: 0.03em;
+}
+
+.home-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem 1.2rem;
+  justify-content: center;
+}
+
+.home-footer-links a {
+  color: rgba(232, 228, 223, 0.4);
+  text-decoration: none;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: color 300ms ease;
+}
+
+.home-footer-links a:hover {
+  color: rgba(232, 228, 223, 0.75);
+}
+
+.home-footer-note {
+  margin: 0;
+  max-width: 540px;
+  color: rgba(232, 228, 223, 0.25);
+  font-size: 0.7rem;
+  line-height: 1.6;
+}
+
+.home-footer-credit {
+  margin: 0;
+  color: rgba(232, 228, 223, 0.15);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* ─── Tablet: collapse split to single column ─── */
+@media (max-width: 1100px) {
+  .home-copy {
+    width: min(480px, calc(100% - 2rem));
+  }
+
+  .home-split,
+  .home-twentyfour-layout {
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 5vh, 3.5rem);
+    max-width: 560px;
+  }
+
+  .home-split-text,
+  .home-twentyfour-text {
+    text-align: center;
+  }
+
+  .home-section--reverse .home-split-text {
+    order: 1;
+  }
+
+  .home-section--reverse .home-split-phone {
+    order: 2;
+  }
+
+  .home-section--split:not(.home-section--reverse) .home-phone-shell,
+  .home-section--reverse .home-phone-shell {
+    transform: rotateX(2deg);
+  }
+
+  .home-section--split:not(.home-section--reverse) .home-phone-shell:hover,
+  .home-section--reverse .home-phone-shell:hover {
+    transform: rotateX(0deg) translateY(-4px);
+  }
+
+  .home-poem-teaser {
+    text-align: left;
+    border-top: none;
+    padding-top: 0;
+  }
+
+  .home-cta-book {
+    align-items: center;
+  }
+}
+
+/* ─── Mobile ─── */
+@media (max-width: 700px) {
+  .home-nav {
+    padding: 0.7rem 0.75rem;
+    padding-right: max(0.75rem, env(safe-area-inset-right, 0.75rem));
+  }
+
+  .home-nav-brand {
+    gap: 0.3rem;
+  }
+
+  .home-nav-logo {
+    width: 15px;
+    height: 15px;
+  }
+
+  .home-nav-wordmark {
+    font-size: 0.72rem;
+  }
+
+  .home-nav-links {
+    gap: 0.5rem;
+    margin-right: 4px;
+  }
+
+  .home-nav-links a {
+    font-size: 0.62rem;
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
+
+  .home-copy {
+    width: min(84vw, 400px);
+  }
+
+  .home-hero-line {
+    font-size: clamp(0.88rem, 3.85vw, 1.15rem);
+  }
+
+  .home-paragraph {
+    font-size: clamp(0.9rem, 3.8vw, 1rem);
+    line-height: 1.8;
+  }
+
+  .home-phone-shell {
+    width: clamp(220px, 60vw, 280px);
+    border-radius: 38px;
+    padding: 7px;
+  }
+
+  .home-phone-screen {
+    border-radius: 30px;
+  }
+
+  .home-section {
+    padding: clamp(3.5rem, 8vh, 6rem) 0;
+  }
+
+  .home-section:first-child {
+    min-height: auto;
+    padding-top: clamp(5rem, 12vh, 7rem);
+    padding-bottom: clamp(3rem, 7vh, 5rem);
+  }
+}
+
+/* ─── Reduced motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  [data-animate] {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+
+  .home-phone-shell {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ─── Smooth scroll ─── */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ─── Scrollbar: hidden on mobile, thin overlay on desktop ─── */
+html::-webkit-scrollbar {
+  width: 0;
+  display: none;
+}
+html {
+  scrollbar-width: none;
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+}
+
+/* Desktop: show thin scrollbar */
+@media (min-width: 701px) {
+  html::-webkit-scrollbar {
+    width: 6px;
+    display: block;
+    background: transparent;
+  }
+  html::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 3px;
+  }
+  html::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.22);
+  }
+  html::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+  }
+}

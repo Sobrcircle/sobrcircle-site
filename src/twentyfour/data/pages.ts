@@ -1091,7 +1091,7 @@ export const pages: BookPage[] = [
       { text: 'first edition, 2026' },
       { text: 'cover and interior design by the author' },
       { text: 'printed in canada' },
-      { text: 'www.moradilabs.com' },
+      { text: 'sobrcircle.com' },
     ],
   },
 ]

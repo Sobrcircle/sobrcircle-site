@@ -19,7 +19,7 @@ html, body, #root {
   height: 100dvh;
   height: 100vh; /* fallback */
   overflow: hidden;
-  font-family: Georgia, "Times New Roman", Times, serif;
+  font-family: 'Times New Roman', Times, serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: var(--dark-bg); /* dark canvas prevents white flash between pages */

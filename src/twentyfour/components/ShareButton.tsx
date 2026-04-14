@@ -115,12 +115,12 @@ export default function ShareButton({
       {modalOpen && (
         <div
           className="fixed inset-0 z-[300] flex items-end sm:items-center justify-center"
-          style={{ background: 'rgba(0,0,0,0.88)' }}
+          style={{ background: 'rgba(0,0,0,0.88)', paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
         >
           <div className="absolute inset-0" onClick={close} />
 
           <div
-            className="relative w-full max-w-[420px] max-h-[78dvh] max-h-[78vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl border border-white/5 share-modal-scroll"
+            className="relative w-full max-w-[420px] max-h-[70dvh] max-h-[70vh] mb-[env(safe-area-inset-bottom,0px)] overflow-y-auto rounded-t-2xl sm:rounded-2xl border border-white/5 share-modal-scroll"
             style={{ background: '#0a0a0a', color: '#e8e4df' }}
           >
             <button

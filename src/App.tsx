@@ -1,7 +1,7 @@
-import ScrollStory from '@/components/scroll-story'
+import HomePage from '@/components/home/components/HomePage'
 
 function App() {
-  return <ScrollStory />
+  return <HomePage />
 }
 
 export default App
