@@ -94,16 +94,16 @@ export default function TwentyFourSection({ section }: Props) {
         {/* Text content */}
         <div className="home-twentyfour-text">
           {section.content.map((paragraph, i) => (
-            <p key={i} className="home-paragraph" data-animate data-delay={`${0.25 + i * 0.12}`}>
+            <p key={i} className="home-paragraph" data-split data-split-delay={`${0.1 + i * 0.08}`}>
               {paragraph.map((span, j) => renderSpan(span, j))}
             </p>
           ))}
 
-          <blockquote className="home-poem-teaser" data-animate data-delay="0.6">
-            <p className="home-poem-teaser-line">{'\u201C'}two people who understood darkness</p>
-            <p className="home-poem-teaser-line">the same way</p>
-            <p className="home-poem-teaser-line">is either a lifeline</p>
-            <p className="home-poem-teaser-line">or a match waiting to be struck{'\u201D'}</p>
+          <blockquote className="home-poem-teaser">
+            <p className="home-poem-teaser-line" data-split data-split-delay="0.05">{'\u201C'}two people who understood darkness</p>
+            <p className="home-poem-teaser-line" data-split data-split-delay="0.15">the same way</p>
+            <p className="home-poem-teaser-line" data-split data-split-delay="0.25">is either a lifeline</p>
+            <p className="home-poem-teaser-line" data-split data-split-delay="0.35">or a match waiting to be struck{'\u201D'}</p>
           </blockquote>
 
           <a

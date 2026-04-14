@@ -66,10 +66,16 @@ export function useSplitReveal(enabled: boolean = true) {
     }
 
     // Wait for fonts so splitting happens at final metrics.
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(run)
-    } else {
+    const go = () => {
       run()
+      // Layout shifted from wrapping each char in spans — refresh triggers
+      // so scroll-based reveals lower on the page fire at the right offsets.
+      ScrollTrigger.refresh()
+    }
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(go)
+    } else {
+      go()
     }
   }, [enabled])
 }
