@@ -934,10 +934,10 @@ html {
   position: fixed;
   top: 27px;
   left: 50%;
-  width: 420px;
-  height: 420px;
-  margin-left: -210px;
-  margin-top: -210px;
+  width: 525px;
+  height: 525px;
+  margin-left: -262.5px;
+  margin-top: -262.5px;
   border-radius: 50%;
   pointer-events: none;
   z-index: 0;
