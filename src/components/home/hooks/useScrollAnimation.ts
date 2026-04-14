@@ -44,7 +44,20 @@ export function useScrollAnimation() {
 
     phones.forEach((phone, i) => {
       const shell = phone.querySelector<HTMLElement>('.home-phone-shell')
-      gsap.set(phone, { transformPerspective: 1200 })
+      gsap.set(phone, { transformPerspective: 1200, opacity: 0 })
+
+      // Fade phone in as it scrolls into view — prevents the shell's rounded
+      // top edge from rendering as a visible arc at section seams.
+      gsap.to(phone, {
+        scrollTrigger: {
+          trigger: phone,
+          start: 'top 92%',
+          end: 'top 55%',
+          scrub: 1,
+        },
+        opacity: 1,
+        ease: 'none',
+      })
 
       // Scroll-driven parallax + gentle 3D tilt — desktop/tablet only
       // Amplitudes kept small so the image never crops inside the shell.

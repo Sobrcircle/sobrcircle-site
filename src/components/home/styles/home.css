@@ -120,24 +120,19 @@
 /* Section background — subtle warm glow, no SVG textures */
 .home-section-bg {
   position: absolute;
-  inset: -100px 0;
+  inset: 0;
   background: radial-gradient(ellipse 60% 40% at 50% 50%, rgba(196, 168, 130, 0.015) 0%, transparent 70%);
   z-index: 0;
+  pointer-events: none;
 }
 
-/* Section overlay — soft atmospheric fade only; edges stay transparent so
-   consecutive sections blend instead of stacking into a dark seam. */
+/* Section overlay — fully transparent now that seams are handled upstream.
+   Kept as a zero-cost hook in case we want per-section tinting later. */
 .home-section-overlay {
   position: absolute;
-  inset: -40px;
-  background: linear-gradient(
-    180deg,
-    rgba(10, 10, 10, 0.35) 0%,
-    transparent 22%,
-    transparent 78%,
-    rgba(10, 10, 10, 0.35) 100%
-  );
+  inset: 0;
   z-index: 1;
+  pointer-events: none;
 }
 
 /* ─── Copy container (centered, text-only sections) ─── */
@@ -365,16 +360,12 @@
   width: clamp(240px, 28vw, 310px);
   max-width: 100%;
   border-radius: 44px;
-  background: linear-gradient(165deg, #151518 0%, #0c0c0e 100%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #0a0a0a;
+  border: none;
   box-shadow:
     0 4px 8px rgba(0, 0, 0, 0.3),
     0 16px 32px rgba(0, 0, 0, 0.4),
-    0 32px 64px rgba(0, 0, 0, 0.3),
-    0 0 60px rgba(196, 168, 130, 0.06),
-    0 0 120px rgba(196, 168, 130, 0.03),
-    0 0 0 0.5px rgba(255, 255, 255, 0.04) inset,
-    0 1px 0 rgba(255, 255, 255, 0.05) inset;
+    0 32px 64px rgba(0, 0, 0, 0.3);
   padding: 8px;
   transform: rotateX(2deg);
   transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
