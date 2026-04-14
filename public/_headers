@@ -7,31 +7,31 @@
   Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://formsubmit.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self' mailto:; upgrade-insecure-requests
 
 /
-  Cache-Control: no-cache
+  Cache-Control: no-store, must-revalidate
 
 /index.html
-  Cache-Control: no-cache
+  Cache-Control: no-store, must-revalidate
 
 /twentyfour/
-  Cache-Control: no-cache
+  Cache-Control: no-store, must-revalidate
 
 /twentyfour/index.html
-  Cache-Control: no-cache
+  Cache-Control: no-store, must-revalidate
 
 /support/
-  Cache-Control: no-cache
+  Cache-Control: no-store, must-revalidate
 
 /privacy/
-  Cache-Control: no-cache
+  Cache-Control: no-store, must-revalidate
 
 /terms/
-  Cache-Control: no-cache
+  Cache-Control: no-store, must-revalidate
 
 /delete-account/
-  Cache-Control: no-cache
+  Cache-Control: no-store, must-revalidate
 
 /site.css
-  Cache-Control: no-cache
+  Cache-Control: no-store, must-revalidate
 
 /favicon-dark-64.png
   Cache-Control: public, max-age=3600, must-revalidate
