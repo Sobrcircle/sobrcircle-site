@@ -31,9 +31,10 @@
   left: 0;
   right: 0;
   z-index: 20;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
   align-items: center;
+  justify-content: center;
+  gap: clamp(1.2rem, 3vw, 2.2rem);
   padding: 0.8rem clamp(1.25rem, 4vw, 3rem);
   overflow: hidden;
   background: rgba(10, 10, 10, 0.88);
@@ -49,7 +50,6 @@
   text-decoration: none;
   color: var(--home-text);
   flex-shrink: 0;
-  padding: 0 clamp(0.8rem, 2vw, 1.4rem);
 }
 
 .home-nav-logo {
@@ -63,12 +63,7 @@
 .home-nav-group {
   display: flex;
   align-items: center;
-  gap: clamp(1rem, 2.5vw, 1.8rem);
-}
-
-.home-nav-group--left,
-.home-nav-group--right {
-  justify-content: center;
+  gap: clamp(1.2rem, 3vw, 2.2rem);
 }
 
 .home-nav-group a {
@@ -758,8 +753,8 @@
     padding-right: max(0.75rem, env(safe-area-inset-right, 0.75rem));
   }
 
-  .home-nav-brand {
-    padding: 0 0.6rem;
+  .home-nav {
+    gap: 0.9rem;
   }
 
   .home-nav-logo {
@@ -812,16 +807,16 @@
 
 /* ─── Very narrow screens: keep 4 nav labels visible ─── */
 @media (max-width: 380px) {
+  .home-nav {
+    gap: 0.7rem;
+  }
+
   .home-nav-group {
     gap: 0.7rem;
   }
 
   .home-nav-group a {
     font-size: 0.72rem;
-  }
-
-  .home-nav-brand {
-    padding: 0 0.4rem;
   }
 }
 
