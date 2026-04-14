@@ -339,21 +339,36 @@
   perspective: 1200px;
 }
 
-/* Subtle warm glow behind phone — breathing */
+/* Warm breathing glow behind the phone — gives the shell definition against
+   the page bg without the static box-shadow that caused seam banding. */
 .home-phone-wrap::before {
   content: '';
   position: absolute;
-  inset: 10% 15%;
-  background: radial-gradient(ellipse at center, rgba(196, 168, 130, 0.06) 0%, transparent 70%);
-  filter: blur(40px);
+  inset: -4% -10%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(196, 168, 130, 0.18) 0%,
+    rgba(196, 168, 130, 0.08) 35%,
+    transparent 70%
+  );
+  filter: blur(30px);
   pointer-events: none;
   z-index: -1;
-  animation: phoneGlow 6s ease-in-out infinite;
+  animation: phoneGlow 5.5s ease-in-out infinite;
+  will-change: opacity, transform;
 }
 
 @keyframes phoneGlow {
-  0%, 100% { opacity: 0.6; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.08); }
+  0%, 100% { opacity: 0.55; transform: scale(0.97); }
+  50%      { opacity: 1;    transform: scale(1.05); }
+}
+
+/* Stagger the breathing so adjacent phones don't pulse in lockstep */
+.home-section:nth-of-type(even) .home-phone-wrap::before { animation-delay: -1.8s; }
+.home-section:nth-of-type(3n)    .home-phone-wrap::before { animation-delay: -3.2s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .home-phone-wrap::before { animation: none; opacity: 0.7; }
 }
 
 .home-phone-shell {
