@@ -19,7 +19,7 @@ export default function HomePage() {
   const [booted, setBooted] = useState(false)
 
   useLenis()
-  useScrollAnimation()
+  useScrollAnimation(booted)
   useSplitReveal(booted)
 
   let featureIndex = 0
