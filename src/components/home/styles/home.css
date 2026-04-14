@@ -31,10 +31,10 @@
   left: 0;
   right: 0;
   z-index: 20;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: center;
-  gap: clamp(1.2rem, 3vw, 2.2rem);
+  column-gap: clamp(1.2rem, 3vw, 2.2rem);
   padding: 0.8rem clamp(1.25rem, 4vw, 3rem);
   overflow: hidden;
   background: rgba(10, 10, 10, 0.88);
@@ -64,6 +64,14 @@
   display: flex;
   align-items: center;
   gap: clamp(1.2rem, 3vw, 2.2rem);
+}
+
+.home-nav-group--left {
+  justify-content: flex-end;
+}
+
+.home-nav-group--right {
+  justify-content: flex-start;
 }
 
 .home-nav-group a {
@@ -754,7 +762,7 @@
   }
 
   .home-nav {
-    gap: 0.9rem;
+    column-gap: 0.9rem;
   }
 
   .home-nav-logo {
@@ -808,7 +816,7 @@
 /* ─── Very narrow screens: keep 4 nav labels visible ─── */
 @media (max-width: 380px) {
   .home-nav {
-    gap: 0.7rem;
+    column-gap: 0.7rem;
   }
 
   .home-nav-group {
