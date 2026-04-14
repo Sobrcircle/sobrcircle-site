@@ -3,7 +3,7 @@ const BG = '#0a0a0a'
 const TEXT = '#e8e4df'
 const MUTED = '#6b6560'
 const ACCENT = '#c4a882'
-const FONT = 'Georgia'
+const FONT = "'Times New Roman', Times, serif"
 
 const PAD_X = 90
 const PAD_TOP = 120

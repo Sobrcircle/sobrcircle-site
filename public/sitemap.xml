@@ -2,8 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://sobrcircle.com/</loc>
-    <lastmod>2026-02-27</lastmod>
-    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://sobrcircle.com/twentyfour/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sobrcircle.com/support/</loc>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://sobrcircle.com/privacy/</loc>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://sobrcircle.com/terms/</loc>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://sobrcircle.com/delete-account/</loc>
+    <priority>0.2</priority>
   </url>
 </urlset>
