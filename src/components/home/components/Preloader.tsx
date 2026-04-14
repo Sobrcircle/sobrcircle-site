@@ -24,13 +24,20 @@ export default function Preloader({ onDone }: { onDone: () => void }) {
     const prevOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
 
-    const tl = gsap.timeline({
-      onComplete: () => {
-        document.body.style.overflow = prevOverflow
-        setVisible(false)
-        onDone()
-      },
-    })
+    let done = false
+    const finish = () => {
+      if (done) return
+      done = true
+      document.body.style.overflow = prevOverflow
+      setVisible(false)
+      onDone()
+    }
+
+    const tl = gsap.timeline({ onComplete: finish })
+
+    // Safety net: if GSAP stalls (e.g. tab backgrounded mid-tween),
+    // guarantee the curtain lifts so the site stays usable.
+    const failsafe = window.setTimeout(finish, 5500)
 
     tl.fromTo(
       lineRef.current,
@@ -47,6 +54,7 @@ export default function Preloader({ onDone }: { onDone: () => void }) {
 
     return () => {
       tl.kill()
+      window.clearTimeout(failsafe)
       document.body.style.overflow = prevOverflow
     }
   }, [visible, onDone])

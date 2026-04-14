@@ -5,6 +5,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin(ScrollTrigger)
 
 export function useScrollAnimation(booted: boolean = true) {
+  // Mount — pre-hide everything so nothing flashes before the curtain lifts.
   useEffect(() => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (reduceMotion) {
@@ -16,67 +17,72 @@ export function useScrollAnimation(booted: boolean = true) {
       return
     }
 
-    // Pre-hide the elements that should fade/populate in. Scroll-driven tweens
-    // are registered below after fonts load so trigger positions are computed
-    // against final layout (critical on mobile where fonts/images shift
-    // section offsets noticeably).
-    const animElements = document.querySelectorAll<HTMLElement>('[data-animate]')
-    animElements.forEach((el) => { gsap.set(el, { opacity: 0 }) })
+    document.querySelectorAll<HTMLElement>('[data-animate]').forEach((el) => {
+      gsap.set(el, { opacity: 0 })
+    })
 
-    const isMobile = window.innerWidth < 700
-    const phones = document.querySelectorAll<HTMLElement>('.home-phone-wrap')
-    phones.forEach((phone) => {
+    document.querySelectorAll<HTMLElement>('.home-phone-wrap').forEach((phone) => {
       gsap.set(phone, { transformPerspective: 1200, opacity: 0, scale: 0.92 })
     })
 
-    // Pre-hide hero branding so it stays dark behind the curtain — the
-    // booted-gated effect below fires the entrance when the preloader lifts.
     const heroLogo = document.querySelector('.home-logo')
     const heroBrand = document.querySelector('.home-brand')
     const heroTagline = document.querySelector('.home-tagline')
     if (heroLogo) gsap.set(heroLogo, { opacity: 0, scale: 0 })
     if (heroBrand) gsap.set(heroBrand, { opacity: 0, y: 16 })
     if (heroTagline) gsap.set(heroTagline, { opacity: 0 })
+  }, [])
 
-    // Failsafe: if a scroll trigger somehow never fires, reveal everything
-    // after 8s so the page never stays blank below the hero.
-    const failsafe = window.setTimeout(() => {
-      animElements.forEach((el) => { gsap.set(el, { opacity: 1 }) })
-      phones.forEach((el) => { gsap.set(el, { opacity: 1, scale: 1 }) })
-    }, 8000)
+  // After boot — wire up ScrollTrigger-based reveals and hero entrance.
+  // ScrollTrigger is used (not IntersectionObserver) because Lenis drives
+  // ScrollTrigger via `lenis.on('scroll', ScrollTrigger.update)`, so this is
+  // the path that reliably fires on both desktop and mobile native touch.
+  useEffect(() => {
+    if (!booted) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
-    const registerReveals = () => {
-      animElements.forEach((el) => {
+    const triggers: ScrollTrigger[] = []
+
+    const run = () => {
+      // Body / text block reveals.
+      document.querySelectorAll<HTMLElement>('[data-animate]').forEach((el) => {
         const delay = parseFloat(el.dataset.delay || '0')
-        gsap.to(el, {
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 85%',
-            toggleActions: 'play none none none',
+        const st = ScrollTrigger.create({
+          trigger: el,
+          start: 'top 88%',
+          once: true,
+          onEnter: () => {
+            gsap.to(el, {
+              opacity: 1,
+              duration: 1.0,
+              delay,
+              ease: 'power2.out',
+            })
           },
-          opacity: 1,
-          duration: 1.0,
-          delay,
-          ease: 'power2.out',
         })
+        triggers.push(st)
       })
 
+      // Phone entrance.
+      const phones = document.querySelectorAll<HTMLElement>('.home-phone-wrap')
+      const isMobile = window.innerWidth < 700
       phones.forEach((phone, i) => {
-        const shell = phone.querySelector<HTMLElement>('.home-phone-shell')
-
-        gsap.to(phone, {
-          scrollTrigger: {
-            trigger: phone,
-            start: 'top 85%',
-            toggleActions: 'play none none none',
+        const st = ScrollTrigger.create({
+          trigger: phone,
+          start: 'top 88%',
+          once: true,
+          onEnter: () => {
+            gsap.to(phone, {
+              opacity: 1,
+              scale: 1,
+              duration: 1.3,
+              ease: 'power3.out',
+            })
           },
-          opacity: 1,
-          scale: 1,
-          duration: 1.3,
-          ease: 'power3.out',
         })
+        triggers.push(st)
 
-        // Scroll-driven parallax + gentle 3D tilt — desktop/tablet only.
+        const shell = phone.querySelector<HTMLElement>('.home-phone-shell')
         if (!isMobile) {
           gsap.fromTo(
             phone,
@@ -96,7 +102,6 @@ export function useScrollAnimation(booted: boolean = true) {
           )
         }
 
-        // Breathing float on the inner shell.
         if (shell) {
           gsap.to(shell, {
             y: isMobile ? 6 : 10,
@@ -109,57 +114,49 @@ export function useScrollAnimation(booted: boolean = true) {
         }
       })
 
-      // Positions now stamped — refresh so triggers registered before
-      // fonts/layout settled get recalibrated.
       ScrollTrigger.refresh()
     }
 
+    // Wait for fonts so measurements are against final layout.
     if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(registerReveals)
+      document.fonts.ready.then(run)
     } else {
-      registerReveals()
+      run()
     }
 
-    return () => {
-      window.clearTimeout(failsafe)
-      ScrollTrigger.getAll().forEach((t) => t.kill())
-    }
-  }, [])
-
-  // ── Hero branding entrance — only after the preloader curtain lifts ──
-  useEffect(() => {
-    if (!booted) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-
+    // Hero branding entrance — plays as the curtain lifts.
     const heroLogo = document.querySelector('.home-logo')
     const heroBrand = document.querySelector('.home-brand')
     const heroTagline = document.querySelector('.home-tagline')
-    if (!heroLogo || !heroBrand || !heroTagline) return
-
     const heroTl = gsap.timeline({ delay: 0.1 })
-    heroTl
-      .fromTo(heroLogo,
-        { opacity: 0, scale: 0 },
-        { opacity: 1, scale: 1.35, duration: 1, ease: 'power2.out' }
-      )
-      .to(heroLogo,
-        { scale: 1, duration: 0.8, ease: 'power2.inOut' }
-      )
-      .fromTo(heroBrand,
+    if (heroLogo) {
+      heroTl
+        .fromTo(heroLogo,
+          { opacity: 0, scale: 0 },
+          { opacity: 1, scale: 1.35, duration: 1, ease: 'power2.out' }
+        )
+        .to(heroLogo,
+          { scale: 1, duration: 0.8, ease: 'power2.inOut' }
+        )
+    }
+    if (heroBrand) {
+      heroTl.fromTo(heroBrand,
         { opacity: 0, y: 16 },
         { opacity: 1, y: 0, duration: 1, ease: 'power2.out' },
         0.6
       )
-      .fromTo(heroTagline,
+    }
+    if (heroTagline) {
+      heroTl.fromTo(heroTagline,
         { opacity: 0 },
         { opacity: 1, duration: 0.9, ease: 'power2.out' },
         1.1
       )
+    }
 
-    // Refresh triggers once booted — curtain lift is when final layout is
-    // first visible and any triggers created earlier should recalibrate.
-    ScrollTrigger.refresh()
-
-    return () => { heroTl.kill() }
+    return () => {
+      triggers.forEach((t) => t.kill())
+      heroTl.kill()
+    }
   }, [booted])
 }
