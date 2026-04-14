@@ -16,95 +16,17 @@ export function useScrollAnimation(booted: boolean = true) {
       return
     }
 
-    // ── Fade-in reveals for text/phone blocks ──
-    // IntersectionObserver (not ScrollTrigger) so it fires reliably on mobile
-    // regardless of Lenis smooth-scroll state or touch event handling.
+    // Pre-hide the elements that should fade/populate in. Scroll-driven tweens
+    // are registered below after fonts load so trigger positions are computed
+    // against final layout (critical on mobile where fonts/images shift
+    // section offsets noticeably).
     const animElements = document.querySelectorAll<HTMLElement>('[data-animate]')
     animElements.forEach((el) => { gsap.set(el, { opacity: 0 }) })
 
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return
-          const el = entry.target as HTMLElement
-          const delay = parseFloat(el.dataset.delay || '0')
-          gsap.to(el, {
-            opacity: 1,
-            duration: 1.0,
-            delay,
-            ease: 'power2.out',
-          })
-          io.unobserve(el)
-        })
-      },
-      { rootMargin: '0px 0px -18% 0px', threshold: 0.01 }
-    )
-    animElements.forEach((el) => io.observe(el))
-
-    // ── Phone mockups: scroll parallax + 3D tilt on wrap, breathing on shell ──
-    // Splitting across elements so no two tweens fight over the same property.
     const isMobile = window.innerWidth < 700
     const phones = document.querySelectorAll<HTMLElement>('.home-phone-wrap')
-
-    const phoneIo = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return
-          const el = entry.target as HTMLElement
-          gsap.to(el, {
-            opacity: 1,
-            scale: 1,
-            duration: 1.3,
-            ease: 'power3.out',
-          })
-          phoneIo.unobserve(el)
-        })
-      },
-      { rootMargin: '0px 0px -18% 0px', threshold: 0.01 }
-    )
-
-    phones.forEach((phone, i) => {
-      const shell = phone.querySelector<HTMLElement>('.home-phone-shell')
+    phones.forEach((phone) => {
       gsap.set(phone, { transformPerspective: 1200, opacity: 0, scale: 0.92 })
-
-      // Populate reveal — phone fades + scales in when the section enters view.
-      // IntersectionObserver for mobile reliability (Lenis's touch passthrough
-      // can leave ScrollTrigger idle).
-      phoneIo.observe(phone)
-
-      // Scroll-driven parallax + gentle 3D tilt — desktop/tablet only
-      // Amplitudes kept small so the image never crops inside the shell.
-      if (!isMobile) {
-        gsap.fromTo(
-          phone,
-          { y: 20, rotateX: 4, rotateY: -2 },
-          {
-            scrollTrigger: {
-              trigger: phone,
-              start: 'top 95%',
-              end: 'bottom 10%',
-              scrub: 1.4,
-            },
-            y: -20,
-            rotateX: -3,
-            rotateY: 2,
-            ease: 'none',
-          }
-        )
-      }
-
-      // Breathing float on the inner shell so it never conflicts with scroll tweens
-      if (shell) {
-        gsap.to(shell, {
-          y: isMobile ? 6 : 10,
-          duration: 4.5 + i * 0.4,
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut',
-          delay: i * 0.5,
-        })
-      }
-
     })
 
     // Pre-hide hero branding so it stays dark behind the curtain — the
@@ -116,10 +38,91 @@ export function useScrollAnimation(booted: boolean = true) {
     if (heroBrand) gsap.set(heroBrand, { opacity: 0, y: 16 })
     if (heroTagline) gsap.set(heroTagline, { opacity: 0 })
 
+    // Failsafe: if a scroll trigger somehow never fires, reveal everything
+    // after 8s so the page never stays blank below the hero.
+    const failsafe = window.setTimeout(() => {
+      animElements.forEach((el) => { gsap.set(el, { opacity: 1 }) })
+      phones.forEach((el) => { gsap.set(el, { opacity: 1, scale: 1 }) })
+    }, 8000)
+
+    const registerReveals = () => {
+      animElements.forEach((el) => {
+        const delay = parseFloat(el.dataset.delay || '0')
+        gsap.to(el, {
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 85%',
+            toggleActions: 'play none none none',
+          },
+          opacity: 1,
+          duration: 1.0,
+          delay,
+          ease: 'power2.out',
+        })
+      })
+
+      phones.forEach((phone, i) => {
+        const shell = phone.querySelector<HTMLElement>('.home-phone-shell')
+
+        gsap.to(phone, {
+          scrollTrigger: {
+            trigger: phone,
+            start: 'top 85%',
+            toggleActions: 'play none none none',
+          },
+          opacity: 1,
+          scale: 1,
+          duration: 1.3,
+          ease: 'power3.out',
+        })
+
+        // Scroll-driven parallax + gentle 3D tilt — desktop/tablet only.
+        if (!isMobile) {
+          gsap.fromTo(
+            phone,
+            { y: 20, rotateX: 4, rotateY: -2 },
+            {
+              scrollTrigger: {
+                trigger: phone,
+                start: 'top 95%',
+                end: 'bottom 10%',
+                scrub: 1.4,
+              },
+              y: -20,
+              rotateX: -3,
+              rotateY: 2,
+              ease: 'none',
+            }
+          )
+        }
+
+        // Breathing float on the inner shell.
+        if (shell) {
+          gsap.to(shell, {
+            y: isMobile ? 6 : 10,
+            duration: 4.5 + i * 0.4,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut',
+            delay: i * 0.5,
+          })
+        }
+      })
+
+      // Positions now stamped — refresh so triggers registered before
+      // fonts/layout settled get recalibrated.
+      ScrollTrigger.refresh()
+    }
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(registerReveals)
+    } else {
+      registerReveals()
+    }
+
     return () => {
+      window.clearTimeout(failsafe)
       ScrollTrigger.getAll().forEach((t) => t.kill())
-      io.disconnect()
-      phoneIo.disconnect()
     }
   }, [])
 
@@ -152,6 +155,10 @@ export function useScrollAnimation(booted: boolean = true) {
         { opacity: 1, duration: 0.9, ease: 'power2.out' },
         1.1
       )
+
+    // Refresh triggers once booted — curtain lift is when final layout is
+    // first visible and any triggers created earlier should recalibrate.
+    ScrollTrigger.refresh()
 
     return () => { heroTl.kill() }
   }, [booted])
