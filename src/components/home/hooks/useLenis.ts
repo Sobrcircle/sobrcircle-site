@@ -14,11 +14,33 @@ export function useLenis() {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (reduce) return
 
+    // Touch devices: skip Lenis entirely. Even with syncTouch:false, Lenis
+    // still patches <html>, runs a RAF loop, and its wheel handlers can end
+    // up fighting the native touch scroll pipeline — the page feels
+    // "sticky" and stutters when swiping. Native iOS/Android scroll is
+    // already smooth; we only want Lenis for desktop wheel/trackpad.
+    const isTouch = window.matchMedia('(pointer: coarse)').matches
+    if (isTouch) {
+      // Still intercept in-page anchor clicks so nav scrolls smoothly via
+      // the native API (respects iOS rubber-band and momentum).
+      const onAnchorClickNative = (e: MouseEvent) => {
+        const target = (e.target as HTMLElement).closest('a[href^="#"]') as HTMLAnchorElement | null
+        if (!target) return
+        const id = target.getAttribute('href')?.slice(1)
+        if (!id) return
+        const el = document.getElementById(id)
+        if (!el) return
+        e.preventDefault()
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+      document.addEventListener('click', onAnchorClickNative)
+      return () => document.removeEventListener('click', onAnchorClickNative)
+    }
+
     const lenis = new Lenis({
       lerp: 0.09,
       duration: 1.2,
       smoothWheel: true,
-      // syncTouch disabled — native iOS/Android scroll feels better on touch
     })
 
     lenis.on('scroll', ScrollTrigger.update)
