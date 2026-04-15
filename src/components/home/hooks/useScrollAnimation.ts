@@ -124,27 +124,11 @@ export function useScrollAnimation(booted: boolean = true) {
       run()
     }
 
-    // Refresh start positions once all images have loaded. Without this,
-    // phone images lower on the page finish loading after ScrollTrigger
-    // was created, the page grows taller, and stale start positions cause
-    // lower sections' onEnter to fire prematurely — so they appear already
-    // faded in when the user finally scrolls to them.
-    const images = Array.from(document.images)
-    const pending = images.filter((img) => !img.complete)
-    let remaining = pending.length
-    const onImgDone = () => {
-      remaining -= 1
-      if (remaining <= 0) ScrollTrigger.refresh()
-    }
-    pending.forEach((img) => {
-      img.addEventListener('load', onImgDone, { once: true })
-      img.addEventListener('error', onImgDone, { once: true })
-    })
-
-    // Also refresh on window resize / orientation change.
-    const onResize = () => ScrollTrigger.refresh()
-    window.addEventListener('resize', onResize)
-    window.addEventListener('orientationchange', onResize)
+    // Note: no image-load or resize refresh here. The phone images have an
+    // explicit aspect-ratio so layout never shifts when they load, and the
+    // mobile URL bar constantly fires resize events as it collapses/expands
+    // during native scroll — refreshing ScrollTrigger on each one
+    // interrupts scroll momentum and feels like the page is "anchoring".
 
     // Hero branding entrance — plays as the curtain lifts.
     const heroLogo = document.querySelector('.home-logo')
@@ -179,8 +163,6 @@ export function useScrollAnimation(booted: boolean = true) {
     return () => {
       triggers.forEach((t) => t.kill())
       heroTl.kill()
-      window.removeEventListener('resize', onResize)
-      window.removeEventListener('orientationchange', onResize)
     }
   }, [booted])
 }
