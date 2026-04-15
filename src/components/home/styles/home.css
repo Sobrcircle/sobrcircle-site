@@ -397,6 +397,12 @@
   width: 100%;
   height: auto;
   display: block;
+  /* Reserve the image's vertical footprint before it loads so lazy-loaded
+     phones below the fold don't shift layout as they arrive. Without this,
+     ScrollTriggers below a not-yet-loaded phone are created against a
+     shorter page and fire their onEnter prematurely when the image pops
+     in and pushes sections down. */
+  aspect-ratio: 9 / 19.5;
 }
 
 /* Split layout phone: subtle tilt toward text */
