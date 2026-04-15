@@ -39,6 +39,14 @@ export default function Preloader({ onDone }: { onDone: () => void }) {
     // guarantee the curtain lifts so the site stays usable.
     const failsafe = window.setTimeout(finish, 5500)
 
+    // If the user tries to interact (tap, scroll, swipe), skip straight
+    // to the site — a preloader should never feel like a wall.
+    const skip = () => finish()
+    window.addEventListener('pointerdown', skip, { once: true, passive: true })
+    window.addEventListener('touchstart', skip, { once: true, passive: true })
+    window.addEventListener('wheel', skip, { once: true, passive: true })
+    window.addEventListener('keydown', skip, { once: true })
+
     tl.fromTo(
       lineRef.current,
       { opacity: 0, y: 16, filter: 'blur(8px)' },
@@ -55,6 +63,10 @@ export default function Preloader({ onDone }: { onDone: () => void }) {
     return () => {
       tl.kill()
       window.clearTimeout(failsafe)
+      window.removeEventListener('pointerdown', skip)
+      window.removeEventListener('touchstart', skip)
+      window.removeEventListener('wheel', skip)
+      window.removeEventListener('keydown', skip)
       document.body.style.overflow = prevOverflow
     }
   }, [visible, onDone])
