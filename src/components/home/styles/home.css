@@ -1191,8 +1191,10 @@ html {
 }
 
 /* ── 3D phone tilt perspective support ── */
+/* perspective alone gives the rotateX tilt its depth. preserve-3d is
+   intentionally omitted: putting the ::before glow into shared 3D space
+   with the tilted shell caused a horizontal clip line across the phone. */
 .home-phone-wrap {
-  transform-style: preserve-3d;
   perspective: 1200px;
 }
 
