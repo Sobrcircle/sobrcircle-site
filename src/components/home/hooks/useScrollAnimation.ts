@@ -124,6 +124,28 @@ export function useScrollAnimation(booted: boolean = true) {
       run()
     }
 
+    // Refresh start positions once all images have loaded. Without this,
+    // phone images lower on the page finish loading after ScrollTrigger
+    // was created, the page grows taller, and stale start positions cause
+    // lower sections' onEnter to fire prematurely — so they appear already
+    // faded in when the user finally scrolls to them.
+    const images = Array.from(document.images)
+    const pending = images.filter((img) => !img.complete)
+    let remaining = pending.length
+    const onImgDone = () => {
+      remaining -= 1
+      if (remaining <= 0) ScrollTrigger.refresh()
+    }
+    pending.forEach((img) => {
+      img.addEventListener('load', onImgDone, { once: true })
+      img.addEventListener('error', onImgDone, { once: true })
+    })
+
+    // Also refresh on window resize / orientation change.
+    const onResize = () => ScrollTrigger.refresh()
+    window.addEventListener('resize', onResize)
+    window.addEventListener('orientationchange', onResize)
+
     // Hero branding entrance — plays as the curtain lifts.
     const heroLogo = document.querySelector('.home-logo')
     const heroBrand = document.querySelector('.home-brand')
@@ -157,6 +179,8 @@ export function useScrollAnimation(booted: boolean = true) {
     return () => {
       triggers.forEach((t) => t.kill())
       heroTl.kill()
+      window.removeEventListener('resize', onResize)
+      window.removeEventListener('orientationchange', onResize)
     }
   }, [booted])
 }
