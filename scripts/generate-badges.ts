@@ -270,14 +270,13 @@ function drawMicroTypography(ctx: SKRSContext2D, hex: string) {
   const lb = Math.round(b + (255 - b) * k)
   const fill = `rgba(${lr}, ${lg}, ${lb}, 0.95)`
 
-  // In the gap between the brushed ring's outer edge and the white
-  // halo line at the badge's outer perimeter. Text rides at r=388 with
-  // a small font so it fits in the band without bleeding into either.
-  const radius = 388
-  const fontSize = 20
+  // Dead center of the gap between the brushstroke's outer edge (~r=378)
+  // and the bright white halo line (~r=390). Text rides at r=383.
+  const radius = 383
+  const fontSize = 26
 
   const segments: { text: string; weight: number }[] = []
-  const repeats = 10
+  const repeats = 8
   for (let i = 0; i < repeats; i++) {
     segments.push({ text: 'Sobr',   weight: 700 })
     segments.push({ text: 'Circle', weight: 400 })
