@@ -1,32 +1,42 @@
 // Build PNG badges by compositing on top of the master template.
 // Template lives at public/badges/template.png (1024x1024, "24 HOURS" worn-chrome disc).
-// For each duration we erase the existing center text by overlaying a
-// matching vertical gradient inside a soft circular mask, then draw the
-// new "<N> <UNIT>" text in a similar light/etched style.
 //
-// First-pass output goes to public/badges/v1/preview/ so it doesn't clobber
-// the existing AI-generated v1 badges until we sign off on the look.
+// Strategy:
+//   1. Draw the template.
+//   2. Erase the existing center text by replacing the inner-disc region
+//      with a heavily-blurred copy of itself (the blur smears the bright
+//      text strokes into the surrounding gray, leaving a clean canvas
+//      with the master's exact lighting). A soft circular alpha mask
+//      keeps the chrome ring untouched.
+//   3. Draw the new "<N> <UNIT>" text in Inter Thin with an etched/worn
+//      edge to match the master's distressed-chrome look.
+//
+// Output goes to public/badges/v1/preview/.
 
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { createCanvas, loadImage } from '@napi-rs/canvas'
+import { createCanvas, loadImage, GlobalFonts } from '@napi-rs/canvas'
 import type { SKRSContext2D } from '@napi-rs/canvas'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(__dirname, '..')
 const TEMPLATE = path.join(ROOT, 'public/badges/template.png')
 const OUT_DIR = path.join(ROOT, 'public/badges/v1/preview')
+const FONT_PATH = path.join(ROOT, 'scripts/fonts/Inter.ttf')
+
+GlobalFonts.registerFromPath(FONT_PATH, 'Inter')
 
 const SIZE = 1024
-// Center of badge inside the canvas (slightly above geometric center because
-// the template's original glow extends below the disc).
+// Center of the badge inside the canvas. The master's halo extends below
+// the disc, so the disc itself sits slightly above geometric center.
 const CX = 512
 const CY = 484
-// Radius of the area we want to repaint (inside the chrome ring).
-const FILL_R = 230
-// Soft feather radius — alpha fades from full at FILL_R*0.78 to 0 at FILL_R.
-const FEATHER_INNER = FILL_R * 0.78
+// Inner-disc radius — the chrome ring's inner edge is ~r=265, so 240
+// covers the existing text without clipping the ring.
+const FILL_R = 240
+// Soft feather range — alpha fades from full at FEATHER_INNER to 0 at FILL_R.
+const FEATHER_INNER = FILL_R * 0.82
 
 type Duration = {
   slug: string
@@ -34,71 +44,109 @@ type Duration = {
   label: string
 }
 
-// Erase the existing text region by overlaying a vertical gradient that
-// matches the inner-disc lighting, soft-masked at the edges so it blends
-// into the surrounding chrome instead of leaving a visible disc.
-function eraseCenterText(ctx: SKRSContext2D) {
+// Replace the inner-disc region with a blurred copy of itself. The bright
+// strokes of "24 HOURS" get smeared into the surrounding gray, giving us
+// a clean canvas with the master's exact color and lighting. A soft alpha
+// mask blends the patch back into the chrome ring at the edges.
+function eraseCenterText(ctx: SKRSContext2D, template: any) {
   const off = createCanvas(SIZE, SIZE)
   const offCtx = off.getContext('2d')
 
-  // Vertical lighting matching the template (sampled values).
-  const grad = offCtx.createLinearGradient(0, CY - FILL_R, 0, CY + FILL_R)
-  grad.addColorStop(0, 'rgb(198, 200, 213)')
-  grad.addColorStop(0.5, 'rgb(186, 189, 202)')
-  grad.addColorStop(1, 'rgb(168, 171, 186)')
-  offCtx.fillStyle = grad
-  offCtx.fillRect(CX - FILL_R, CY - FILL_R, FILL_R * 2, FILL_R * 2)
+  // Draw the template with a heavy blur — this smears the existing text out
+  // of recognition while preserving the disc's lighting and color.
+  offCtx.filter = 'blur(40px)'
+  offCtx.drawImage(template, 0, 0, SIZE, SIZE)
+  offCtx.filter = 'none'
 
-  // Soft circular alpha mask: opaque in center, fading to 0 at edge.
+  // Soft circular alpha mask centered on the disc.
   const mask = offCtx.createRadialGradient(CX, CY, FEATHER_INNER, CX, CY, FILL_R)
   mask.addColorStop(0, 'rgba(0,0,0,1)')
   mask.addColorStop(1, 'rgba(0,0,0,0)')
   offCtx.globalCompositeOperation = 'destination-in'
   offCtx.fillStyle = mask
-  offCtx.fillRect(CX - FILL_R, CY - FILL_R, FILL_R * 2, FILL_R * 2)
+  offCtx.fillRect(0, 0, SIZE, SIZE)
 
   ctx.drawImage(off, 0, 0)
 }
 
-// Draw the big numeral and small label in a light, slightly transparent
-// white that approximates the etched-chrome look of the master template.
-function drawText(ctx: SKRSContext2D, d: Duration) {
-  const bigLen = d.big.length
-  const bigSize = bigLen === 1 ? 300 : bigLen === 2 ? 240 : 200
-  const labelSize = 50
-
-  ctx.fillStyle = 'rgba(248, 249, 252, 0.92)'
+function drawCenteredText(
+  ctx: SKRSContext2D,
+  text: string,
+  cx: number,
+  cy: number,
+  size: number,
+  weight: number,
+  tracking = 0,
+) {
+  ctx.font = `${weight} ${size}px Inter, sans-serif`
   ctx.textAlign = 'center'
   ctx.textBaseline = 'alphabetic'
 
-  // Numeral
-  ctx.font = `300 ${bigSize}px "DejaVu Sans", "Liberation Sans", "FreeSans", sans-serif`
-  ctx.fillText(d.big, CX, CY + bigSize * 0.18)
-
-  // Label — manually space the letters since canvas has no letterSpacing.
-  ctx.font = `400 ${labelSize}px "DejaVu Sans", "Liberation Sans", "FreeSans", sans-serif`
-  const tracking = 14
-  const chars = d.label.split('')
-  let totalW = 0
-  const widths = chars.map((c) => {
-    const w = ctx.measureText(c).width
-    totalW += w
-    return w
-  })
-  totalW += tracking * (chars.length - 1)
-  let x = CX - totalW / 2
-  const y = CY + bigSize * 0.18 + 80
+  const chars = text.split('')
+  const widths = chars.map((c) => ctx.measureText(c).width)
+  const totalW = widths.reduce((a, b) => a + b, 0) + tracking * (chars.length - 1)
+  let x = cx - totalW / 2
   for (let i = 0; i < chars.length; i++) {
-    ctx.fillText(chars[i], x + widths[i] / 2, y)
+    ctx.fillText(chars[i], x + widths[i] / 2, cy)
     x += widths[i] + tracking
   }
+}
+
+// Apply a distressed / etched edge to a freshly drawn text layer by punching
+// out small random clusters of alpha. Operates only inside the bbox so the
+// rest of the canvas isn't touched.
+function distressLayer(canvas: any, bbox: { x: number; y: number; w: number; h: number }) {
+  const ctx = canvas.getContext('2d')
+  const img = ctx.getImageData(bbox.x, bbox.y, bbox.w, bbox.h)
+  const px = img.data
+  let seed = 1
+  const rand = () => {
+    seed = (seed * 1664525 + 1013904223) % 0x100000000
+    return seed / 0x100000000
+  }
+  for (let i = 3; i < px.length; i += 4) {
+    if (px[i] === 0) continue
+    const r = rand()
+    if (r < 0.10) px[i] = Math.max(0, px[i] - Math.floor(rand() * 200))
+    else if (r < 0.13) px[i] = 0
+    else px[i] = Math.max(0, Math.min(255, px[i] - Math.floor(rand() * 18)))
+  }
+  ctx.putImageData(img, bbox.x, bbox.y)
+}
+
+function drawText(ctx: SKRSContext2D, d: Duration) {
+  const bigLen = d.big.length
+  const bigSize = bigLen === 1 ? 290 : bigLen === 2 ? 230 : 195
+  const labelSize = 46
+  const labelTracking = 12
+
+  const layer = createCanvas(SIZE, SIZE)
+  const lctx = layer.getContext('2d')
+  lctx.fillStyle = 'rgba(252, 253, 255, 0.95)'
+
+  const numeralBaseline = CY + bigSize * 0.18
+  drawCenteredText(lctx, d.big, CX, numeralBaseline, bigSize, 200)
+  drawCenteredText(lctx, d.label, CX, numeralBaseline + 78, labelSize, 400, labelTracking)
+
+  distressLayer(layer, {
+    x: CX - 280,
+    y: CY - bigSize * 0.7,
+    w: 560,
+    h: bigSize + 160,
+  })
+
+  ctx.save()
+  ctx.shadowColor = 'rgba(255, 255, 255, 0.55)'
+  ctx.shadowBlur = 10
+  ctx.drawImage(layer, 0, 0)
+  ctx.restore()
 }
 
 async function renderBadge(template: any, d: Duration): Promise<Buffer> {
   const canvas = createCanvas(SIZE, SIZE)
   const ctx = canvas.getContext('2d')
   ctx.drawImage(template, 0, 0, SIZE, SIZE)
-  eraseCenterText(ctx)
+  eraseCenterText(ctx, template)
   drawText(ctx, d)
   return canvas.toBuffer('image/png')
 }

@@ -8,36 +8,28 @@ const ctx = canvas.getContext('2d')
 ctx.drawImage(img, 0, 0)
 
 const data = ctx.getImageData(0, 0, w, h).data
-let minX = w
-let minY = h
-let maxX = 0
-let maxY = 0
-for (let y = 0; y < h; y++) {
-  for (let x = 0; x < w; x++) {
-    const a = data[(y * w + x) * 4 + 3]
-    if (a > 5) {
-      if (x < minX) minX = x
-      if (y < minY) minY = y
-      if (x > maxX) maxX = x
-      if (y > maxY) maxY = y
-    }
-  }
-}
-console.log(`badge bbox: x=${minX}-${maxX} y=${minY}-${maxY}`)
-console.log(`size: ${maxX - minX} x ${maxY - minY}`)
-console.log(`center: (${(minX + maxX) / 2}, ${(minY + maxY) / 2})`)
-
-const sample = (x: number, y: number): string => {
+const sample = (x: number, y: number) => {
   const i = (y * w + x) * 4
-  return `(${data[i]}, ${data[i + 1]}, ${data[i + 2]}, ${data[i + 3]})`
+  return { r: data[i], g: data[i + 1], b: data[i + 2], a: data[i + 3] }
 }
-console.log(`top of badge (512, ${minY + 50}): ${sample(512, minY + 50)}`)
-console.log(`above text (512, 350): ${sample(512, 350)}`)
-console.log(`above text (512, 400): ${sample(512, 400)}`)
-console.log(`below text (512, 700): ${sample(512, 700)}`)
-console.log(`below text (512, 750): ${sample(512, 750)}`)
-console.log(`inside ring left (380, 500): ${sample(380, 500)}`)
-console.log(`inside ring right (644, 500): ${sample(644, 500)}`)
-console.log(`text area middle (512, 500): ${sample(512, 500)}`)
-console.log(`outside ring left (260, 512): ${sample(260, 512)}`)
-console.log(`outside ring right (770, 512): ${sample(770, 512)}`)
+
+const CX = 512
+const CY = 484
+
+// Walk a horizontal line through center; brightness profile reveals ring location.
+console.log('horizontal profile through y=' + CY + ':')
+for (let r = 0; r <= 410; r += 10) {
+  const left = sample(CX - r, CY)
+  const right = sample(CX + r, CY)
+  const avgL = Math.round((left.r + left.g + left.b) / 3)
+  const avgR = Math.round((right.r + right.g + right.b) / 3)
+  console.log(`  r=${r.toString().padStart(3)}: L=${avgL} R=${avgR}`)
+}
+
+console.log('\nvertical profile (y values, x=512), avoiding text:')
+// scan columns just left of center to avoid text strokes
+for (let y = 80; y <= 900; y += 20) {
+  const c = sample(CX - 200, y)
+  const avg = Math.round((c.r + c.g + c.b) / 3)
+  console.log(`  y=${y.toString().padStart(3)}: avg=${avg}`)
+}
