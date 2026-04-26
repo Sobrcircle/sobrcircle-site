@@ -292,11 +292,11 @@ function applyTint(ctx: SKRSContext2D, hex: string) {
   ctx.putImageData(img, 0, 0)
 }
 
-// Soft glow that follows the bottom curve of the disc — like the lighter
-// halo you'd see under a coin sitting on a glowing surface. The arc is
-// rendered offscreen, then drawn back at three blur radii to build a
-// soft falloff: outer haze, mid-glow, sharper bright core. Placed just
-// outside the master halo (r=420) so it doesn't get masked by it.
+// Soft crescent glow that touches the bottom of the disc and curves
+// along its edge — like a lighter shadow you'd see under a coin. Built
+// by rendering a flat elliptical bloom positioned just below the disc,
+// then carving out the part that overlaps the disc itself so what's
+// left is a crescent that wraps the bottom curve.
 function drawUnderGlow(ctx: SKRSContext2D, hex: string) {
   const [r, g, b] = hexToRgb(hex)
   const a = 0.4
@@ -304,35 +304,39 @@ function drawUnderGlow(ctx: SKRSContext2D, hex: string) {
   const lg = Math.round(g + (255 - g) * a)
   const lb = Math.round(b + (255 - b) * a)
 
-  // Bottom arc: 22° to 158° — the 90° bottom of the disc is centered,
-  // ~68° tapers up each side.
-  const startAng = Math.PI * (22 / 180)
-  const endAng = Math.PI * (158 / 180)
-  const arcR = 420
-
-  // Render the arc itself onto an offscreen canvas first.
   const off = createCanvas(SIZE, SIZE)
   const octx = off.getContext('2d')
-  octx.lineCap = 'round'
-  octx.strokeStyle = `rgba(${lr}, ${lg}, ${lb}, 1)`
-  octx.lineWidth = 14
-  octx.beginPath()
-  octx.arc(CX, CY, arcR, startAng, endAng)
-  octx.stroke()
 
-  // Three composited passes of decreasing blur, each at lower opacity,
-  // build a layered glow with a soft outer falloff and a brighter core.
-  ctx.save()
-  ctx.globalAlpha = 0.7
-  ctx.filter = 'blur(40px)'
+  // Flat ellipse, top tangent to the disc bottom (CY + ~395). Center
+  // sits below the disc so the bright peak shows just under the edge.
+  const cx = CX
+  const cy = CY + 425
+  const halfW = 240
+  const halfH = 70
+
+  octx.save()
+  octx.translate(cx, cy)
+  octx.scale(halfW / halfH, 1)
+  const grad = octx.createRadialGradient(0, 0, 0, 0, 0, halfH * 1.4)
+  grad.addColorStop(0, `rgba(${lr}, ${lg}, ${lb}, 0.95)`)
+  grad.addColorStop(0.45, `rgba(${lr}, ${lg}, ${lb}, 0.5)`)
+  grad.addColorStop(1, `rgba(${lr}, ${lg}, ${lb}, 0)`)
+  octx.fillStyle = grad
+  octx.beginPath()
+  octx.arc(0, 0, halfH * 1.4, 0, Math.PI * 2)
+  octx.fill()
+  octx.restore()
+
+  // Carve out the portion of the ellipse that would sit on top of the
+  // disc so the glow becomes a crescent that hugs the disc's bottom
+  // curve instead of bleeding into the coin.
+  octx.globalCompositeOperation = 'destination-out'
+  octx.fillStyle = '#000'
+  octx.beginPath()
+  octx.arc(CX, CY, 395, 0, Math.PI * 2)
+  octx.fill()
+
   ctx.drawImage(off, 0, 0)
-  ctx.globalAlpha = 0.85
-  ctx.filter = 'blur(18px)'
-  ctx.drawImage(off, 0, 0)
-  ctx.globalAlpha = 1
-  ctx.filter = 'blur(6px)'
-  ctx.drawImage(off, 0, 0)
-  ctx.restore()
 }
 
 async function renderBadge(template: any, d: Duration): Promise<Buffer> {
