@@ -17,7 +17,9 @@ import type { SKRSContext2D } from '@napi-rs/canvas'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(__dirname, '..')
 const TEMPLATE = path.join(ROOT, 'public/badges/template.png')
-const OUT_DIR = path.join(ROOT, 'public/badges/v1/preview')
+const FINAL_DIR = path.join(ROOT, 'public/badges/v1')
+const PREVIEW_DIR = path.join(ROOT, 'public/badges/v1/preview')
+const MANIFEST_PATH = path.join(ROOT, 'public/badges/manifest.json')
 const FONT_PATH = path.join(ROOT, 'scripts/fonts/Inter.ttf')
 
 GlobalFonts.registerFromPath(FONT_PATH, 'Inter')
@@ -512,17 +514,59 @@ async function renderBadge(template: any, d: Duration): Promise<Buffer> {
 // Sample subset for visual review before generating the full set.
 const SAMPLE_SLUGS = new Set(['24hours', '6months', '18months', '1year', '5years'])
 
+// Human-readable duration label used as the manifest key.
+function manifestLabel(d: Duration): string {
+  if (d.label === 'HOURS') return `${d.big} Hours`
+  if (d.label === 'MONTH') return `${d.big} Month`
+  if (d.label === 'MONTHS') return `${d.big} Months`
+  if (d.label === 'YEAR') return `${d.big} Year`
+  return `${d.big} Years`
+}
+
+async function writeManifest() {
+  const badges: Record<string, string> = {}
+  for (const d of DURATIONS) {
+    badges[manifestLabel(d)] = `${d.slug}.png`
+  }
+  const manifest = {
+    version: 'badge-v1',
+    ttlHours: 24,
+    baseUrl: 'https://sobrcircle.com/badges/v1/',
+    fallback: {
+      light: 'lightmodecircle.png',
+      dark: 'darkmodecircle.png',
+    },
+    badges,
+  }
+  await fs.writeFile(MANIFEST_PATH, JSON.stringify(manifest, null, 2) + '\n')
+  console.log(`wrote manifest.json with ${Object.keys(badges).length} badges`)
+}
+
 async function main() {
   const onlySamples = process.argv.includes('--samples')
   const target = onlySamples ? DURATIONS.filter((d) => SAMPLE_SLUGS.has(d.slug)) : DURATIONS
+  const outDir = onlySamples ? PREVIEW_DIR : FINAL_DIR
 
   const template = await loadImage(TEMPLATE)
-  await fs.mkdir(OUT_DIR, { recursive: true })
+  await fs.mkdir(outDir, { recursive: true })
+
+  let count = 0
+  const t0 = Date.now()
   for (const d of target) {
     const buf = await renderBadge(template, d)
     const filename = `${d.slug}.png`
-    await fs.writeFile(path.join(OUT_DIR, filename), buf)
-    console.log(`wrote ${filename} (${d.color})`)
+    await fs.writeFile(path.join(outDir, filename), buf)
+    count++
+    if (!onlySamples && count % 10 === 0) {
+      const elapsed = ((Date.now() - t0) / 1000).toFixed(1)
+      console.log(`  ${count}/${target.length} written (${elapsed}s)`)
+    }
+  }
+  const elapsed = ((Date.now() - t0) / 1000).toFixed(1)
+  console.log(`wrote ${count} badge${count === 1 ? '' : 's'} in ${elapsed}s`)
+
+  if (!onlySamples) {
+    await writeManifest()
   }
 }
 
