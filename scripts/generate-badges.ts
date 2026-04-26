@@ -182,10 +182,20 @@ function distressLayer(canvas: any, bbox: { x: number; y: number; w: number; h: 
   ctx.putImageData(img, bbox.x, bbox.y)
 }
 
+// Lighten a hex toward white by `amount` (0..1). Used to render the text
+// in the same hue family as the chrome-ring highlights — ties the numerals
+// and label visually to the ring brushwork instead of solid white.
+function lighten(hex: string, amount: number): string {
+  const [r, g, b] = hexToRgb(hex)
+  return `rgb(${Math.round(r + (255 - r) * amount)}, ${Math.round(g + (255 - g) * amount)}, ${Math.round(b + (255 - b) * amount)})`
+}
+
 function drawText(ctx: SKRSContext2D, d: Duration) {
   const layer = createCanvas(SIZE, SIZE)
   const lctx = layer.getContext('2d')
-  lctx.fillStyle = 'rgba(252, 253, 255, 0.95)'
+  // Text color matches the brushed-ring highlight family: same hue as the
+  // tint, lifted ~62% toward white for clean readability against the disc.
+  lctx.fillStyle = lighten(d.color, 0.62)
 
   const bigSize = d.big.length === 1 ? BIG_SIZE_SINGLE : BIG_SIZE_DOUBLE
   drawCenteredText(lctx, d.big, CX, NUMERAL_BASELINE, bigSize, 200)
@@ -199,8 +209,8 @@ function drawText(ctx: SKRSContext2D, d: Duration) {
   })
 
   ctx.save()
-  ctx.shadowColor = 'rgba(255, 255, 255, 0.55)'
-  ctx.shadowBlur = 10
+  ctx.shadowColor = lighten(d.color, 0.85)
+  ctx.shadowBlur = 8
   ctx.drawImage(layer, 0, 0)
   ctx.restore()
 }
