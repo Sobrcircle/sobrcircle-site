@@ -1,15 +1,10 @@
 // Build PNG badges by compositing on top of the master template.
 // Template lives at public/badges/template.png (1024x1024, "24 HOURS" worn-chrome disc).
 //
-// Strategy:
-//   1. Draw the template.
-//   2. Erase the existing center text by replacing the inner-disc region
-//      with a heavily-blurred copy of itself (the blur smears the bright
-//      text strokes into the surrounding gray, leaving a clean canvas
-//      with the master's exact lighting). A soft circular alpha mask
-//      keeps the chrome ring untouched.
-//   3. Draw the new "<N> <UNIT>" text in Inter Thin with an etched/worn
-//      edge to match the master's distressed-chrome look.
+// Per-duration color map (provided by user). The master is silver-gray;
+// each badge gets tinted via canvas "color" blend so the chrome luminance,
+// halo, and worn ring texture are preserved while hue/saturation shift to
+// the assigned color.
 //
 // Output goes to public/badges/v1/preview/.
 
@@ -28,37 +23,113 @@ const FONT_PATH = path.join(ROOT, 'scripts/fonts/Inter.ttf')
 GlobalFonts.registerFromPath(FONT_PATH, 'Inter')
 
 const SIZE = 1024
-// Center of the badge inside the canvas. The master's halo extends below
-// the disc, so the disc itself sits slightly above geometric center.
 const CX = 512
 const CY = 484
-// Inner-disc radius — the chrome ring's inner edge is ~r=265, so 240
-// covers the existing text without clipping the ring.
 const FILL_R = 240
-// Soft feather range — alpha fades from full at FEATHER_INNER to 0 at FILL_R.
 const FEATHER_INNER = FILL_R * 0.82
 
+const BIG_SIZE_DOUBLE = 295
+const BIG_SIZE_SINGLE = 258
+const LABEL_SIZE = 60
+const LABEL_TRACKING = 16
+const NUMERAL_BASELINE = 555
+const LABEL_BASELINE = 638
+
 type Duration = {
-  slug: string
-  big: string
-  label: string
+  slug: string  // filename without color suffix
+  big: string   // numeral
+  label: string // unit (HOURS / MONTHS / YEAR / YEARS)
+  color: string // assigned hex
 }
 
-// Replace the inner-disc region with a blurred copy of itself. The bright
-// strokes of "24 HOURS" get smeared into the surrounding gray, giving us
-// a clean canvas with the master's exact color and lighting. A soft alpha
-// mask blends the patch back into the chrome ring at the edges.
+// Duration → assigned color (user-provided).
+const DURATIONS: Duration[] = [
+  { slug: '24hours',  big: '24', label: 'HOURS',  color: '#C0C6CF' },
+  { slug: '1month',   big: '1',  label: 'MONTH',  color: '#00A86B' },
+  { slug: '2months',  big: '2',  label: 'MONTHS', color: '#6A0DAD' },
+  { slug: '3months',  big: '3',  label: 'MONTHS', color: '#CC5500' },
+  { slug: '4months',  big: '4',  label: 'MONTHS', color: '#0057D9' },
+  { slug: '5months',  big: '5',  label: 'MONTHS', color: '#B11226' },
+  { slug: '6months',  big: '6',  label: 'MONTHS', color: '#008B8B' },
+  { slug: '7months',  big: '7',  label: 'MONTHS', color: '#C2185B' },
+  { slug: '8months',  big: '8',  label: 'MONTHS', color: '#3F00FF' },
+  { slug: '9months',  big: '9',  label: 'MONTHS', color: '#B87333' },
+  { slug: '10months', big: '10', label: 'MONTHS', color: '#39FF14' },
+  { slug: '11months', big: '11', label: 'MONTHS', color: '#0F52BA' },
+  { slug: '18months', big: '18', label: 'MONTHS', color: '#B76E79' },
+  { slug: '1year',    big: '1',  label: 'YEAR',   color: '#D4A017' },
+  { slug: '2years',   big: '2',  label: 'YEARS',  color: '#00A86B' },
+  { slug: '3years',   big: '3',  label: 'YEARS',  color: '#6A0DAD' },
+  { slug: '4years',   big: '4',  label: 'YEARS',  color: '#CC5500' },
+  { slug: '5years',   big: '5',  label: 'YEARS',  color: '#0057D9' },
+  { slug: '6years',   big: '6',  label: 'YEARS',  color: '#B11226' },
+  { slug: '7years',   big: '7',  label: 'YEARS',  color: '#008B8B' },
+  { slug: '8years',   big: '8',  label: 'YEARS',  color: '#C2185B' },
+  { slug: '9years',   big: '9',  label: 'YEARS',  color: '#3F00FF' },
+  { slug: '10years',  big: '10', label: 'YEARS',  color: '#D4A017' },
+  { slug: '11years',  big: '11', label: 'YEARS',  color: '#00A86B' },
+  { slug: '12years',  big: '12', label: 'YEARS',  color: '#6A0DAD' },
+  { slug: '13years',  big: '13', label: 'YEARS',  color: '#CC5500' },
+  { slug: '14years',  big: '14', label: 'YEARS',  color: '#0057D9' },
+  { slug: '15years',  big: '15', label: 'YEARS',  color: '#B11226' },
+  { slug: '16years',  big: '16', label: 'YEARS',  color: '#008B8B' },
+  { slug: '17years',  big: '17', label: 'YEARS',  color: '#C2185B' },
+  { slug: '18years',  big: '18', label: 'YEARS',  color: '#3F00FF' },
+  { slug: '19years',  big: '19', label: 'YEARS',  color: '#B87333' },
+  { slug: '20years',  big: '20', label: 'YEARS',  color: '#D4A017' },
+  { slug: '21years',  big: '21', label: 'YEARS',  color: '#00A86B' },
+  { slug: '22years',  big: '22', label: 'YEARS',  color: '#6A0DAD' },
+  { slug: '23years',  big: '23', label: 'YEARS',  color: '#CC5500' },
+  { slug: '24years',  big: '24', label: 'YEARS',  color: '#0057D9' },
+  { slug: '25years',  big: '25', label: 'YEARS',  color: '#B11226' },
+  { slug: '26years',  big: '26', label: 'YEARS',  color: '#008B8B' },
+  { slug: '27years',  big: '27', label: 'YEARS',  color: '#C2185B' },
+  { slug: '28years',  big: '28', label: 'YEARS',  color: '#3F00FF' },
+  { slug: '29years',  big: '29', label: 'YEARS',  color: '#B87333' },
+  { slug: '30years',  big: '30', label: 'YEARS',  color: '#D4A017' },
+  { slug: '31years',  big: '31', label: 'YEARS',  color: '#00A86B' },
+  { slug: '32years',  big: '32', label: 'YEARS',  color: '#6A0DAD' },
+  { slug: '33years',  big: '33', label: 'YEARS',  color: '#CC5500' },
+  { slug: '34years',  big: '34', label: 'YEARS',  color: '#0057D9' },
+  { slug: '35years',  big: '35', label: 'YEARS',  color: '#B11226' },
+  { slug: '36years',  big: '36', label: 'YEARS',  color: '#008B8B' },
+  { slug: '37years',  big: '37', label: 'YEARS',  color: '#C2185B' },
+  { slug: '38years',  big: '38', label: 'YEARS',  color: '#3F00FF' },
+  { slug: '39years',  big: '39', label: 'YEARS',  color: '#B87333' },
+  { slug: '40years',  big: '40', label: 'YEARS',  color: '#D4A017' },
+  { slug: '41years',  big: '41', label: 'YEARS',  color: '#00A86B' },
+  { slug: '42years',  big: '42', label: 'YEARS',  color: '#6A0DAD' },
+  { slug: '43years',  big: '43', label: 'YEARS',  color: '#CC5500' },
+  { slug: '44years',  big: '44', label: 'YEARS',  color: '#0057D9' },
+  { slug: '45years',  big: '45', label: 'YEARS',  color: '#B11226' },
+  { slug: '46years',  big: '46', label: 'YEARS',  color: '#008B8B' },
+  { slug: '47years',  big: '47', label: 'YEARS',  color: '#C2185B' },
+  { slug: '48years',  big: '48', label: 'YEARS',  color: '#3F00FF' },
+  { slug: '49years',  big: '49', label: 'YEARS',  color: '#B87333' },
+  { slug: '50years',  big: '50', label: 'YEARS',  color: '#D4A017' },
+  { slug: '51years',  big: '51', label: 'YEARS',  color: '#00A86B' },
+  { slug: '52years',  big: '52', label: 'YEARS',  color: '#6A0DAD' },
+  { slug: '53years',  big: '53', label: 'YEARS',  color: '#CC5500' },
+  { slug: '54years',  big: '54', label: 'YEARS',  color: '#0057D9' },
+  { slug: '55years',  big: '55', label: 'YEARS',  color: '#B11226' },
+  { slug: '56years',  big: '56', label: 'YEARS',  color: '#008B8B' },
+  { slug: '57years',  big: '57', label: 'YEARS',  color: '#C2185B' },
+  { slug: '58years',  big: '58', label: 'YEARS',  color: '#3F00FF' },
+  { slug: '59years',  big: '59', label: 'YEARS',  color: '#B87333' },
+  { slug: '60years',  big: '60', label: 'YEARS',  color: '#D4A017' },
+]
+
+// Erase old text by overlaying a heavily-blurred copy of the template,
+// soft-masked inside the chrome ring. Uses the master's actual lighting
+// so there's no seam.
 function eraseCenterText(ctx: SKRSContext2D, template: any) {
   const off = createCanvas(SIZE, SIZE)
   const offCtx = off.getContext('2d')
 
-  // Draw the template with a heavy blur — this smears the existing text out
-  // of recognition while preserving the disc's lighting and color.
   offCtx.filter = 'blur(40px)'
   offCtx.drawImage(template, 0, 0, SIZE, SIZE)
   offCtx.filter = 'none'
 
-  // Soft circular alpha mask centered on the disc.
   const mask = offCtx.createRadialGradient(CX, CY, FEATHER_INNER, CX, CY, FILL_R)
   mask.addColorStop(0, 'rgba(0,0,0,1)')
   mask.addColorStop(1, 'rgba(0,0,0,0)')
@@ -92,9 +163,6 @@ function drawCenteredText(
   }
 }
 
-// Apply a distressed / etched edge to a freshly drawn text layer by punching
-// out small random clusters of alpha. Operates only inside the bbox so the
-// rest of the canvas isn't touched.
 function distressLayer(canvas: any, bbox: { x: number; y: number; w: number; h: number }) {
   const ctx = canvas.getContext('2d')
   const img = ctx.getImageData(bbox.x, bbox.y, bbox.w, bbox.h)
@@ -113,16 +181,6 @@ function distressLayer(canvas: any, bbox: { x: number; y: number; w: number; h: 
   }
   ctx.putImageData(img, bbox.x, bbox.y)
 }
-
-// Visual size matching: a single chunky "6" carries all the visual weight
-// in one character, so at the same font-size as "24" it reads bigger. The
-// 1-digit size is dropped ~12% so they feel the same on the disc.
-const BIG_SIZE_DOUBLE = 295
-const BIG_SIZE_SINGLE = 258
-const LABEL_SIZE = 60
-const LABEL_TRACKING = 16
-const NUMERAL_BASELINE = 555
-const LABEL_BASELINE = 638
 
 function drawText(ctx: SKRSContext2D, d: Duration) {
   const layer = createCanvas(SIZE, SIZE)
@@ -147,31 +205,51 @@ function drawText(ctx: SKRSContext2D, d: Duration) {
   ctx.restore()
 }
 
+// Apply the per-duration tint using the "color" blend mode. This keeps
+// the master's chrome luminance (highlights, mid-tones, shadows, ring
+// brushwork) and only swaps hue/saturation toward the assigned color.
+// The tint is masked to the badge's alpha so the transparent canvas
+// outside the disc isn't filled.
+function applyTint(ctx: SKRSContext2D, hex: string) {
+  // Save the current alpha shape so we can re-mask after the fill.
+  const tintLayer = createCanvas(SIZE, SIZE)
+  const tctx = tintLayer.getContext('2d')
+
+  // Paint solid color across the canvas.
+  tctx.fillStyle = hex
+  tctx.fillRect(0, 0, SIZE, SIZE)
+
+  // Apply the tint with "color" blend onto a copy of the badge.
+  ctx.save()
+  ctx.globalCompositeOperation = 'color'
+  ctx.drawImage(tintLayer, 0, 0)
+  ctx.restore()
+}
+
 async function renderBadge(template: any, d: Duration): Promise<Buffer> {
   const canvas = createCanvas(SIZE, SIZE)
   const ctx = canvas.getContext('2d')
   ctx.drawImage(template, 0, 0, SIZE, SIZE)
   eraseCenterText(ctx, template)
   drawText(ctx, d)
+  applyTint(ctx, d.color)
   return canvas.toBuffer('image/png')
 }
 
-const SAMPLE: Duration[] = [
-  { slug: '24hours',  big: '24', label: 'HOURS'  },
-  { slug: '6months',  big: '6',  label: 'MONTHS' },
-  { slug: '18months', big: '18', label: 'MONTHS' },
-  { slug: '1year',    big: '1',  label: 'YEAR'   },
-  { slug: '5years',   big: '5',  label: 'YEARS'  },
-]
+// Sample subset for visual review before generating the full set.
+const SAMPLE_SLUGS = new Set(['24hours', '6months', '18months', '1year', '5years'])
 
 async function main() {
+  const onlySamples = process.argv.includes('--samples')
+  const target = onlySamples ? DURATIONS.filter((d) => SAMPLE_SLUGS.has(d.slug)) : DURATIONS
+
   const template = await loadImage(TEMPLATE)
   await fs.mkdir(OUT_DIR, { recursive: true })
-  for (const d of SAMPLE) {
+  for (const d of target) {
     const buf = await renderBadge(template, d)
-    const filename = `${d.slug}-silver.png`
+    const filename = `${d.slug}.png`
     await fs.writeFile(path.join(OUT_DIR, filename), buf)
-    console.log(`wrote ${filename}`)
+    console.log(`wrote ${filename} (${d.color})`)
   }
 }
 
