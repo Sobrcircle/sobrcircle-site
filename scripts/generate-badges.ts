@@ -270,13 +270,13 @@ function drawMicroTypography(ctx: SKRSContext2D, hex: string) {
   const lb = Math.round(b + (255 - b) * k)
   const fill = `rgba(${lr}, ${lg}, ${lb}, 0.95)`
 
-  // Inside the chrome ring's inner edge (~r=265), in the gap between
-  // the inner disc and the brushed ring.
-  const radius = 250
-  const fontSize = 26
+  // In the clean blue band between the brushwork's outer edge (~r=378)
+  // and the bright white halo line (~r=395). Text rides centered at r=386.
+  const radius = 386
+  const fontSize = 28
 
   const segments: { text: string; weight: number }[] = []
-  const repeats = 5
+  const repeats = 7
   for (let i = 0; i < repeats; i++) {
     segments.push({ text: 'Sobr',   weight: 700 })
     segments.push({ text: 'Circle', weight: 400 })
