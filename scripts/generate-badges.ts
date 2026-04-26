@@ -377,6 +377,98 @@ function applyTint(ctx: SKRSContext2D, hex: string) {
   ctx.putImageData(img, 0, 0)
 }
 
+// Median-filter the chrome ring annulus to remove brushwork noise while
+// keeping the ring's inner and outer edges crisp. For each pixel in the
+// ring band we replace its R/G/B with the median of the 5×5 neighborhood
+// — outliers (the bright/dark scratches) drop out, the underlying smooth
+// gradient survives. Alpha is left untouched. A small feather at the
+// inner and outer band edges blends the filtered ring into the unmodified
+// disc + halo so there's no hard transition.
+function medianFilterRing(canvas: any) {
+  const ctx = canvas.getContext('2d')
+  const img = ctx.getImageData(0, 0, SIZE, SIZE)
+  const src = img.data
+  const dst = new Uint8ClampedArray(src.length)
+  dst.set(src)
+
+  const w = SIZE
+  const half = 4 // 9x9 kernel — wide enough to swallow 3–4 px brush strokes
+  // Active band — pixels here get fully replaced by the median.
+  const inR = 270
+  const outR = 378
+  // Feather widths — pixels in these annular shells blend median with original.
+  const feather = 8
+  const inMin2 = (inR - feather) * (inR - feather)
+  const inMax2 = inR * inR
+  const outMin2 = outR * outR
+  const outMax2 = (outR + feather) * (outR + feather)
+
+  // Reusable neighborhood arrays (avoid allocating each pixel).
+  const k = (half * 2 + 1) ** 2
+  const rs = new Uint8Array(k)
+  const gs = new Uint8Array(k)
+  const bs = new Uint8Array(k)
+  const midIdx = Math.floor(k / 2)
+
+  for (let y = half; y < SIZE - half; y++) {
+    const dy = y - CY
+    const dy2 = dy * dy
+    for (let x = half; x < SIZE - half; x++) {
+      const dx = x - CX
+      const r2 = dx * dx + dy2
+      if (r2 < inMin2 || r2 > outMax2) continue
+
+      const i = (y * w + x) * 4
+      if (src[i + 3] === 0) continue
+
+      // Collect the 5×5 neighborhood for each channel.
+      let n = 0
+      for (let ky = -half; ky <= half; ky++) {
+        for (let kx = -half; kx <= half; kx++) {
+          const ki = ((y + ky) * w + (x + kx)) * 4
+          rs[n] = src[ki]
+          gs[n] = src[ki + 1]
+          bs[n] = src[ki + 2]
+          n++
+        }
+      }
+      // Median of k samples = sort and take the middle index.
+      sortInPlace(rs)
+      sortInPlace(gs)
+      sortInPlace(bs)
+      const mr = rs[midIdx]
+      const mg = gs[midIdx]
+      const mb = bs[midIdx]
+
+      // Feather blend: 0 at outer feather edge → 1 in active band → 0 at inner feather edge.
+      let blend = 1
+      if (r2 < inMax2) blend = (r2 - inMin2) / (inMax2 - inMin2)
+      else if (r2 > outMin2) blend = 1 - (r2 - outMin2) / (outMax2 - outMin2)
+      blend = Math.max(0, Math.min(1, blend))
+
+      dst[i]     = Math.round(src[i]     * (1 - blend) + mr * blend)
+      dst[i + 1] = Math.round(src[i + 1] * (1 - blend) + mg * blend)
+      dst[i + 2] = Math.round(src[i + 2] * (1 - blend) + mb * blend)
+      // alpha untouched (already copied)
+    }
+  }
+
+  ctx.putImageData(new img.constructor(dst, SIZE), 0, 0)
+}
+
+function sortInPlace(a: Uint8Array) {
+  // Insertion sort for short arrays — faster than Array.sort here.
+  for (let i = 1; i < a.length; i++) {
+    const v = a[i]
+    let j = i - 1
+    while (j >= 0 && a[j] > v) {
+      a[j + 1] = a[j]
+      j--
+    }
+    a[j + 1] = v
+  }
+}
+
 async function renderBadge(template: any, d: Duration): Promise<Buffer> {
   // Pre-tint the template so the disc-gray anchor maps exactly to the
   // assigned color. Doing this first (rather than at the end) avoids the
@@ -385,6 +477,7 @@ async function renderBadge(template: any, d: Duration): Promise<Buffer> {
   const tctx = tinted.getContext('2d')
   tctx.drawImage(template, 0, 0, SIZE, SIZE)
   applyTint(tctx, d.color)
+  medianFilterRing(tinted)
 
   const canvas = createCanvas(SIZE, SIZE)
   const ctx = canvas.getContext('2d')
