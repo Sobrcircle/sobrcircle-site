@@ -292,6 +292,70 @@ function applyTint(ctx: SKRSContext2D, hex: string) {
   ctx.putImageData(img, 0, 0)
 }
 
+// Paint a soft glow pooling underneath the badge — like the disc is
+// sitting on a glowing surface or casting light downward. No all-around
+// halo; the glow is a directional bloom centered below the disc.
+function drawOuterGlow(ctx: SKRSContext2D, hex: string) {
+  const [r, g, b] = hexToRgb(hex)
+
+  // Three downward-pooling passes: a bright core under the disc, a wider
+  // soft bloom, and a faint outer haze.
+  const passes = [
+    { cx: CX, cy: CY + 360, r0: 0,   r1: 220, alpha: 0.7  },
+    { cx: CX, cy: CY + 380, r0: 60,  r1: 360, alpha: 0.4  },
+    { cx: CX, cy: CY + 410, r0: 140, r1: 480, alpha: 0.22 },
+  ]
+
+  for (const p of passes) {
+    const grad = ctx.createRadialGradient(p.cx, p.cy, p.r0, p.cx, p.cy, p.r1)
+    grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${p.alpha})`)
+    grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`)
+    ctx.fillStyle = grad
+    ctx.fillRect(0, 0, SIZE, SIZE)
+  }
+}
+
+// Scatter sparkle particles in the tint family around the disc — small,
+// soft-edged dots concentrated below the badge with a few rising along
+// the sides. Drawn on top of everything so they read as light flecks.
+function drawSparkles(ctx: SKRSContext2D, hex: string, sparkleSeed: number) {
+  const [r, g, b] = hexToRgb(hex)
+  // Brighten toward white so sparkles register as light, not just tint.
+  const lr = Math.round(r + (255 - r) * 0.7)
+  const lg = Math.round(g + (255 - g) * 0.7)
+  const lb = Math.round(b + (255 - b) * 0.7)
+
+  let seed = sparkleSeed
+  const rand = () => {
+    seed = (seed * 1664525 + 1013904223) % 0x100000000
+    return seed / 0x100000000
+  }
+
+  const count = 28
+  for (let i = 0; i < count; i++) {
+    // Sparkles concentrate inside the glow pool under the badge.
+    const x = CX + (rand() - 0.5) * 640
+    const y = CY + 260 + rand() * 260
+    const size = 1.5 + rand() * 4
+    const alpha = 0.45 + rand() * 0.45
+
+    // Soft glow around each sparkle.
+    const glow = ctx.createRadialGradient(x, y, 0, x, y, size * 4)
+    glow.addColorStop(0, `rgba(${lr}, ${lg}, ${lb}, ${alpha * 0.7})`)
+    glow.addColorStop(1, `rgba(${lr}, ${lg}, ${lb}, 0)`)
+    ctx.fillStyle = glow
+    ctx.beginPath()
+    ctx.arc(x, y, size * 4, 0, Math.PI * 2)
+    ctx.fill()
+
+    // Bright core dot.
+    ctx.fillStyle = `rgba(${lr}, ${lg}, ${lb}, ${alpha})`
+    ctx.beginPath()
+    ctx.arc(x, y, size, 0, Math.PI * 2)
+    ctx.fill()
+  }
+}
+
 async function renderBadge(template: any, d: Duration): Promise<Buffer> {
   // Pre-tint the template so the disc-gray anchor maps exactly to the
   // assigned color. Doing this first (rather than at the end) avoids the
@@ -303,9 +367,17 @@ async function renderBadge(template: any, d: Duration): Promise<Buffer> {
 
   const canvas = createCanvas(SIZE, SIZE)
   const ctx = canvas.getContext('2d')
+
+  // Outer glow under the badge, then the badge, then sparkles on top.
+  drawOuterGlow(ctx, d.color)
   ctx.drawImage(tinted, 0, 0)
   eraseCenterText(ctx, tinted)
   drawText(ctx, d)
+  // Sparkles use the duration slug as a seed so each badge has a stable
+  // but distinct sparkle pattern.
+  const seed = Array.from(d.slug).reduce((a, c) => a + c.charCodeAt(0), 1)
+  drawSparkles(ctx, d.color, seed)
+
   return canvas.toBuffer('image/png')
 }
 
