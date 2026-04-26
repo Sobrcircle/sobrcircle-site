@@ -115,14 +115,14 @@ function distressLayer(canvas: any, bbox: { x: number; y: number; w: number; h: 
 }
 
 // Visual size matching: a single chunky "6" carries all the visual weight
-// in one character, so at the same font-size as "24" it reads bigger. Drop
-// 1-digit numerals about 12% so they feel the same on the disc.
-const BIG_SIZE_DOUBLE = 240
-const BIG_SIZE_SINGLE = 210
-const LABEL_SIZE = 52
-const LABEL_TRACKING = 14
-const NUMERAL_BASELINE = 540
-const LABEL_BASELINE = 615
+// in one character, so at the same font-size as "24" it reads bigger. The
+// 1-digit size is dropped ~12% so they feel the same on the disc.
+const BIG_SIZE_DOUBLE = 295
+const BIG_SIZE_SINGLE = 258
+const LABEL_SIZE = 60
+const LABEL_TRACKING = 16
+const NUMERAL_BASELINE = 555
+const LABEL_BASELINE = 638
 
 function drawText(ctx: SKRSContext2D, d: Duration) {
   const layer = createCanvas(SIZE, SIZE)
