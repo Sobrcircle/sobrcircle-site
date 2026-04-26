@@ -270,17 +270,22 @@ function drawMicroTypography(ctx: SKRSContext2D, hex: string) {
   const lb = Math.round(b + (255 - b) * k)
   const fill = `rgba(${lr}, ${lg}, ${lb}, 0.95)`
 
-  // In the clean tinted band, pulled in slightly so the top of the
-  // text doesn't kiss the bright white halo line.
-  const radius = 376
+  // In the clean tinted band, pulled in further from the white halo
+  // line. Dots between SobrCircle repeats are rendered larger via a
+  // dedicated segment type so they read as a clear separator.
+  const radius = 358
   const fontSize = 28
+  const dotSize = 40
 
-  const segments: { text: string; weight: number }[] = []
-  const repeats = 7
+  type Seg = { text: string; weight: number; size: number }
+  const segments: Seg[] = []
+  const repeats = 6
   for (let i = 0; i < repeats; i++) {
-    segments.push({ text: 'Sobr',   weight: 700 })
-    segments.push({ text: 'Circle', weight: 400 })
-    segments.push({ text: '   ·   ', weight: 400 })
+    segments.push({ text: 'Sobr',   weight: 700, size: fontSize })
+    segments.push({ text: 'Circle', weight: 400, size: fontSize })
+    segments.push({ text: '   ',    weight: 400, size: fontSize })
+    segments.push({ text: '•',      weight: 700, size: dotSize })
+    segments.push({ text: '   ',    weight: 400, size: fontSize })
   }
 
   // Render the ring text onto its own canvas so we can run the same
@@ -288,13 +293,13 @@ function drawMicroTypography(ctx: SKRSContext2D, hex: string) {
   const layer = createCanvas(SIZE, SIZE)
   const lctx = layer.getContext('2d')
 
-  const chars: { c: string; w: number; weight: number }[] = []
+  const chars: { c: string; w: number; weight: number; size: number }[] = []
   let totalWidth = 0
   for (const seg of segments) {
-    lctx.font = `${seg.weight} ${fontSize}px Inter`
+    lctx.font = `${seg.weight} ${seg.size}px Inter`
     for (const c of seg.text) {
       const w = lctx.measureText(c).width
-      chars.push({ c, w, weight: seg.weight })
+      chars.push({ c, w, weight: seg.weight, size: seg.size })
       totalWidth += w
     }
   }
@@ -317,7 +322,7 @@ function drawMicroTypography(ctx: SKRSContext2D, hex: string) {
     lctx.save()
     lctx.rotate(angle)
     lctx.translate(0, -radius)
-    lctx.font = `${ch.weight} ${fontSize}px Inter`
+    lctx.font = `${ch.weight} ${ch.size}px Inter`
     lctx.fillText(ch.c, 0, 0)
     lctx.restore()
     angle += charAngle / 2
