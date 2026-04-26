@@ -270,9 +270,9 @@ function drawMicroTypography(ctx: SKRSContext2D, hex: string) {
   const lb = Math.round(b + (255 - b) * k)
   const fill = `rgba(${lr}, ${lg}, ${lb}, 0.95)`
 
-  // In the clean blue band between the brushwork's outer edge (~r=378)
-  // and the bright white halo line (~r=395). Text rides centered at r=386.
-  const radius = 386
+  // In the clean tinted band, pulled in slightly so the top of the
+  // text doesn't kiss the bright white halo line.
+  const radius = 376
   const fontSize = 28
 
   const segments: { text: string; weight: number }[] = []
