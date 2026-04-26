@@ -257,38 +257,44 @@ function hexToRgb(hex: string): [number, number, number] {
 // the canvas outside the badge stays transparent for in-app use.
 const DISC_REF_LUM = 0.8
 
-// Micro-typography running around the OUTSIDE of the chrome ring —
-// where the under-glow used to sit. Repeats "SobrCircle" with "Sobr" in
-// bold and "Circle" in regular, evenly distributed around the full
-// circumference. Uses the same lightened-tint hue as the main text so
-// it stays in family.
+// Micro-typography sitting in the gap between the inner disc and the
+// chrome ring's inner edge. Repeats "SobrCircle" (Sobr bold, Circle
+// regular) evenly around the full circle, then runs the same distress
+// pass as the main text so the SobrCircle reads as etched into the
+// metal in the same character as the duration text.
 function drawMicroTypography(ctx: SKRSContext2D, hex: string) {
   const [r, g, b] = hexToRgb(hex)
-  const k = 0.7
+  const k = 0.62
   const lr = Math.round(r + (255 - r) * k)
   const lg = Math.round(g + (255 - g) * k)
   const lb = Math.round(b + (255 - b) * k)
-  const fill = `rgba(${lr}, ${lg}, ${lb}, 0.85)`
+  const fill = `rgba(${lr}, ${lg}, ${lb}, 0.95)`
 
-  // Just outside the chrome ring outer edge (~r=390) — sits in the
-  // halo zone where the under-glow used to be.
-  const radius = 400
-  const fontSize = 32
+  // In the gap between the brushed ring's outer edge and the white
+  // halo line at the badge's outer perimeter. Text rides at r=388 with
+  // a small font so it fits in the band without bleeding into either.
+  const radius = 388
+  const fontSize = 20
 
   const segments: { text: string; weight: number }[] = []
-  const repeats = 8
+  const repeats = 10
   for (let i = 0; i < repeats; i++) {
     segments.push({ text: 'Sobr',   weight: 700 })
     segments.push({ text: 'Circle', weight: 400 })
     segments.push({ text: '   ·   ', weight: 400 })
   }
 
+  // Render the ring text onto its own canvas so we can run the same
+  // distress pass that the main text uses.
+  const layer = createCanvas(SIZE, SIZE)
+  const lctx = layer.getContext('2d')
+
   const chars: { c: string; w: number; weight: number }[] = []
   let totalWidth = 0
   for (const seg of segments) {
-    ctx.font = `${seg.weight} ${fontSize}px Inter`
+    lctx.font = `${seg.weight} ${fontSize}px Inter`
     for (const c of seg.text) {
-      const w = ctx.measureText(c).width
+      const w = lctx.measureText(c).width
       chars.push({ c, w, weight: seg.weight })
       totalWidth += w
     }
@@ -298,27 +304,39 @@ function drawMicroTypography(ctx: SKRSContext2D, hex: string) {
   const slack = circumference - totalWidth
   const perCharExtra = slack / chars.length
 
-  ctx.save()
-  ctx.translate(CX, CY)
-  ctx.fillStyle = fill
-  ctx.textAlign = 'center'
-  ctx.textBaseline = 'middle'
+  lctx.save()
+  lctx.translate(CX, CY)
+  lctx.fillStyle = fill
+  lctx.textAlign = 'center'
+  lctx.textBaseline = 'middle'
 
   let angle = -Math.PI / 2
   for (const ch of chars) {
     const arcW = ch.w + perCharExtra
     const charAngle = arcW / radius
     angle += charAngle / 2
-    ctx.save()
-    ctx.rotate(angle)
-    ctx.translate(0, -radius)
-    ctx.font = `${ch.weight} ${fontSize}px Inter`
-    ctx.fillText(ch.c, 0, 0)
-    ctx.restore()
+    lctx.save()
+    lctx.rotate(angle)
+    lctx.translate(0, -radius)
+    lctx.font = `${ch.weight} ${fontSize}px Inter`
+    lctx.fillText(ch.c, 0, 0)
+    lctx.restore()
     angle += charAngle / 2
   }
+  lctx.restore()
 
-  ctx.restore()
+  // Distress the whole ring band so the SobrCircle text picks up the
+  // same etched/worn look as the main duration text. Bbox covers a
+  // square around the full ring annulus at this radius.
+  const span = radius + fontSize
+  distressLayer(layer, {
+    x: CX - span,
+    y: CY - span,
+    w: span * 2,
+    h: span * 2,
+  })
+
+  ctx.drawImage(layer, 0, 0)
 }
 
 function applyTint(ctx: SKRSContext2D, hex: string) {
