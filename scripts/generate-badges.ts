@@ -292,11 +292,12 @@ function applyTint(ctx: SKRSContext2D, hex: string) {
   ctx.putImageData(img, 0, 0)
 }
 
-// Soft crescent glow that touches the bottom of the disc and curves
-// along its edge — like a lighter shadow you'd see under a coin. Built
-// by rendering a flat elliptical bloom positioned just below the disc,
-// then carving out the part that overlaps the disc itself so what's
-// left is a crescent that wraps the bottom curve.
+// Crescent glow that hugs the bottom curvature of the coin — both the
+// inner and outer edges are arcs concentric with the disc, so the glow
+// band itself follows the coin's curve. Built as an annular sector
+// (donut wedge) at the disc's bottom, filled with a radial gradient
+// that's brightest at the disc edge and fades outward, then composited
+// with multi-radius blur for a soft halo.
 function drawUnderGlow(ctx: SKRSContext2D, hex: string) {
   const [r, g, b] = hexToRgb(hex)
   const a = 0.4
@@ -307,36 +308,40 @@ function drawUnderGlow(ctx: SKRSContext2D, hex: string) {
   const off = createCanvas(SIZE, SIZE)
   const octx = off.getContext('2d')
 
-  // Flat ellipse, top tangent to the disc bottom (CY + ~395). Center
-  // sits below the disc so the bright peak shows just under the edge.
-  const cx = CX
-  const cy = CY + 425
-  const halfW = 240
-  const halfH = 70
+  // Annular sector that wraps the bottom of the disc.
+  const innerR = 395  // disc outer edge — glow's inner edge touches here
+  const outerR = 485  // glow extends 90px outward
+  const startAng = Math.PI * (38 / 180)
+  const endAng = Math.PI * (142 / 180)
 
-  octx.save()
-  octx.translate(cx, cy)
-  octx.scale(halfW / halfH, 1)
-  const grad = octx.createRadialGradient(0, 0, 0, 0, 0, halfH * 1.4)
+  octx.beginPath()
+  octx.arc(CX, CY, outerR, startAng, endAng)
+  octx.arc(CX, CY, innerR, endAng, startAng, true)
+  octx.closePath()
+
+  // Bright at inner edge (touching the coin), fading to transparent
+  // at the outer edge of the band.
+  const grad = octx.createRadialGradient(CX, CY, innerR, CX, CY, outerR)
   grad.addColorStop(0, `rgba(${lr}, ${lg}, ${lb}, 0.95)`)
-  grad.addColorStop(0.45, `rgba(${lr}, ${lg}, ${lb}, 0.5)`)
+  grad.addColorStop(0.5, `rgba(${lr}, ${lg}, ${lb}, 0.45)`)
   grad.addColorStop(1, `rgba(${lr}, ${lg}, ${lb}, 0)`)
   octx.fillStyle = grad
-  octx.beginPath()
-  octx.arc(0, 0, halfH * 1.4, 0, Math.PI * 2)
-  octx.fill()
-  octx.restore()
-
-  // Carve out the portion of the ellipse that would sit on top of the
-  // disc so the glow becomes a crescent that hugs the disc's bottom
-  // curve instead of bleeding into the coin.
-  octx.globalCompositeOperation = 'destination-out'
-  octx.fillStyle = '#000'
-  octx.beginPath()
-  octx.arc(CX, CY, 395, 0, Math.PI * 2)
   octx.fill()
 
+  // Composite back with stacked blurs so the band's hard angle ends
+  // soften into a natural taper and the inner edge bleeds slightly
+  // up against the coin.
+  ctx.save()
+  ctx.globalAlpha = 0.65
+  ctx.filter = 'blur(22px)'
   ctx.drawImage(off, 0, 0)
+  ctx.globalAlpha = 0.85
+  ctx.filter = 'blur(8px)'
+  ctx.drawImage(off, 0, 0)
+  ctx.globalAlpha = 1
+  ctx.filter = 'none'
+  ctx.drawImage(off, 0, 0)
+  ctx.restore()
 }
 
 async function renderBadge(template: any, d: Duration): Promise<Buffer> {
