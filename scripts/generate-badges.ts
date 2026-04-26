@@ -377,41 +377,6 @@ function applyTint(ctx: SKRSContext2D, hex: string) {
   ctx.putImageData(img, 0, 0)
 }
 
-// Smooth the chrome ring brushwork on the tinted template by blending
-// a blurred copy back over the ring annulus only. The inner disc and
-// outer halo line stay untouched. Mask is feathered at both ring edges
-// so the smoothing fades into the original instead of hard-cutting.
-function smoothChromeRing(canvas: any) {
-  const ctx = canvas.getContext('2d')
-
-  // 1. Blurred copy of the canvas.
-  const blurred = createCanvas(SIZE, SIZE)
-  const bctx = blurred.getContext('2d')
-  bctx.filter = 'blur(10px)'
-  bctx.drawImage(canvas, 0, 0)
-  bctx.filter = 'none'
-
-  // 2. Feathered annulus mask: alpha 0 outside r=250 and r=395, alpha 1
-  // between r=280 and r=370 with soft transitions at both edges.
-  const mask = createCanvas(SIZE, SIZE)
-  const mctx = mask.getContext('2d')
-  const grad = mctx.createRadialGradient(CX, CY, 250, CX, CY, 395)
-  const span = 395 - 250
-  grad.addColorStop(0, 'rgba(255,255,255,0)')
-  grad.addColorStop((280 - 250) / span, 'rgba(255,255,255,1)')
-  grad.addColorStop((370 - 250) / span, 'rgba(255,255,255,1)')
-  grad.addColorStop(1, 'rgba(255,255,255,0)')
-  mctx.fillStyle = grad
-  mctx.fillRect(0, 0, SIZE, SIZE)
-
-  // 3. Mask the blurred copy down to the feathered ring band.
-  bctx.globalCompositeOperation = 'destination-in'
-  bctx.drawImage(mask, 0, 0)
-
-  // 4. Overlay the smoothed ring band back over the original canvas.
-  ctx.drawImage(blurred, 0, 0)
-}
-
 async function renderBadge(template: any, d: Duration): Promise<Buffer> {
   // Pre-tint the template so the disc-gray anchor maps exactly to the
   // assigned color. Doing this first (rather than at the end) avoids the
@@ -420,7 +385,6 @@ async function renderBadge(template: any, d: Duration): Promise<Buffer> {
   const tctx = tinted.getContext('2d')
   tctx.drawImage(template, 0, 0, SIZE, SIZE)
   applyTint(tctx, d.color)
-  smoothChromeRing(tinted)
 
   const canvas = createCanvas(SIZE, SIZE)
   const ctx = canvas.getContext('2d')
