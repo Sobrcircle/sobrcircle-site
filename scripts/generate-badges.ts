@@ -292,49 +292,46 @@ function applyTint(ctx: SKRSContext2D, hex: string) {
   ctx.putImageData(img, 0, 0)
 }
 
-// Soft glow pooling under the badge that hugs the disc's bottom curve.
-// Uses a flat ellipse positioned just below the disc, in a lightened
-// version of the tint. Stays well inside the 1024px canvas so the glow
-// doesn't get cropped at the bottom edge.
+// Soft glow that follows the bottom curve of the disc — like the lighter
+// halo you'd see under a coin sitting on a glowing surface. The arc is
+// rendered offscreen, then drawn back at three blur radii to build a
+// soft falloff: outer haze, mid-glow, sharper bright core. Placed just
+// outside the master halo (r=420) so it doesn't get masked by it.
 function drawUnderGlow(ctx: SKRSContext2D, hex: string) {
   const [r, g, b] = hexToRgb(hex)
-  // Lighter hue of the tint for the glow itself.
-  const [lr, lg, lb] = (() => {
-    const a = 0.35
-    return [
-      Math.round(r + (255 - r) * a),
-      Math.round(g + (255 - g) * a),
-      Math.round(b + (255 - b) * a),
-    ]
-  })()
+  const a = 0.4
+  const lr = Math.round(r + (255 - r) * a)
+  const lg = Math.round(g + (255 - g) * a)
+  const lb = Math.round(b + (255 - b) * a)
 
-  // Disc bottom edge is around y=884; canvas bottom is 1024. Center the
-  // glow ellipse at y=905 with a 95-px vertical extent so it stays
-  // clear of the canvas edge.
-  const cx = CX
-  const cy = 905
-  const halfW = 280
-  const halfH = 55
+  // Bottom arc: 22° to 158° — the 90° bottom of the disc is centered,
+  // ~68° tapers up each side.
+  const startAng = Math.PI * (22 / 180)
+  const endAng = Math.PI * (158 / 180)
+  const arcR = 420
 
+  // Render the arc itself onto an offscreen canvas first.
+  const off = createCanvas(SIZE, SIZE)
+  const octx = off.getContext('2d')
+  octx.lineCap = 'round'
+  octx.strokeStyle = `rgba(${lr}, ${lg}, ${lb}, 1)`
+  octx.lineWidth = 14
+  octx.beginPath()
+  octx.arc(CX, CY, arcR, startAng, endAng)
+  octx.stroke()
+
+  // Three composited passes of decreasing blur, each at lower opacity,
+  // build a layered glow with a soft outer falloff and a brighter core.
   ctx.save()
-  ctx.translate(cx, cy)
-  ctx.scale(halfW / halfH, 1)
-  // Two passes for a soft bright core fading into a wider haze.
-  const inner = ctx.createRadialGradient(0, 0, 0, 0, 0, halfH)
-  inner.addColorStop(0, `rgba(${lr}, ${lg}, ${lb}, 0.55)`)
-  inner.addColorStop(1, `rgba(${lr}, ${lg}, ${lb}, 0)`)
-  ctx.fillStyle = inner
-  ctx.beginPath()
-  ctx.arc(0, 0, halfH, 0, Math.PI * 2)
-  ctx.fill()
-
-  const outer = ctx.createRadialGradient(0, 0, 0, 0, 0, halfH * 1.5)
-  outer.addColorStop(0, `rgba(${lr}, ${lg}, ${lb}, 0.25)`)
-  outer.addColorStop(1, `rgba(${lr}, ${lg}, ${lb}, 0)`)
-  ctx.fillStyle = outer
-  ctx.beginPath()
-  ctx.arc(0, 0, halfH * 1.5, 0, Math.PI * 2)
-  ctx.fill()
+  ctx.globalAlpha = 0.7
+  ctx.filter = 'blur(40px)'
+  ctx.drawImage(off, 0, 0)
+  ctx.globalAlpha = 0.85
+  ctx.filter = 'blur(18px)'
+  ctx.drawImage(off, 0, 0)
+  ctx.globalAlpha = 1
+  ctx.filter = 'blur(6px)'
+  ctx.drawImage(off, 0, 0)
   ctx.restore()
 }
 
