@@ -265,7 +265,10 @@ const DISC_REF_LUM = 0.8
 // metal in the same character as the duration text.
 function drawMicroTypography(ctx: SKRSContext2D, hex: string) {
   const [r, g, b] = hexToRgb(hex)
-  const k = 0.62
+  // Match the outer halo's lift cap (0.4 toward white) so the SobrCircle
+  // text reads in the same brightened-tint family as the outer ring,
+  // not the brighter ring-highlight family.
+  const k = 0.4
   const lr = Math.round(r + (255 - r) * k)
   const lg = Math.round(g + (255 - g) * k)
   const lb = Math.round(b + (255 - b) * k)
