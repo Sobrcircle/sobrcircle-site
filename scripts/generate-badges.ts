@@ -163,21 +163,49 @@ function drawCenteredText(
   }
 }
 
+// Apply a distressed / etched edge to the text layer to match the ring's
+// brushed-chrome character: random alpha erosion for chipped edges plus
+// a horizontal brushwork pass that lifts/cuts narrow horizontal bands so
+// the strokes get the same swept look as the chrome ring brushwork.
 function distressLayer(canvas: any, bbox: { x: number; y: number; w: number; h: number }) {
   const ctx = canvas.getContext('2d')
   const img = ctx.getImageData(bbox.x, bbox.y, bbox.w, bbox.h)
   const px = img.data
+  const w = bbox.w
+  const h = bbox.h
+
   let seed = 1
   const rand = () => {
     seed = (seed * 1664525 + 1013904223) % 0x100000000
     return seed / 0x100000000
   }
-  for (let i = 3; i < px.length; i += 4) {
-    if (px[i] === 0) continue
-    const r = rand()
-    if (r < 0.10) px[i] = Math.max(0, px[i] - Math.floor(rand() * 200))
-    else if (r < 0.13) px[i] = 0
-    else px[i] = Math.max(0, Math.min(255, px[i] - Math.floor(rand() * 18)))
+
+  // Pre-compute a per-row brushwork modulation: each horizontal scanline
+  // gets a small darken/lighten factor that runs across the row, so when
+  // applied it looks like a swept brush stroke.
+  const rowMod = new Float32Array(h)
+  for (let y = 0; y < h; y++) {
+    rowMod[y] = (rand() - 0.5) * 0.55
+  }
+
+  for (let y = 0; y < h; y++) {
+    const row = rowMod[y]
+    const rowBase = y * w * 4
+    for (let x = 0; x < w; x++) {
+      const i = rowBase + x * 4 + 3
+      if (px[i] === 0) continue
+      const r = rand()
+      // ~22% of opaque pixels get heavily eroded (chipped edges)
+      if (r < 0.22) px[i] = Math.max(0, px[i] - Math.floor(rand() * 230))
+      // ~5% knocked out entirely (worn through)
+      else if (r < 0.27) px[i] = 0
+      else px[i] = Math.max(0, Math.min(255, px[i] - Math.floor(rand() * 30)))
+      // Apply the row brushwork — narrow horizontal bands of slightly
+      // varied alpha to read as swept chrome marks across the strokes.
+      if (px[i] > 0) {
+        px[i] = Math.max(0, Math.min(255, px[i] + Math.floor(row * 70)))
+      }
+    }
   }
   ctx.putImageData(img, bbox.x, bbox.y)
 }
@@ -208,11 +236,8 @@ function drawText(ctx: SKRSContext2D, d: Duration) {
     h: BIG_SIZE_DOUBLE + 160,
   })
 
-  ctx.save()
-  ctx.shadowColor = lighten(d.color, 0.85)
-  ctx.shadowBlur = 8
+  // No glow — soft shadow erodes the sharp etched edges we want here.
   ctx.drawImage(layer, 0, 0)
-  ctx.restore()
 }
 
 function hexToRgb(hex: string): [number, number, number] {
