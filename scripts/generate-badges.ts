@@ -347,6 +347,7 @@ function applyTint(ctx: SKRSContext2D, hex: string) {
   const [tr, tg, tb] = hexToRgb(hex)
   const img = ctx.getImageData(0, 0, SIZE, SIZE)
   const px = img.data
+  const w = SIZE
 
   for (let i = 0; i < px.length; i += 4) {
     const a = px[i + 3]
@@ -359,7 +360,22 @@ function applyTint(ctx: SKRSContext2D, hex: string) {
     let b: number
     if (lum >= DISC_REF_LUM) {
       // Brighter than the disc interior: blend tint toward white.
-      const t = (lum - DISC_REF_LUM) / (1 - DISC_REF_LUM)
+      // Pixel position lets us cap the lift on the outer halo so the
+      // bright outer "white line" stays in the badge's color family
+      // instead of going near-white. Inside the chrome ring we still
+      // let highlights lift fully so the brushwork still pops.
+      const idx = i / 4
+      const px_x = idx % w
+      const px_y = (idx - px_x) / w
+      const dx = px_x - CX
+      const dy = px_y - CY
+      const pr = Math.sqrt(dx * dx + dy * dy)
+
+      let t = (lum - DISC_REF_LUM) / (1 - DISC_REF_LUM)
+      // Outer halo region: cap the lift so the outermost ring reads
+      // as a brightened tint rather than near-white.
+      if (pr > 380) t = Math.min(t, 0.35)
+
       r = tr + (255 - tr) * t
       g = tg + (255 - tg) * t
       b = tb + (255 - tb) * t
@@ -378,6 +394,38 @@ function applyTint(ctx: SKRSContext2D, hex: string) {
   ctx.putImageData(img, 0, 0)
 }
 
+// Apply distress to the outer halo ring (the "white line"). Erodes
+// pixel alpha randomly within r=380–410 only — same etched/chipped
+// character as the text and the chrome ring, contained to its band so
+// nothing bleeds outside.
+function distressOuterRing(ctx: SKRSContext2D) {
+  const img = ctx.getImageData(0, 0, SIZE, SIZE)
+  const px = img.data
+  const w = SIZE
+  let seed = 7
+  const rand = () => {
+    seed = (seed * 1664525 + 1013904223) % 0x100000000
+    return seed / 0x100000000
+  }
+  for (let i = 0; i < px.length; i += 4) {
+    const a = px[i + 3]
+    if (a === 0) continue
+    const idx = i >> 2
+    const px_x = idx % w
+    const px_y = (idx - px_x) / w
+    const dx = px_x - CX
+    const dy = px_y - CY
+    const pr2 = dx * dx + dy * dy
+    if (pr2 < 380 * 380) continue
+    if (pr2 > 415 * 415) continue
+    const r = rand()
+    if (r < 0.18) px[i + 3] = Math.max(0, a - Math.floor(rand() * 110))
+    else if (r < 0.22) px[i + 3] = 0
+    else if (r < 0.50) px[i + 3] = Math.max(0, a - Math.floor(rand() * 28))
+  }
+  ctx.putImageData(img, 0, 0)
+}
+
 async function renderBadge(template: any, d: Duration): Promise<Buffer> {
   // Pre-tint the template so the disc-gray anchor maps exactly to the
   // assigned color. Doing this first (rather than at the end) avoids the
@@ -391,11 +439,13 @@ async function renderBadge(template: any, d: Duration): Promise<Buffer> {
   const ctx = canvas.getContext('2d')
 
   // Tinted disc → erase old text → main duration text → SobrCircle
-  // micro-typography around the outside of the chrome ring.
+  // micro-typography around the outside of the chrome ring → distress
+  // the outer halo line so it matches the etched character of the rest.
   ctx.drawImage(tinted, 0, 0)
   eraseCenterText(ctx, tinted)
   drawText(ctx, d)
   drawMicroTypography(ctx, d.color)
+  distressOuterRing(ctx)
 
   return canvas.toBuffer('image/png')
 }
