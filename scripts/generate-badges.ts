@@ -293,12 +293,10 @@ function applyTint(ctx: SKRSContext2D, hex: string) {
 }
 
 // Soft shadow under the coin that hugs its bottom curvature. Built from
-// a radial gradient anchored inside the lower half of the disc — the
-// disc itself is then carved out, leaving the gradient visible only
-// below the coin. Because the gradient is radial it falls off in every
-// direction (outward AND laterally), so the shadow naturally tapers
-// smaller toward the sides of the coin instead of having hard angular
-// ends. Heavy blur + lowered opacity make it read as shadow, not band.
+// a radial gradient that's heavily blurred for a diffuse-shadow read,
+// then masked by a disc cutout AFTER the blur so the gap between the
+// coin's white halo line and the start of the glow stays clean (instead
+// of the blur smearing the gradient back over the rim).
 function drawUnderGlow(ctx: SKRSContext2D, hex: string) {
   const [r, g, b] = hexToRgb(hex)
   const a = 0.4
@@ -306,44 +304,51 @@ function drawUnderGlow(ctx: SKRSContext2D, hex: string) {
   const lg = Math.round(g + (255 - g) * a)
   const lb = Math.round(b + (255 - b) * a)
 
-  const off = createCanvas(SIZE, SIZE)
-  const octx = off.getContext('2d')
-
-  // Gradient center sits inside the lower half of the disc so the
-  // visible part (after disc cutout) peaks right at the coin's bottom
-  // edge and fades laterally + downward.
+  // Build the unblurred gradient on its own canvas.
+  const src = createCanvas(SIZE, SIZE)
+  const sctx = src.getContext('2d')
   const gx = CX
   const gy = CY + 220
   const innerR = 60
   const outerR = 360
-
-  const grad = octx.createRadialGradient(gx, gy, innerR, gx, gy, outerR)
-  grad.addColorStop(0, `rgba(${lr}, ${lg}, ${lb}, 0.55)`)
-  grad.addColorStop(0.45, `rgba(${lr}, ${lg}, ${lb}, 0.25)`)
+  const grad = sctx.createRadialGradient(gx, gy, innerR, gx, gy, outerR)
+  grad.addColorStop(0, `rgba(${lr}, ${lg}, ${lb}, 0.7)`)
+  grad.addColorStop(0.45, `rgba(${lr}, ${lg}, ${lb}, 0.3)`)
   grad.addColorStop(1, `rgba(${lr}, ${lg}, ${lb}, 0)`)
-  octx.fillStyle = grad
-  octx.fillRect(0, 0, SIZE, SIZE)
+  sctx.fillStyle = grad
+  sctx.fillRect(0, 0, SIZE, SIZE)
 
-  // Cut the disc out so the shadow is visible only below the coin.
-  // Cutout radius is bumped past the disc's actual edge (395) so a small
-  // gap separates the master halo's white rim from the start of the glow.
-  octx.globalCompositeOperation = 'destination-out'
-  octx.fillStyle = '#000'
-  octx.beginPath()
-  octx.arc(CX, CY, 418, 0, Math.PI * 2)
-  octx.fill()
+  // Stack-blur the gradient on a second canvas to build the diffuse
+  // shadow look. The cutout happens on this canvas afterward so the
+  // edge against the coin stays clean.
+  const blurred = createCanvas(SIZE, SIZE)
+  const bctx = blurred.getContext('2d')
+  bctx.globalAlpha = 0.55
+  bctx.filter = 'blur(30px)'
+  bctx.drawImage(src, 0, 0)
+  bctx.globalAlpha = 0.75
+  bctx.filter = 'blur(14px)'
+  bctx.drawImage(src, 0, 0)
+  bctx.globalAlpha = 0.9
+  bctx.filter = 'blur(4px)'
+  bctx.drawImage(src, 0, 0)
+  bctx.globalAlpha = 1
+  bctx.filter = 'none'
 
-  // Composite with stacked blurs for a soft, diffuse shadow read.
+  // Cut the disc out AFTER the blur so the gap between the coin's
+  // white halo rim and the start of the glow stays sharp. Cutout
+  // radius is well outside the master halo (~410) for a visible gap.
+  bctx.globalCompositeOperation = 'destination-out'
+  bctx.fillStyle = '#000'
+  bctx.beginPath()
+  bctx.arc(CX, CY, 445, 0, Math.PI * 2)
+  bctx.fill()
+
+  // Slight final blur to soften the cutout edge so it doesn't read
+  // as a hard line.
   ctx.save()
-  ctx.globalAlpha = 0.55
-  ctx.filter = 'blur(28px)'
-  ctx.drawImage(off, 0, 0)
-  ctx.globalAlpha = 0.7
-  ctx.filter = 'blur(12px)'
-  ctx.drawImage(off, 0, 0)
-  ctx.globalAlpha = 0.9
-  ctx.filter = 'blur(4px)'
-  ctx.drawImage(off, 0, 0)
+  ctx.filter = 'blur(2px)'
+  ctx.drawImage(blurred, 0, 0)
   ctx.restore()
 }
 
