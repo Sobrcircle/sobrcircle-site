@@ -229,12 +229,13 @@ function drawText(ctx: SKRSContext2D, d: Duration) {
   drawCenteredText(lctx, d.big, CX, NUMERAL_BASELINE, bigSize, 200)
   drawCenteredText(lctx, d.label, CX, LABEL_BASELINE, LABEL_SIZE, 400, LABEL_TRACKING)
 
-  distressLayer(layer, {
-    x: CX - 290,
-    y: NUMERAL_BASELINE - BIG_SIZE_DOUBLE,
-    w: 580,
-    h: BIG_SIZE_DOUBLE + 160,
-  })
+  // Distress disabled for clean-look comparison run.
+  // distressLayer(layer, {
+  //   x: CX - 290,
+  //   y: NUMERAL_BASELINE - BIG_SIZE_DOUBLE,
+  //   w: 580,
+  //   h: BIG_SIZE_DOUBLE + 160,
+  // })
 
   // No glow — soft shadow erodes the sharp etched edges we want here.
   ctx.drawImage(layer, 0, 0)
@@ -329,16 +330,14 @@ function drawMicroTypography(ctx: SKRSContext2D, hex: string) {
   }
   lctx.restore()
 
-  // Distress the whole ring band so the SobrCircle text picks up the
-  // same etched/worn look as the main duration text. Bbox covers a
-  // square around the full ring annulus at this radius.
-  const span = radius + fontSize
-  distressLayer(layer, {
-    x: CX - span,
-    y: CY - span,
-    w: span * 2,
-    h: span * 2,
-  })
+  // Distress disabled for clean-look comparison run.
+  // const span = radius + fontSize
+  // distressLayer(layer, {
+  //   x: CX - span,
+  //   y: CY - span,
+  //   w: span * 2,
+  //   h: span * 2,
+  // })
 
   ctx.drawImage(layer, 0, 0)
 }
