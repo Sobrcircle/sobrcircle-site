@@ -325,10 +325,12 @@ function drawUnderGlow(ctx: SKRSContext2D, hex: string) {
   octx.fillRect(0, 0, SIZE, SIZE)
 
   // Cut the disc out so the shadow is visible only below the coin.
+  // Cutout radius is bumped past the disc's actual edge (395) so a small
+  // gap separates the master halo's white rim from the start of the glow.
   octx.globalCompositeOperation = 'destination-out'
   octx.fillStyle = '#000'
   octx.beginPath()
-  octx.arc(CX, CY, 395, 0, Math.PI * 2)
+  octx.arc(CX, CY, 418, 0, Math.PI * 2)
   octx.fill()
 
   // Composite with stacked blurs for a soft, diffuse shadow read.
