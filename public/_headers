@@ -51,5 +51,8 @@
 /badges/manifest.json
   Cache-Control: public, max-age=300
 
-/badges/*
-  Cache-Control: public, max-age=31536000, immutable
+/badges/v1/*
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/badges/v2/*
+  Cache-Control: public, max-age=3600, must-revalidate
