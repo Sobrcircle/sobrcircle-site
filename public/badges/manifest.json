@@ -1,7 +1,7 @@
 {
-  "version": "badge-v1",
+  "version": "badge-v2",
   "ttlHours": 24,
-  "baseUrl": "https://sobrcircle.com/badges/v1/",
+  "baseUrl": "https://sobrcircle.com/badges/v2/",
   "fallback": {
     "light": "lightmodecircle.png",
     "dark": "darkmodecircle.png"

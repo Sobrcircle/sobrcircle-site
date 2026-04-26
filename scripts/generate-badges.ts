@@ -17,8 +17,8 @@ import type { SKRSContext2D } from '@napi-rs/canvas'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(__dirname, '..')
 const TEMPLATE = path.join(ROOT, 'public/badges/template.png')
-const FINAL_DIR = path.join(ROOT, 'public/badges/v1')
-const PREVIEW_DIR = path.join(ROOT, 'public/badges/v1/preview')
+const FINAL_DIR = path.join(ROOT, 'public/badges/v2')
+const PREVIEW_DIR = path.join(ROOT, 'public/badges/v2/preview')
 const MANIFEST_PATH = path.join(ROOT, 'public/badges/manifest.json')
 const FONT_PATH = path.join(ROOT, 'scripts/fonts/Inter.ttf')
 
@@ -529,9 +529,9 @@ async function writeManifest() {
     badges[manifestLabel(d)] = `${d.slug}.png`
   }
   const manifest = {
-    version: 'badge-v1',
+    version: 'badge-v2',
     ttlHours: 24,
-    baseUrl: 'https://sobrcircle.com/badges/v1/',
+    baseUrl: 'https://sobrcircle.com/badges/v2/',
     fallback: {
       light: 'lightmodecircle.png',
       dark: 'darkmodecircle.png',
