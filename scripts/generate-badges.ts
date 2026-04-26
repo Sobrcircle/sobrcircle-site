@@ -292,12 +292,13 @@ function applyTint(ctx: SKRSContext2D, hex: string) {
   ctx.putImageData(img, 0, 0)
 }
 
-// Crescent glow that hugs the bottom curvature of the coin — both the
-// inner and outer edges are arcs concentric with the disc, so the glow
-// band itself follows the coin's curve. Built as an annular sector
-// (donut wedge) at the disc's bottom, filled with a radial gradient
-// that's brightest at the disc edge and fades outward, then composited
-// with multi-radius blur for a soft halo.
+// Soft shadow under the coin that hugs its bottom curvature. Built from
+// a radial gradient anchored inside the lower half of the disc — the
+// disc itself is then carved out, leaving the gradient visible only
+// below the coin. Because the gradient is radial it falls off in every
+// direction (outward AND laterally), so the shadow naturally tapers
+// smaller toward the sides of the coin instead of having hard angular
+// ends. Heavy blur + lowered opacity make it read as shadow, not band.
 function drawUnderGlow(ctx: SKRSContext2D, hex: string) {
   const [r, g, b] = hexToRgb(hex)
   const a = 0.4
@@ -308,38 +309,38 @@ function drawUnderGlow(ctx: SKRSContext2D, hex: string) {
   const off = createCanvas(SIZE, SIZE)
   const octx = off.getContext('2d')
 
-  // Annular sector that wraps the bottom of the disc.
-  const innerR = 395  // disc outer edge — glow's inner edge touches here
-  const outerR = 485  // glow extends 90px outward
-  const startAng = Math.PI * (38 / 180)
-  const endAng = Math.PI * (142 / 180)
+  // Gradient center sits inside the lower half of the disc so the
+  // visible part (after disc cutout) peaks right at the coin's bottom
+  // edge and fades laterally + downward.
+  const gx = CX
+  const gy = CY + 220
+  const innerR = 60
+  const outerR = 360
 
-  octx.beginPath()
-  octx.arc(CX, CY, outerR, startAng, endAng)
-  octx.arc(CX, CY, innerR, endAng, startAng, true)
-  octx.closePath()
-
-  // Bright at inner edge (touching the coin), fading to transparent
-  // at the outer edge of the band.
-  const grad = octx.createRadialGradient(CX, CY, innerR, CX, CY, outerR)
-  grad.addColorStop(0, `rgba(${lr}, ${lg}, ${lb}, 0.95)`)
-  grad.addColorStop(0.5, `rgba(${lr}, ${lg}, ${lb}, 0.45)`)
+  const grad = octx.createRadialGradient(gx, gy, innerR, gx, gy, outerR)
+  grad.addColorStop(0, `rgba(${lr}, ${lg}, ${lb}, 0.55)`)
+  grad.addColorStop(0.45, `rgba(${lr}, ${lg}, ${lb}, 0.25)`)
   grad.addColorStop(1, `rgba(${lr}, ${lg}, ${lb}, 0)`)
   octx.fillStyle = grad
+  octx.fillRect(0, 0, SIZE, SIZE)
+
+  // Cut the disc out so the shadow is visible only below the coin.
+  octx.globalCompositeOperation = 'destination-out'
+  octx.fillStyle = '#000'
+  octx.beginPath()
+  octx.arc(CX, CY, 395, 0, Math.PI * 2)
   octx.fill()
 
-  // Composite back with stacked blurs so the band's hard angle ends
-  // soften into a natural taper and the inner edge bleeds slightly
-  // up against the coin.
+  // Composite with stacked blurs for a soft, diffuse shadow read.
   ctx.save()
-  ctx.globalAlpha = 0.65
-  ctx.filter = 'blur(22px)'
+  ctx.globalAlpha = 0.55
+  ctx.filter = 'blur(28px)'
   ctx.drawImage(off, 0, 0)
-  ctx.globalAlpha = 0.85
-  ctx.filter = 'blur(8px)'
+  ctx.globalAlpha = 0.7
+  ctx.filter = 'blur(12px)'
   ctx.drawImage(off, 0, 0)
-  ctx.globalAlpha = 1
-  ctx.filter = 'none'
+  ctx.globalAlpha = 0.9
+  ctx.filter = 'blur(4px)'
   ctx.drawImage(off, 0, 0)
   ctx.restore()
 }
