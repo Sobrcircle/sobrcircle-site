@@ -205,34 +205,72 @@ function drawText(ctx: SKRSContext2D, d: Duration) {
   ctx.restore()
 }
 
-// Apply the per-duration tint using the "color" blend mode. This keeps
-// the master's chrome luminance (highlights, mid-tones, shadows, ring
-// brushwork) and only swaps hue/saturation toward the assigned color.
-// The tint is masked to the badge's alpha so the transparent canvas
-// outside the disc isn't filled.
+function hexToRgb(hex: string): [number, number, number] {
+  const h = hex.replace('#', '')
+  return [
+    parseInt(h.slice(0, 2), 16),
+    parseInt(h.slice(2, 4), 16),
+    parseInt(h.slice(4, 6), 16),
+  ]
+}
+
+// We anchor the master's inner-disc luminance to the assigned tint so the
+// disc interior reads as the exact assigned color. Anchor pushed to 0.80
+// so chrome highlights have to be quite bright to lift toward white;
+// everything else (most of the disc) lands at the full tint or slightly
+// darker. Alpha is preserved so the outer halo keeps its soft fade and
+// the canvas outside the badge stays transparent for in-app use.
+const DISC_REF_LUM = 0.8
+
 function applyTint(ctx: SKRSContext2D, hex: string) {
-  // Save the current alpha shape so we can re-mask after the fill.
-  const tintLayer = createCanvas(SIZE, SIZE)
-  const tctx = tintLayer.getContext('2d')
+  const [tr, tg, tb] = hexToRgb(hex)
+  const img = ctx.getImageData(0, 0, SIZE, SIZE)
+  const px = img.data
 
-  // Paint solid color across the canvas.
-  tctx.fillStyle = hex
-  tctx.fillRect(0, 0, SIZE, SIZE)
+  for (let i = 0; i < px.length; i += 4) {
+    const a = px[i + 3]
+    if (a === 0) continue
+    const lum =
+      (px[i] * 0.299 + px[i + 1] * 0.587 + px[i + 2] * 0.114) / 255
 
-  // Apply the tint with "color" blend onto a copy of the badge.
-  ctx.save()
-  ctx.globalCompositeOperation = 'color'
-  ctx.drawImage(tintLayer, 0, 0)
-  ctx.restore()
+    let r: number
+    let g: number
+    let b: number
+    if (lum >= DISC_REF_LUM) {
+      // Brighter than the disc interior: blend tint toward white.
+      const t = (lum - DISC_REF_LUM) / (1 - DISC_REF_LUM)
+      r = tr + (255 - tr) * t
+      g = tg + (255 - tg) * t
+      b = tb + (255 - tb) * t
+    } else {
+      // Darker than the disc interior: pull tint toward black.
+      const t = lum / DISC_REF_LUM
+      r = tr * t
+      g = tg * t
+      b = tb * t
+    }
+    px[i]     = Math.round(r)
+    px[i + 1] = Math.round(g)
+    px[i + 2] = Math.round(b)
+    // alpha untouched
+  }
+  ctx.putImageData(img, 0, 0)
 }
 
 async function renderBadge(template: any, d: Duration): Promise<Buffer> {
+  // Pre-tint the template so the disc-gray anchor maps exactly to the
+  // assigned color. Doing this first (rather than at the end) avoids the
+  // blur-erase pass lightening the inner disc and shifting the anchor.
+  const tinted = createCanvas(SIZE, SIZE)
+  const tctx = tinted.getContext('2d')
+  tctx.drawImage(template, 0, 0, SIZE, SIZE)
+  applyTint(tctx, d.color)
+
   const canvas = createCanvas(SIZE, SIZE)
   const ctx = canvas.getContext('2d')
-  ctx.drawImage(template, 0, 0, SIZE, SIZE)
-  eraseCenterText(ctx, template)
+  ctx.drawImage(tinted, 0, 0)
+  eraseCenterText(ctx, tinted)
   drawText(ctx, d)
-  applyTint(ctx, d.color)
   return canvas.toBuffer('image/png')
 }
 
