@@ -114,11 +114,11 @@ function distressLayer(canvas: any, bbox: { x: number; y: number; w: number; h: 
   ctx.putImageData(img, bbox.x, bbox.y)
 }
 
-// All badges use the same numeral size, label size, and baseline positions
-// regardless of how many characters are in the duration. This keeps the
-// look uniform across the full set — "6 MONTHS" and "12 MONTHS" sit at
-// the same vertical position with the same character height.
-const BIG_SIZE = 240
+// Visual size matching: a single chunky "6" carries all the visual weight
+// in one character, so at the same font-size as "24" it reads bigger. Drop
+// 1-digit numerals about 12% so they feel the same on the disc.
+const BIG_SIZE_DOUBLE = 240
+const BIG_SIZE_SINGLE = 210
 const LABEL_SIZE = 52
 const LABEL_TRACKING = 14
 const NUMERAL_BASELINE = 540
@@ -129,14 +129,15 @@ function drawText(ctx: SKRSContext2D, d: Duration) {
   const lctx = layer.getContext('2d')
   lctx.fillStyle = 'rgba(252, 253, 255, 0.95)'
 
-  drawCenteredText(lctx, d.big, CX, NUMERAL_BASELINE, BIG_SIZE, 200)
+  const bigSize = d.big.length === 1 ? BIG_SIZE_SINGLE : BIG_SIZE_DOUBLE
+  drawCenteredText(lctx, d.big, CX, NUMERAL_BASELINE, bigSize, 200)
   drawCenteredText(lctx, d.label, CX, LABEL_BASELINE, LABEL_SIZE, 400, LABEL_TRACKING)
 
   distressLayer(layer, {
     x: CX - 290,
-    y: NUMERAL_BASELINE - BIG_SIZE,
+    y: NUMERAL_BASELINE - BIG_SIZE_DOUBLE,
     w: 580,
-    h: BIG_SIZE + 160,
+    h: BIG_SIZE_DOUBLE + 160,
   })
 
   ctx.save()
