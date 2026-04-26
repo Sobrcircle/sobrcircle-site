@@ -257,6 +257,70 @@ function hexToRgb(hex: string): [number, number, number] {
 // the canvas outside the badge stays transparent for in-app use.
 const DISC_REF_LUM = 0.8
 
+// Micro-typography running around the OUTSIDE of the chrome ring —
+// where the under-glow used to sit. Repeats "SobrCircle" with "Sobr" in
+// bold and "Circle" in regular, evenly distributed around the full
+// circumference. Uses the same lightened-tint hue as the main text so
+// it stays in family.
+function drawMicroTypography(ctx: SKRSContext2D, hex: string) {
+  const [r, g, b] = hexToRgb(hex)
+  const k = 0.7
+  const lr = Math.round(r + (255 - r) * k)
+  const lg = Math.round(g + (255 - g) * k)
+  const lb = Math.round(b + (255 - b) * k)
+  const fill = `rgba(${lr}, ${lg}, ${lb}, 0.85)`
+
+  // Just outside the chrome ring outer edge (~r=390) — sits in the
+  // halo zone where the under-glow used to be.
+  const radius = 400
+  const fontSize = 32
+
+  const segments: { text: string; weight: number }[] = []
+  const repeats = 8
+  for (let i = 0; i < repeats; i++) {
+    segments.push({ text: 'Sobr',   weight: 700 })
+    segments.push({ text: 'Circle', weight: 400 })
+    segments.push({ text: '   ·   ', weight: 400 })
+  }
+
+  const chars: { c: string; w: number; weight: number }[] = []
+  let totalWidth = 0
+  for (const seg of segments) {
+    ctx.font = `${seg.weight} ${fontSize}px Inter`
+    for (const c of seg.text) {
+      const w = ctx.measureText(c).width
+      chars.push({ c, w, weight: seg.weight })
+      totalWidth += w
+    }
+  }
+
+  const circumference = 2 * Math.PI * radius
+  const slack = circumference - totalWidth
+  const perCharExtra = slack / chars.length
+
+  ctx.save()
+  ctx.translate(CX, CY)
+  ctx.fillStyle = fill
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'middle'
+
+  let angle = -Math.PI / 2
+  for (const ch of chars) {
+    const arcW = ch.w + perCharExtra
+    const charAngle = arcW / radius
+    angle += charAngle / 2
+    ctx.save()
+    ctx.rotate(angle)
+    ctx.translate(0, -radius)
+    ctx.font = `${ch.weight} ${fontSize}px Inter`
+    ctx.fillText(ch.c, 0, 0)
+    ctx.restore()
+    angle += charAngle / 2
+  }
+
+  ctx.restore()
+}
+
 function applyTint(ctx: SKRSContext2D, hex: string) {
   const [tr, tg, tb] = hexToRgb(hex)
   const img = ctx.getImageData(0, 0, SIZE, SIZE)
@@ -292,130 +356,6 @@ function applyTint(ctx: SKRSContext2D, hex: string) {
   ctx.putImageData(img, 0, 0)
 }
 
-// Micro-typography around the inner edge of the chrome ring — repeats
-// "SobrCircle" with "Sobr" in bold weight and "Circle" in regular, like
-// the engraved text on a luxury coin's bezel. Subtle by design; you have
-// to look close to read it. Uses the same lightened-tint hue as the
-// main text so it stays in family.
-function drawMicroTypography(ctx: SKRSContext2D, hex: string) {
-  const [r, g, b] = hexToRgb(hex)
-  const k = 0.7
-  const lr = Math.round(r + (255 - r) * k)
-  const lg = Math.round(g + (255 - g) * k)
-  const lb = Math.round(b + (255 - b) * k)
-  const fill = `rgba(${lr}, ${lg}, ${lb}, 0.7)`
-
-  // Place text just inside the chrome ring (ring inner edge ~r=265).
-  const radius = 252
-  const fontSize = 26
-
-  // Each repeat is "Sobr" (bold) + "Circle" (regular) + a bullet spacer.
-  // Spacer width is tuned so 6 repeats fill the full ring without gaps.
-  const segments: { text: string; weight: number }[] = []
-  const repeats = 6
-  for (let i = 0; i < repeats; i++) {
-    segments.push({ text: 'Sobr',   weight: 700 })
-    segments.push({ text: 'Circle', weight: 400 })
-    segments.push({ text: '   ·   ', weight: 400 })
-  }
-
-  // Measure each char so we can place them by arc-length around the circle.
-  const chars: { c: string; w: number; weight: number }[] = []
-  let totalWidth = 0
-  for (const seg of segments) {
-    ctx.font = `${seg.weight} ${fontSize}px Inter`
-    for (const c of seg.text) {
-      const w = ctx.measureText(c).width
-      chars.push({ c, w, weight: seg.weight })
-      totalWidth += w
-    }
-  }
-
-  // If chars total less than the circumference, distribute the slack as
-  // even per-char extra spacing so the row wraps continuously.
-  const circumference = 2 * Math.PI * radius
-  const slack = circumference - totalWidth
-  const perCharExtra = slack / chars.length
-
-  ctx.save()
-  ctx.translate(CX, CY)
-  ctx.fillStyle = fill
-  ctx.textAlign = 'center'
-  ctx.textBaseline = 'middle'
-
-  let angle = -Math.PI / 2 // start at top
-  for (const ch of chars) {
-    const arcW = ch.w + perCharExtra
-    const charAngle = arcW / radius
-    angle += charAngle / 2
-    ctx.save()
-    ctx.rotate(angle)
-    ctx.translate(0, -radius)
-    ctx.font = `${ch.weight} ${fontSize}px Inter`
-    ctx.fillText(ch.c, 0, 0)
-    ctx.restore()
-    angle += charAngle / 2
-  }
-
-  ctx.restore()
-}
-
-// Specular highlight in the upper-left of the disc — like a polished
-// coin catching light from above-left. Soft, low-opacity, white-ish. Sits
-// over the tinted disc; the disc cutout keeps it from spilling outside.
-function drawSpecularHighlight(ctx: SKRSContext2D) {
-  const off = createCanvas(SIZE, SIZE)
-  const octx = off.getContext('2d')
-
-  // Bright soft circle at upper-left interior of the disc.
-  const hx = CX - 165
-  const hy = CY - 155
-  const grad = octx.createRadialGradient(hx, hy, 0, hx, hy, 230)
-  grad.addColorStop(0, 'rgba(255, 255, 255, 0.32)')
-  grad.addColorStop(0.55, 'rgba(255, 255, 255, 0.10)')
-  grad.addColorStop(1, 'rgba(255, 255, 255, 0)')
-  octx.fillStyle = grad
-  octx.fillRect(0, 0, SIZE, SIZE)
-
-  // Mask to the disc area so the highlight stays on the coin.
-  octx.globalCompositeOperation = 'destination-in'
-  octx.fillStyle = '#000'
-  octx.beginPath()
-  octx.arc(CX, CY, 380, 0, Math.PI * 2)
-  octx.fill()
-
-  ctx.drawImage(off, 0, 0)
-}
-
-// Inner bevel: a soft dark ring right where the chrome ring meets the
-// inner disc. Reads as if the ring is raised above the disc surface
-// instead of painted onto it. Tiny effect; massive perceived quality.
-function drawInnerBevel(ctx: SKRSContext2D) {
-  const off = createCanvas(SIZE, SIZE)
-  const octx = off.getContext('2d')
-
-  // Dark ring just inside the chrome ring inner edge.
-  octx.strokeStyle = 'rgba(0, 0, 0, 0.5)'
-  octx.lineWidth = 6
-  octx.beginPath()
-  octx.arc(CX, CY, 268, 0, Math.PI * 2)
-  octx.stroke()
-
-  // Companion thin highlight just inside the dark ring — adds the
-  // light-from-above bevel suggestion.
-  octx.strokeStyle = 'rgba(255, 255, 255, 0.18)'
-  octx.lineWidth = 2
-  octx.beginPath()
-  octx.arc(CX, CY, 261, 0, Math.PI * 2)
-  octx.stroke()
-
-  // Soft blur so the bevel reads as a shadow, not a hard line.
-  ctx.save()
-  ctx.filter = 'blur(2px)'
-  ctx.drawImage(off, 0, 0)
-  ctx.restore()
-}
-
 async function renderBadge(template: any, d: Duration): Promise<Buffer> {
   // Pre-tint the template so the disc-gray anchor maps exactly to the
   // assigned color. Doing this first (rather than at the end) avoids the
@@ -428,15 +368,12 @@ async function renderBadge(template: any, d: Duration): Promise<Buffer> {
   const canvas = createCanvas(SIZE, SIZE)
   const ctx = canvas.getContext('2d')
 
-  // Order: tinted disc → erase old text → inner bevel (so it sits on
-  // the ring boundary) → micro-typography → main duration text →
-  // specular highlight on top.
+  // Tinted disc → erase old text → main duration text → SobrCircle
+  // micro-typography around the outside of the chrome ring.
   ctx.drawImage(tinted, 0, 0)
   eraseCenterText(ctx, tinted)
-  drawInnerBevel(ctx)
-  drawMicroTypography(ctx, d.color)
   drawText(ctx, d)
-  drawSpecularHighlight(ctx)
+  drawMicroTypography(ctx, d.color)
 
   return canvas.toBuffer('image/png')
 }
