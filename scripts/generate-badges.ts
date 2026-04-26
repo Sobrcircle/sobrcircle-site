@@ -346,6 +346,7 @@ function applyTint(ctx: SKRSContext2D, hex: string) {
   const [tr, tg, tb] = hexToRgb(hex)
   const img = ctx.getImageData(0, 0, SIZE, SIZE)
   const px = img.data
+  const w = SIZE
 
   for (let i = 0; i < px.length; i += 4) {
     const a = px[i + 3]
@@ -357,8 +358,21 @@ function applyTint(ctx: SKRSContext2D, hex: string) {
     let g: number
     let b: number
     if (lum >= DISC_REF_LUM) {
-      // Brighter than the disc interior: blend tint toward white.
-      const t = (lum - DISC_REF_LUM) / (1 - DISC_REF_LUM)
+      // Brighter than the disc interior: blend tint toward white. Inside
+      // the chrome ring we let highlights lift fully so brushwork still
+      // pops. In the outer halo (r > 380) we cap the lift so the
+      // outermost ring stays in the badge's color family — the natural
+      // brightness variation in the halo carries through, just in tint.
+      const idx = i >> 2
+      const px_x = idx % w
+      const px_y = (idx - px_x) / w
+      const dx = px_x - CX
+      const dy = px_y - CY
+      const pr2 = dx * dx + dy * dy
+
+      let t = (lum - DISC_REF_LUM) / (1 - DISC_REF_LUM)
+      if (pr2 > 380 * 380) t = Math.min(t, 0.4)
+
       r = tr + (255 - tr) * t
       g = tg + (255 - tg) * t
       b = tb + (255 - tb) * t
