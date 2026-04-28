@@ -18,6 +18,12 @@
 /twentyfour/index.html
   Cache-Control: no-store, must-revalidate
 
+/paws/
+  Cache-Control: no-store, must-revalidate
+
+/paws/index.html
+  Cache-Control: no-store, must-revalidate
+
 /support/
   Cache-Control: no-store, must-revalidate
 
@@ -47,6 +53,15 @@
 
 /assets/*.css
   Cache-Control: public, max-age=31536000, immutable
+
+/paws/assets/*.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/paws/assets/*.css
+  Cache-Control: public, max-age=31536000, immutable
+
+/paws/paws-story.jpg
+  Cache-Control: public, max-age=3600, must-revalidate
 
 /badges/manifest.json
   Cache-Control: public, max-age=300
