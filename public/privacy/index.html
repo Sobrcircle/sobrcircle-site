@@ -24,6 +24,7 @@
         <div class="top-links">
           <a href="/support">Support</a>
           <a href="/terms">Terms</a>
+          <a href="/privacy-officer">Privacy Officer</a>
           <a href="/delete-account">Delete Account</a>
         </div>
       </nav>
@@ -31,7 +32,7 @@
       <article class="legal-panel">
         <p class="eyebrow">Legal</p>
         <h1>Privacy Policy</h1>
-        <p class="meta-line">Effective date: April 30, 2026 &nbsp;&middot;&nbsp; Last updated: April 30, 2026</p>
+        <p class="meta-line">Effective date: April 30, 2026 &nbsp;&middot;&nbsp; Last updated: May 6, 2026</p>
 
         <p class="meta-line" style="margin-top:0.75rem; font-style:italic; font-size:0.875rem; opacity:0.75;">
           This Privacy Policy is prepared with care and represents our genuine commitment to protecting your information. It is not a substitute for legal advice. If you have specific questions about your privacy rights in your jurisdiction, we encourage you to consult a qualified lawyer. Nothing here constitutes legal advice to you. We are not lawyers.
@@ -101,7 +102,7 @@
           <li><strong>App usage events (analytics &mdash; opt-in only):</strong> Firebase Analytics is <strong>disabled by default</strong>. You can opt in through Settings &rarr; Privacy &rarr; Usage Analytics. If you opt in, we collect events such as &ldquo;post created,&rdquo; &ldquo;milestone reached,&rdquo; or &ldquo;feature viewed.&rdquo; We do not record the content of what you wrote, your recovery date, or any recovery-context field in analytics events.</li>
           <li><strong>Push notification token:</strong> a device token so Firebase Cloud Messaging can deliver push notifications you have opted into. You can revoke notification permission at any time in your device settings.</li>
           <li><strong>Presence and typing indicators:</strong> Firebase Realtime Database records your online/offline status and typing indicator state while the app is open. This is visible only to members of your active circle.</li>
-          <li><strong>Device attestation:</strong> Firebase App Check uses Apple App Attest (iOS) and Google Play Integrity (Android) to confirm requests come from a genuine, unmodified copy of SobrCircle. No personally identifying information leaves your device as part of this check.</li>
+          <li><strong>Device attestation:</strong> Firebase App Check uses Apple App Attest (iOS) and Google Play Integrity (Android) to confirm requests come from a genuine, unmodified copy of SobrCircle. No personally identifying information leaves your device as part of this check. App Check is enforced at the Firebase service-tier (the Google gateway in front of Firestore, Storage, Realtime Database, Identity Toolkit, and Cloud Functions) so requests from non-genuine clients are rejected before any application logic runs.</li>
           <li><strong>Feature flags:</strong> Firebase Remote Config delivers feature flag values to your app. No personal information is transmitted as part of this.</li>
         </ul>
 
@@ -120,15 +121,44 @@
           We never collect background location. Location access requires your explicit permission and is never requested at app launch.
         </p>
 
+        <p><strong>5.4a Device permissions and what each one is used for</strong></p>
+        <p>
+          Every device permission SobrCircle asks for has a single, narrowly-scoped purpose that you control. Each prompt is shown the first time you reach a feature that needs it; you can revoke any of these from your device settings at any time and the rest of the app continues to work.
+        </p>
+        <ul>
+          <li><strong>Camera</strong> &mdash; used only when you choose to capture and share a photo or video in posts or messages.</li>
+          <li><strong>Microphone</strong> &mdash; used only when you choose to record a video for a check-in or message, or when you tap the microphone to dictate text.</li>
+          <li><strong>Speech recognition</strong> (iOS) &mdash; transcribes your dictated voice into text on-device. Apple&rsquo;s Speech framework may forward audio to Apple servers for recognition; we receive only the transcribed text from Apple. We never store the raw audio for that flow.</li>
+          <li><strong>Photo library (read)</strong> &mdash; used when you choose images to share in posts or messages.</li>
+          <li><strong>Photo library (add)</strong> &mdash; used only when you explicitly tap &ldquo;save image&rdquo; on shared content.</li>
+          <li><strong>Location while in use</strong> &mdash; used only while the app is open and only when you choose to share your live location with circle members. Location data is never read in the background. (Older versions of SobrCircle declared an &ldquo;Always&rdquo; location purpose string; that declaration has been removed since SobrCircle has never run location in the background.)</li>
+          <li><strong>Push notifications</strong> &mdash; used to deliver new-message, friend-request, and milestone notifications you opted into. Manage at any time in device settings.</li>
+        </ul>
+
         <p><strong>5.5 What we do not collect</strong></p>
         <ul>
           <li>We do not collect your contacts or sync your address book.</li>
-          <li>We do not track you across other apps or websites.</li>
+          <li>We do not track you across other apps or websites. SobrCircle does not use Apple&rsquo;s App Tracking Transparency framework because we do not perform any cross-app tracking; on Android, we explicitly remove the advertising-ID permission (<code>com.google.android.gms.permission.AD_ID</code>) at the manifest-merger layer so the app never receives an advertising identifier.</li>
           <li>We do not sell your personal information.</li>
           <li>We do not use your content to train AI or machine-learning models.</li>
           <li>We do not collect government-issued identifiers (social security numbers, passport numbers, etc.).</li>
           <li>We do not collect financial account details (payment card numbers, bank account numbers).</li>
         </ul>
+
+        <p><strong>5.6 Subscriptions and Family Sharing</strong></p>
+        <p>
+          The SobrCircle Supporter monthly subscription (formerly &ldquo;Premium&rdquo; in older app builds; &ldquo;Supporter&rdquo; everywhere user-facing in current builds) is an <strong>individual subscription</strong>. Apple Family Sharing is intentionally disabled for this subscription, and Google Play Family Library is not enabled. Each member of a household who chooses to support SobrCircle does so with their own subscription. Recovery is personal &mdash; we don&rsquo;t want a household&rsquo;s subscription state to be visible to anyone the user has not chosen to share recovery context with.
+        </p>
+
+        <p><strong>5.7 Home-screen widgets</strong></p>
+        <p>
+          On iOS, SobrCircle&rsquo;s home-screen and lock-screen widgets read a small set of values (recovery date, today&rsquo;s reflection text, tomorrow&rsquo;s reflection text) from a shared App Group container (<code>group.com.sobrcircle.app.widgets</code>) that lives entirely on your device. The app writes these values; the widget extension reads them. <strong>Widget data is local-only and is never transmitted to a server.</strong> The same model applies to the Android home-screen widgets (which read locally-stored values via Android shared preferences).
+        </p>
+
+        <p><strong>5.8 Maps API key</strong></p>
+        <p>
+          SobrCircle uses the Google Maps SDK on both iOS and Android to render maps and meeting locations. The Maps API key is embedded in the app binary (this is the design Google requires for client-side Maps SDKs); it is restricted at the Google Cloud Platform IAM layer to SobrCircle&rsquo;s iOS bundle ID and Android package name + signing certificate, and is restricted to the Maps SDK only. No location tracking happens on our servers as part of map rendering &mdash; the Maps SDK communicates directly with Google&rsquo;s map tile servers from your device.
+        </p>
 
         <h2>6. How we use your information</h2>
 
@@ -240,7 +270,7 @@
 
         <ul>
           <li><strong>Active account data</strong> (profile, posts, messages, photos, videos, journal entries) &mdash; retained while your account is open.</li>
-          <li><strong>Account data after deletion</strong> &mdash; profile and user-generated content are deleted from active systems immediately upon account deletion. Technical logs for security and abuse prevention may persist for up to 30 days before permanent deletion. Encrypted backup copies are purged within 35 days.</li>
+          <li><strong>Account data after deletion</strong> &mdash; when you tap Delete Account, your account enters a <strong>30-day grace period</strong> during which your data is hidden from other users (your posts, messages, and profile become invisible to everyone but you) and your sign-in tokens are revoked. You can sign back in during the grace window to restore the account. After 30 days, profile and user-generated content are permanently deleted from active systems and your authentication record is removed. Technical logs for security and abuse prevention may persist for up to 30 additional days before permanent deletion. Encrypted backup copies are purged within 35 days of permanent deletion.</li>
           <li><strong>Content moderation event records</strong> &mdash; up to 2 years, for safety auditing, appeals, and legal defense.</li>
           <li><strong>CSAM reports</strong> &mdash; retained as required by law (potentially indefinitely under 18 U.S.C. &sect;&nbsp;2258A and applicable Canadian law).</li>
           <li><strong>Subscription and billing records</strong> &mdash; up to 7 years, as required for tax and financial compliance under applicable Canadian law.</li>
@@ -278,7 +308,7 @@
         <ul>
           <li><strong>Access:</strong> request a copy of the personal information we hold about you. You can also export your data directly in-app: Settings &rarr; Account &rarr; Request Data Export. We will deliver a downloadable archive (JSON + media files in a ZIP) within 7 days of the request.</li>
           <li><strong>Correction:</strong> correct inaccurate or incomplete personal information. Edit your profile in-app or email <a href="mailto:privacy@sobrcircle.com">privacy@sobrcircle.com</a>.</li>
-          <li><strong>Deletion:</strong> delete your account and the personal information we hold about you. Use Settings &rarr; Account &rarr; Delete Account in the app, or visit <a href="/delete-account">sobrcircle.com/delete-account</a>. Deletion from active systems is immediate; technical logs are purged within 30 days. See Section&nbsp;9 for legally required retention categories.</li>
+          <li><strong>Deletion:</strong> delete your account and the personal information we hold about you. Use Settings &rarr; Account &rarr; Delete Account in the app, or visit <a href="/delete-account">sobrcircle.com/delete-account</a>. Deletion enters a <strong>30-day grace period</strong> during which you can sign back in to restore the account; after 30 days, all active-system data is permanently deleted and your authentication record is removed. Technical logs are purged within 30 additional days. See Section&nbsp;9 for legally required retention categories and Section&nbsp;9 above for the full deletion timeline.</li>
           <li><strong>Portability:</strong> receive a portable, machine-readable copy of the personal information you have provided to us. Our data export (above) is in JSON format and is machine-readable.</li>
           <li><strong>Withdrawal of consent:</strong> withdraw consent to optional processing (analytics, location sharing, recovery date display, push notifications) at any time through in-app settings or device settings. Withdrawal does not affect the lawfulness of processing before withdrawal.</li>
           <li><strong>Restriction and objection:</strong> ask us to restrict how we process your data, or object to a specific processing activity, by contacting <a href="mailto:privacy@sobrcircle.com">privacy@sobrcircle.com</a>.</li>
