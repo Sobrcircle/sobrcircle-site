@@ -145,18 +145,68 @@
         </ul>
         <p>Current retention windows include:</p>
         <ul>
-          <li>Backup copies: up to 35 days</li>
-          <li>Security and abuse logs: up to 12 months</li>
+          <li>Security and abuse logs: up to 30 days after permanent deletion</li>
+          <li>Encrypted backup copies: purged within 35 days of permanent deletion</li>
           <li>Billing, tax, and transaction records: up to 7 years where required</li>
           <li>Deletion-request audit records: up to 24 months</li>
+          <li>CSAM reports filed under 18 U.S.C. &sect;&nbsp;2258A: retained as required by law (potentially indefinitely)</li>
           <li>Legal hold or dispute records: until resolved</li>
         </ul>
 
         <h2>Deletion timeline</h2>
+        <p>
+          When you tap <strong>Settings &rarr; Account &rarr; Delete Account</strong> in the app, your account
+          enters a <strong>30-day grace period</strong> before permanent deletion. The grace
+          period is designed to protect you from accidental deletion and from
+          someone else triggering deletion if they gain temporary access to
+          your device.
+        </p>
+        <p>What happens at each point in the timeline:</p>
         <ul>
-          <li>Account access is disabled immediately after successful verification.</li>
-          <li>Deletion from active systems is completed within 30 days.</li>
+          <li>
+            <strong>Day 0 (the moment you confirm):</strong> Your authentication
+            tokens are revoked immediately, signing you out on every device.
+            Your profile, posts, messages, and journal entries are hidden from
+            other users (your circle, group members, and anyone you previously
+            messaged stop seeing your content). Your friend code stops resolving
+            for new requests. Push notifications to your devices stop.
+          </li>
+          <li>
+            <strong>Days 1&ndash;30 (grace period &mdash; restoration available):</strong>
+            You can sign back in to SobrCircle at any time during this window
+            to restore your account. Restoration unhides your data immediately
+            and returns the account to its pre-deletion state. After restoration
+            you can continue using SobrCircle normally; circle members and group
+            members regain access to your historical content.
+          </li>
+          <li>
+            <strong>Day 30 (permanent deletion runs):</strong> If you have not
+            restored, an automated cascade runs and permanently deletes: your
+            user document, your posts and comments and reactions, your journal
+            entries, your milestones, your direct-message history (your side
+            of any thread), your group memberships, your circle relationships,
+            your live-location shares, your push-notification tokens, your
+            friend code, your uploaded media in Storage, and finally your
+            Firebase authentication record. The cascade typically completes
+            within 60 seconds. Once your authentication record is deleted, the
+            email and phone number tied to the account become free to use for
+            a new SobrCircle signup.
+          </li>
+          <li>
+            <strong>Days 31&ndash;60:</strong> Technical logs (security, abuse
+            prevention, deletion-request audit records) may persist for up to
+            30 additional days beyond Day 30, then are permanently deleted.
+            Encrypted backup copies are purged within 35 days of Day 30.
+          </li>
         </ul>
+        <p>
+          If something goes wrong during the Day 30 cascade (a transient
+          backend failure), our monitoring fires an alert and our team
+          intervenes manually to complete the deletion. The procedure is
+          documented internally; in every case the goal is to complete
+          permanent deletion as soon as the issue is identified and never
+          to leave an account in a partially-deleted state.
+        </p>
 
         <h2>Subscription notice</h2>
         <p>
