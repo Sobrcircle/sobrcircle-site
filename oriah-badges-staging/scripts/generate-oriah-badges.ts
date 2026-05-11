@@ -374,54 +374,116 @@ function drawMicroTypography(ctx: SKRSContext2D, hex: string) {
   ctx.drawImage(layer, 0, 0)
 }
 
-// Crown of thorns — a jagged closed ring drawn between the inner disc
-// and the chrome ring. Many sharp inward-pointing spikes around the
-// perimeter, evoking the crown without being literal. Drawn in a slightly
-// darker etched tone of the badge color so it reads as engraved metal.
+// Crown of thorns — a thin twisted branch encircling the inner disc, with
+// short sharp thorns sticking out at irregular angles. Aims to evoke
+// Christ's crown rather than read as a decorative sawtooth border. Drawn
+// in a darker etched tone of the badge color so it reads as engraved.
 function drawCrownOfThorns(ctx: SKRSContext2D, hex: string) {
-  // Spikes alternate between two radii (outer base + inner tip).
-  const baseR = 282      // outer line — sits just outside the inner disc edge
-  const tipR  = 252      // inner tip — pokes inward toward the date area
-  const points = 36      // number of inward spikes
-  // Small organic wobble so it doesn't read as perfectly geometric.
-  const wobble = 4
+  // Base radius of the woven branch. Sits just inside the chrome ring's
+  // inner edge (~r=265) and just outside where the date text reaches.
+  const branchR = 262
 
   const [r, g, b] = hexToRgb(hex)
-  // Darker, etched-into-metal tone — pull toward black + reduce sat.
-  const darkR = Math.round(r * 0.55)
-  const darkG = Math.round(g * 0.55)
-  const darkB = Math.round(b * 0.55)
+  // Dark etched tone — deeper version of the badge color, almost-black.
+  const darkR = Math.round(r * 0.35)
+  const darkG = Math.round(g * 0.35)
+  const darkB = Math.round(b * 0.35)
+  const stroke = `rgba(${darkR}, ${darkG}, ${darkB}, 0.9)`
+  const fill   = `rgba(${darkR}, ${darkG}, ${darkB}, 0.95)`
 
-  // Build the jagged closed path: outer vertex, inner tip, outer vertex, …
-  ctx.save()
-  ctx.beginPath()
-  for (let i = 0; i < points; i++) {
-    const baseAngle = (i / points) * Math.PI * 2 - Math.PI / 2
-    const tipAngle  = baseAngle + Math.PI / points
-    const br = baseR + (Math.sin(i * 1.7) * wobble)
-    const tr = tipR + (Math.cos(i * 2.3) * wobble * 0.5)
-    const bx = CX + Math.cos(baseAngle) * br
-    const by = CY + Math.sin(baseAngle) * br
-    const tx = CX + Math.cos(tipAngle) * tr
-    const ty = CY + Math.sin(tipAngle) * tr
-    if (i === 0) ctx.moveTo(bx, by)
-    else ctx.lineTo(bx, by)
-    ctx.lineTo(tx, ty)
+  // Deterministic pseudo-randomness so thorn placement is stable across runs.
+  let seed = 1337
+  const rand = () => {
+    seed = (seed * 1664525 + 1013904223) % 0x100000000
+    return seed / 0x100000000
   }
-  ctx.closePath()
+  const noise = (t: number) =>
+    Math.sin(t * 3.1) * 1.4 + Math.sin(t * 7.7 + 1.3) * 0.7 + Math.sin(t * 13.4 + 2.7) * 0.4
 
-  // Stroke only — keeps the interior visible (date showing through).
-  ctx.strokeStyle = `rgba(${darkR}, ${darkG}, ${darkB}, 0.85)`
-  ctx.lineWidth = 2.2
-  ctx.lineJoin = 'miter'
-  ctx.miterLimit = 4
+  ctx.save()
+
+  // 1. The woven branch — a thin closed circular line with subtle organic
+  //    wobble. Reads as a thin vine, not a perfect circle.
+  ctx.beginPath()
+  const ringPoints = 240
+  for (let i = 0; i <= ringPoints; i++) {
+    const t = (i / ringPoints) * Math.PI * 2
+    const rr = branchR + noise(t)
+    const x = CX + Math.cos(t) * rr
+    const y = CY + Math.sin(t) * rr
+    if (i === 0) ctx.moveTo(x, y)
+    else ctx.lineTo(x, y)
+  }
+  ctx.strokeStyle = stroke
+  ctx.lineWidth = 1.6
+  ctx.lineJoin = 'round'
   ctx.stroke()
 
-  // Subtle inner highlight — a fainter offset stroke on the lighter side
-  // so the thorns read as 3D etched marks, not flat outlines.
-  ctx.strokeStyle = `rgba(255, 255, 255, 0.12)`
-  ctx.lineWidth = 0.8
-  ctx.stroke()
+  // 2. Thorns — individual sharp triangular spikes anchored to the branch
+  //    at irregular intervals. Most point outward (away from center) like
+  //    a real thorn would grow; a handful point inward in different lengths
+  //    so the crown feels twisted, not radially perfect.
+  type Thorn = {
+    angle: number  // angular position around the ring
+    len: number    // distance from branch to tip
+    side: 1 | -1   // 1 = outward, -1 = inward
+    skew: number   // small angular skew so thorn isn't perfectly radial
+    base: number   // half-width at the base
+  }
+
+  const thorns: Thorn[] = []
+  // Outward thorns — ~28 around the ring, irregular spacing.
+  const N_OUT = 28
+  for (let i = 0; i < N_OUT; i++) {
+    const evenly = (i / N_OUT) * Math.PI * 2
+    const jitter = (rand() - 0.5) * (Math.PI * 2 / N_OUT) * 0.7
+    thorns.push({
+      angle: evenly + jitter,
+      len: 10 + rand() * 14,    // 10–24 px
+      side: 1,
+      skew: (rand() - 0.5) * 0.45,
+      base: 2 + rand() * 2.5,
+    })
+  }
+  // A scattering of shorter inward thorns — adds the "twisted" character.
+  const N_IN = 12
+  for (let i = 0; i < N_IN; i++) {
+    thorns.push({
+      angle: rand() * Math.PI * 2,
+      len: 5 + rand() * 9,       // 5–14 px, shorter than outward
+      side: -1,
+      skew: (rand() - 0.5) * 0.55,
+      base: 1.5 + rand() * 1.8,
+    })
+  }
+
+  for (const th of thorns) {
+    const rBranch = branchR + noise(th.angle)
+    const ax = CX + Math.cos(th.angle) * rBranch
+    const ay = CY + Math.sin(th.angle) * rBranch
+
+    // Tip — radially out or in, plus a small angular skew for organic feel.
+    const tipAngle = th.angle + th.skew
+    const tipR = rBranch + th.side * th.len
+    const tx = CX + Math.cos(tipAngle) * tipR
+    const ty = CY + Math.sin(tipAngle) * tipR
+
+    // Base — perpendicular to the radial direction at the branch.
+    const perp = th.angle + Math.PI / 2
+    const b1x = ax + Math.cos(perp) * th.base
+    const b1y = ay + Math.sin(perp) * th.base
+    const b2x = ax - Math.cos(perp) * th.base
+    const b2y = ay - Math.sin(perp) * th.base
+
+    ctx.beginPath()
+    ctx.moveTo(b1x, b1y)
+    ctx.lineTo(tx, ty)
+    ctx.lineTo(b2x, b2y)
+    ctx.closePath()
+    ctx.fillStyle = fill
+    ctx.fill()
+  }
+
   ctx.restore()
 }
 
