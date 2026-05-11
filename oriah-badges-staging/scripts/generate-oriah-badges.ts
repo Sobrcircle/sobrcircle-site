@@ -374,39 +374,33 @@ function drawMicroTypography(ctx: SKRSContext2D, hex: string) {
   ctx.drawImage(layer, 0, 0)
 }
 
-// Crown of thorns — a thin twisted branch encircling the inner disc, with
-// short sharp thorns sticking out at irregular angles. Aims to evoke
-// Christ's crown rather than read as a decorative sawtooth border. Drawn
-// in a darker etched tone of the badge color so it reads as engraved.
+// Crown of thorns — a thin twisted branch sitting INSIDE the chrome ring,
+// with thorns spiking out across the ring's brushwork so the crown reads
+// as part of the chrome ring itself rather than a separate inner element.
 function drawCrownOfThorns(ctx: SKRSContext2D, hex: string) {
-  // Base radius of the woven branch. Sits right at the chrome ring's
-  // inner edge (~r=265) so the thorn bases kiss the ring boundary.
-  const branchR = 266
+  // Branch sits at the chrome ring's centerline (~r=320, mid-band).
+  // Thorns then spike both inward and outward through the brushwork.
+  const branchR = 320
 
   const [r, g, b] = hexToRgb(hex)
-  // Dark etched tone — pull badge color 45% toward black for a deep
-  // engraved feel that still carries the hue (instead of pure black).
   const darkR = Math.round(r * 0.45)
   const darkG = Math.round(g * 0.45)
   const darkB = Math.round(b * 0.45)
-  const stroke = `rgba(${darkR}, ${darkG}, ${darkB}, 0.65)`
+  const stroke = `rgba(${darkR}, ${darkG}, ${darkB}, 0.6)`
   const fill   = `rgba(${darkR}, ${darkG}, ${darkB}, 0.7)`
 
-  // Deterministic pseudo-randomness so thorn placement is stable across runs.
   let seed = 1337
   const rand = () => {
     seed = (seed * 1664525 + 1013904223) % 0x100000000
     return seed / 0x100000000
   }
-  // Subtle wobble — keeps the branch organic without it veering off the
-  // circle. Max excursion ~0.8 px (was ~2.5).
+  // Subtle wobble — keeps the branch organic without veering off the circle.
   const noise = (t: number) =>
-    Math.sin(t * 3.1) * 0.45 + Math.sin(t * 7.7 + 1.3) * 0.25 + Math.sin(t * 13.4 + 2.7) * 0.1
+    Math.sin(t * 3.1) * 0.5 + Math.sin(t * 7.7 + 1.3) * 0.3 + Math.sin(t * 13.4 + 2.7) * 0.1
 
   ctx.save()
 
-  // 1. The woven branch — a thin closed circular line that traces the
-  //    chrome ring's inner edge tightly.
+  // 1. Woven branch — tracing the mid-band of the chrome ring.
   ctx.beginPath()
   const ringPoints = 240
   for (let i = 0; i <= ringPoints; i++) {
@@ -418,13 +412,12 @@ function drawCrownOfThorns(ctx: SKRSContext2D, hex: string) {
     else ctx.lineTo(x, y)
   }
   ctx.strokeStyle = stroke
-  ctx.lineWidth = 1.2
+  ctx.lineWidth = 1.5
   ctx.lineJoin = 'round'
   ctx.stroke()
 
-  // 2. Thorns — individual sharp triangular spikes anchored to the branch
-  //    at irregular intervals. All angled slightly off-radial so none read
-  //    as a flat upright post.
+  // 2. Thorns — bigger this round so they span the chrome ring's width,
+  //    angled off-radial so none reads as a flat post.
   type Thorn = {
     angle: number
     len: number
@@ -433,36 +426,34 @@ function drawCrownOfThorns(ctx: SKRSContext2D, hex: string) {
     base: number
   }
 
-  // Minimum angular skew so no thorn is perfectly radial (which reads as
-  // an upright post). Always at least 0.15 rad off, signed randomly.
   const skewed = () => {
     const sign = rand() < 0.5 ? -1 : 1
-    return sign * (0.15 + rand() * 0.30)  // |skew| in 0.15..0.45
+    return sign * (0.15 + rand() * 0.30)
   }
 
   const thorns: Thorn[] = []
-  // Outward thorns — ~28 around the ring, irregular spacing.
+  // Outward thorns — extend toward the chrome ring's outer edge (~r=380).
   const N_OUT = 28
   for (let i = 0; i < N_OUT; i++) {
     const evenly = (i / N_OUT) * Math.PI * 2
     const jitter = (rand() - 0.5) * (Math.PI * 2 / N_OUT) * 0.7
     thorns.push({
       angle: evenly + jitter,
-      len: 10 + rand() * 14,      // 10–24 px
+      len: 22 + rand() * 22,    // 22–44 px — reaches into the brushwork
       side: 1,
       skew: skewed(),
-      base: 1.8 + rand() * 1.0,   // 1.8–2.8 px — tighter range
+      base: 2.6 + rand() * 1.4, // 2.6–4.0 px — thicker
     })
   }
-  // A scattering of shorter inward thorns — adds the "twisted" character.
-  const N_IN = 12
+  // Inward thorns — extend back toward the inner-disc edge (~r=265).
+  const N_IN = 16
   for (let i = 0; i < N_IN; i++) {
     thorns.push({
       angle: rand() * Math.PI * 2,
-      len: 5 + rand() * 9,        // 5–14 px
+      len: 18 + rand() * 22,    // 18–40 px
       side: -1,
       skew: skewed(),
-      base: 1.5 + rand() * 0.8,   // 1.5–2.3 px
+      base: 2.2 + rand() * 1.3, // 2.2–3.5 px
     })
   }
 
