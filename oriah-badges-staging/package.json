@@ -1,0 +1,16 @@
+{
+  "name": "oriah-badges",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsx scripts/generate-oriah-badges.ts",
+    "samples": "tsx scripts/generate-oriah-badges.ts --samples"
+  },
+  "dependencies": {
+    "@napi-rs/canvas": "^0.1.53"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2"
+  }
+}
