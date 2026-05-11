@@ -379,17 +379,18 @@ function drawMicroTypography(ctx: SKRSContext2D, hex: string) {
 // Christ's crown rather than read as a decorative sawtooth border. Drawn
 // in a darker etched tone of the badge color so it reads as engraved.
 function drawCrownOfThorns(ctx: SKRSContext2D, hex: string) {
-  // Base radius of the woven branch. Sits just inside the chrome ring's
-  // inner edge (~r=265) and just outside where the date text reaches.
-  const branchR = 262
+  // Base radius of the woven branch. Sits right at the chrome ring's
+  // inner edge (~r=265) so the thorn bases kiss the ring boundary.
+  const branchR = 266
 
   const [r, g, b] = hexToRgb(hex)
-  // Dark etched tone — deeper version of the badge color, almost-black.
-  const darkR = Math.round(r * 0.35)
-  const darkG = Math.round(g * 0.35)
-  const darkB = Math.round(b * 0.35)
-  const stroke = `rgba(${darkR}, ${darkG}, ${darkB}, 0.9)`
-  const fill   = `rgba(${darkR}, ${darkG}, ${darkB}, 0.95)`
+  // Dark etched tone — pull badge color 45% toward black for a deep
+  // engraved feel that still carries the hue (instead of pure black).
+  const darkR = Math.round(r * 0.45)
+  const darkG = Math.round(g * 0.45)
+  const darkB = Math.round(b * 0.45)
+  const stroke = `rgba(${darkR}, ${darkG}, ${darkB}, 0.65)`
+  const fill   = `rgba(${darkR}, ${darkG}, ${darkB}, 0.7)`
 
   // Deterministic pseudo-randomness so thorn placement is stable across runs.
   let seed = 1337
@@ -397,13 +398,15 @@ function drawCrownOfThorns(ctx: SKRSContext2D, hex: string) {
     seed = (seed * 1664525 + 1013904223) % 0x100000000
     return seed / 0x100000000
   }
+  // Subtle wobble — keeps the branch organic without it veering off the
+  // circle. Max excursion ~0.8 px (was ~2.5).
   const noise = (t: number) =>
-    Math.sin(t * 3.1) * 1.4 + Math.sin(t * 7.7 + 1.3) * 0.7 + Math.sin(t * 13.4 + 2.7) * 0.4
+    Math.sin(t * 3.1) * 0.45 + Math.sin(t * 7.7 + 1.3) * 0.25 + Math.sin(t * 13.4 + 2.7) * 0.1
 
   ctx.save()
 
-  // 1. The woven branch — a thin closed circular line with subtle organic
-  //    wobble. Reads as a thin vine, not a perfect circle.
+  // 1. The woven branch — a thin closed circular line that traces the
+  //    chrome ring's inner edge tightly.
   ctx.beginPath()
   const ringPoints = 240
   for (let i = 0; i <= ringPoints; i++) {
@@ -415,20 +418,26 @@ function drawCrownOfThorns(ctx: SKRSContext2D, hex: string) {
     else ctx.lineTo(x, y)
   }
   ctx.strokeStyle = stroke
-  ctx.lineWidth = 1.6
+  ctx.lineWidth = 1.2
   ctx.lineJoin = 'round'
   ctx.stroke()
 
   // 2. Thorns — individual sharp triangular spikes anchored to the branch
-  //    at irregular intervals. Most point outward (away from center) like
-  //    a real thorn would grow; a handful point inward in different lengths
-  //    so the crown feels twisted, not radially perfect.
+  //    at irregular intervals. All angled slightly off-radial so none read
+  //    as a flat upright post.
   type Thorn = {
-    angle: number  // angular position around the ring
-    len: number    // distance from branch to tip
-    side: 1 | -1   // 1 = outward, -1 = inward
-    skew: number   // small angular skew so thorn isn't perfectly radial
-    base: number   // half-width at the base
+    angle: number
+    len: number
+    side: 1 | -1
+    skew: number
+    base: number
+  }
+
+  // Minimum angular skew so no thorn is perfectly radial (which reads as
+  // an upright post). Always at least 0.15 rad off, signed randomly.
+  const skewed = () => {
+    const sign = rand() < 0.5 ? -1 : 1
+    return sign * (0.15 + rand() * 0.30)  // |skew| in 0.15..0.45
   }
 
   const thorns: Thorn[] = []
@@ -439,10 +448,10 @@ function drawCrownOfThorns(ctx: SKRSContext2D, hex: string) {
     const jitter = (rand() - 0.5) * (Math.PI * 2 / N_OUT) * 0.7
     thorns.push({
       angle: evenly + jitter,
-      len: 10 + rand() * 14,    // 10–24 px
+      len: 10 + rand() * 14,      // 10–24 px
       side: 1,
-      skew: (rand() - 0.5) * 0.45,
-      base: 2 + rand() * 2.5,
+      skew: skewed(),
+      base: 1.8 + rand() * 1.0,   // 1.8–2.8 px — tighter range
     })
   }
   // A scattering of shorter inward thorns — adds the "twisted" character.
@@ -450,10 +459,10 @@ function drawCrownOfThorns(ctx: SKRSContext2D, hex: string) {
   for (let i = 0; i < N_IN; i++) {
     thorns.push({
       angle: rand() * Math.PI * 2,
-      len: 5 + rand() * 9,       // 5–14 px, shorter than outward
+      len: 5 + rand() * 9,        // 5–14 px
       side: -1,
-      skew: (rand() - 0.5) * 0.55,
-      base: 1.5 + rand() * 1.8,
+      skew: skewed(),
+      base: 1.5 + rand() * 0.8,   // 1.5–2.3 px
     })
   }
 
@@ -462,13 +471,11 @@ function drawCrownOfThorns(ctx: SKRSContext2D, hex: string) {
     const ax = CX + Math.cos(th.angle) * rBranch
     const ay = CY + Math.sin(th.angle) * rBranch
 
-    // Tip — radially out or in, plus a small angular skew for organic feel.
     const tipAngle = th.angle + th.skew
     const tipR = rBranch + th.side * th.len
     const tx = CX + Math.cos(tipAngle) * tipR
     const ty = CY + Math.sin(tipAngle) * tipR
 
-    // Base — perpendicular to the radial direction at the branch.
     const perp = th.angle + Math.PI / 2
     const b1x = ax + Math.cos(perp) * th.base
     const b1y = ay + Math.sin(perp) * th.base
