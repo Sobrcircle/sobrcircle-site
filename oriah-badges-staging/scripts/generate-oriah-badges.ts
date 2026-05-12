@@ -374,50 +374,36 @@ function drawMicroTypography(ctx: SKRSContext2D, hex: string) {
   ctx.drawImage(layer, 0, 0)
 }
 
-// Crown of thorns — a thin twisted branch sitting INSIDE the chrome ring,
-// with thorns spiking out across the ring's brushwork so the crown reads
-// as part of the chrome ring itself rather than a separate inner element.
+// Crown of thorns — a thin twisted branch sitting at the chrome ring's
+// dead centerline, with thorns spiking out across the brushwork. Color
+// matches the date text so the crown, the duration text, and the Oriah
+// outer band all read as one uniform color family.
 function drawCrownOfThorns(ctx: SKRSContext2D, hex: string) {
-  // Branch sits on the chrome ring's INNER smudge band — the visible
-  // lighter brushwork ring just past the inner-disc edge.
-  const branchR = 273
+  // Branch sits exactly at the chrome ring's centerline (~r=322).
+  // The chrome ring brushwork spans roughly r=265–380; mid-band is 322.
+  const branchR = 322
 
-  // Adaptive thorn color tuned for pop: deep dark tone on light badges,
-  // bright lifted tone on dark badges, both with high alpha so the crown
-  // reads cleanly against every coin's base color.
+  // Use the same lightened-tint color as the date text (lighten 0.62)
+  // so thorns, numeral, label, and Oriah micro-text all match in hue.
   const [r, g, b] = hexToRgb(hex)
-  const badgeLum = (r * 0.299 + g * 0.587 + b * 0.114) / 255
-  let tr: number, tg: number, tb: number, strokeA: number, fillA: number
-  if (badgeLum > 0.5) {
-    // Light badge — push hard toward black for engraved contrast.
-    tr = Math.round(r * 0.25)
-    tg = Math.round(g * 0.25)
-    tb = Math.round(b * 0.25)
-    strokeA = 0.85
-    fillA = 0.9
-  } else {
-    // Dark badge — push hard toward white so the crown pops.
-    tr = Math.round(r + (255 - r) * 0.78)
-    tg = Math.round(g + (255 - g) * 0.78)
-    tb = Math.round(b + (255 - b) * 0.78)
-    strokeA = 0.8
-    fillA = 0.85
-  }
-  const stroke = `rgba(${tr}, ${tg}, ${tb}, ${strokeA})`
-  const fill   = `rgba(${tr}, ${tg}, ${tb}, ${fillA})`
+  const k = 0.62
+  const tr = Math.round(r + (255 - r) * k)
+  const tg = Math.round(g + (255 - g) * k)
+  const tb = Math.round(b + (255 - b) * k)
+  const stroke = `rgba(${tr}, ${tg}, ${tb}, 0.7)`
+  const fill   = `rgba(${tr}, ${tg}, ${tb}, 0.85)`
 
   let seed = 1337
   const rand = () => {
     seed = (seed * 1664525 + 1013904223) % 0x100000000
     return seed / 0x100000000
   }
-  // Subtle wobble — keeps the branch organic without veering off the circle.
   const noise = (t: number) =>
     Math.sin(t * 3.1) * 0.5 + Math.sin(t * 7.7 + 1.3) * 0.3 + Math.sin(t * 13.4 + 2.7) * 0.1
 
   ctx.save()
 
-  // 1. Woven branch — tracing the mid-band of the chrome ring.
+  // 1. Woven branch — tracing the chrome ring centerline.
   ctx.beginPath()
   const ringPoints = 240
   for (let i = 0; i <= ringPoints; i++) {
@@ -433,8 +419,8 @@ function drawCrownOfThorns(ctx: SKRSContext2D, hex: string) {
   ctx.lineJoin = 'round'
   ctx.stroke()
 
-  // 2. Thorns — shorter than v4 so they stay within the chrome ring band
-  //    (no overflow into the outer halo). Bases consistent in width.
+  // 2. Thorns — sized so they stay inside the chrome ring band on both
+  //    sides of the centerline (no overflow into halo or inner disc).
   type Thorn = {
     angle: number
     len: number
@@ -449,30 +435,28 @@ function drawCrownOfThorns(ctx: SKRSContext2D, hex: string) {
   }
 
   const thorns: Thorn[] = []
-  // Outward thorns — extend into the chrome ring's brushwork.
-  // Branch at 273 + max 24 = 297 → sits within the inner half of the ring.
+  // Outward: branch 322 + max 22 = 344 → still inside ring outer (~380).
   const N_OUT = 28
   for (let i = 0; i < N_OUT; i++) {
     const evenly = (i / N_OUT) * Math.PI * 2
     const jitter = (rand() - 0.5) * (Math.PI * 2 / N_OUT) * 0.7
     thorns.push({
       angle: evenly + jitter,
-      len: 14 + rand() * 10,    // 14–24 px
+      len: 12 + rand() * 10,
       side: 1,
       skew: skewed(),
-      base: 2.4 + rand() * 1.0, // 2.4–3.4 px
+      base: 2.4 + rand() * 1.0,
     })
   }
-  // Inward thorns — branch at 273 - max 18 = 255 → just nips into the
-  // inner disc edge, hugging the date area like a crown around a head.
+  // Inward: branch 322 - max 18 = 304 → stays inside ring inner (~265).
   const N_IN = 14
   for (let i = 0; i < N_IN; i++) {
     thorns.push({
       angle: rand() * Math.PI * 2,
-      len: 10 + rand() * 8,     // 10–18 px
+      len: 10 + rand() * 8,
       side: -1,
       skew: skewed(),
-      base: 2.0 + rand() * 0.9, // 2.0–2.9 px
+      base: 2.0 + rand() * 0.9,
     })
   }
 
