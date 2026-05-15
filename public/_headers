@@ -30,6 +30,9 @@
 /delete-account/
   Cache-Control: no-store, must-revalidate
 
+/child-safety-standards/
+  Cache-Control: no-store, must-revalidate
+
 /site.css
   Cache-Control: no-store, must-revalidate
 
