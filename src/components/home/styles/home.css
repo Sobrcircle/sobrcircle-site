@@ -106,6 +106,14 @@
   overflow: visible;
 }
 
+/* Hero now leads with the store badges, so it doesn't need the generic
+   section's tall top padding — clear the fixed nav with a small,
+   intentional gap. Tightened further for the shorter mobile nav in the
+   max-width: 700px block below. */
+.home-hero {
+  padding-top: clamp(4rem, 7vh, 5.2rem);
+}
+
 .home-section:first-child {
   padding-top: clamp(5rem, 10vh, 8rem);
   padding-bottom: 0;
@@ -847,6 +855,12 @@
   .home-nav-logo {
     width: 26px;
     height: 26px;
+  }
+
+  /* Mobile nav is shorter — pull the hero (store badges) up closer to
+     it so there isn't a big empty gap below the bar. */
+  .home-hero {
+    padding-top: clamp(3.3rem, 5vh, 3.9rem);
   }
 
   .cursor-glow {
