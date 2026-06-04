@@ -1,5 +1,6 @@
 import type { HomeSection, TextSpan } from '../data/sections'
 import PhoneMockup from './PhoneMockup'
+import StoreBadges from './StoreBadges'
 
 function renderSpan(span: TextSpan, key: number) {
   switch (span.type) {
@@ -35,6 +36,8 @@ export default function HeroSection({ section }: Props) {
           </h1>
           <p className="home-tagline">Recover Together</p>
         </div>
+
+        <StoreBadges />
 
         <div className="home-hero-divider" aria-hidden="true" />
 

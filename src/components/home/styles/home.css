@@ -234,6 +234,74 @@
   to { width: 64px; opacity: 1; }
 }
 
+/* ─── Store download badges (hero) ─── */
+.home-store-badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.7rem;
+  margin: clamp(0.4rem, 1.5vh, 1rem) auto clamp(1.2rem, 3vh, 2rem);
+  animation: storeBadgesReveal 1.4s ease-out 0.9s both;
+}
+
+.home-store-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.58rem 1.05rem 0.6rem;
+  border-radius: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--home-text);
+  text-decoration: none;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: border-color 0.45s ease, background 0.45s ease,
+    transform 0.45s ease, box-shadow 0.45s ease;
+}
+
+.home-store-badge:hover {
+  border-color: rgba(196, 168, 130, 0.55);
+  background: rgba(196, 168, 130, 0.06);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 34px rgba(196, 168, 130, 0.14);
+}
+
+.home-store-badge-icon {
+  flex-shrink: 0;
+  color: var(--home-text);
+  transition: color 0.45s ease;
+}
+
+.home-store-badge:hover .home-store-badge-icon {
+  color: var(--home-accent);
+}
+
+.home-store-badge-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.12;
+}
+
+.home-store-badge-sub {
+  font-size: 0.6rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--home-muted);
+}
+
+.home-store-badge-name {
+  font-size: 0.96rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+@keyframes storeBadgesReveal {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* Hero copy lines */
 .home-hero-line {
   margin: 0 0 0.5rem;
