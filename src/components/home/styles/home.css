@@ -240,8 +240,10 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.7rem;
-  margin: clamp(0.4rem, 1.5vh, 1rem) auto clamp(1.2rem, 3vh, 2rem);
-  animation: storeBadgesReveal 1.4s ease-out 0.9s both;
+  /* Top element of the hero copy now (above the logo) — sit flush at the
+     top under the nav, with room to breathe before the brand lockup. */
+  margin: 0 auto clamp(1.6rem, 3.5vh, 2.6rem);
+  animation: storeBadgesReveal 1.4s ease-out 0.5s both;
 }
 
 .home-store-badge {

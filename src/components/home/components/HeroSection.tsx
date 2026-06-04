@@ -24,6 +24,8 @@ export default function HeroSection({ section }: Props) {
       <div className="home-section-overlay" aria-hidden="true" />
 
       <div className="home-copy">
+        <StoreBadges />
+
         <div className="home-hero-branding">
           <img
             className="home-logo"
@@ -36,8 +38,6 @@ export default function HeroSection({ section }: Props) {
           </h1>
           <p className="home-tagline">Recover Together</p>
         </div>
-
-        <StoreBadges />
 
         <div className="home-hero-divider" aria-hidden="true" />
 
