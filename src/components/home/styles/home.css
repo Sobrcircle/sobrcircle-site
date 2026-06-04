@@ -240,8 +240,9 @@
 /* ─── Store download badges (hero) ─── */
 .home-store-badges {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: center;
+  max-width: 100%;
   gap: 0.7rem;
   /* Top element of the hero copy now (above the logo) — sit flush at the
      top under the nav, with room to breathe before the brand lockup. */
@@ -305,6 +306,30 @@
 @keyframes storeBadgesReveal {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile: scale the two badges down so they ALWAYS stay side by side
+   (never wrap under each other) — at full size they overflow a ~375px
+   phone's content width and wrap. Combined with flex-wrap: nowrap. */
+@media (max-width: 480px) {
+  .home-store-badges {
+    gap: 0.5rem;
+  }
+  .home-store-badge {
+    padding: 0.5rem 0.8rem;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+  .home-store-badge-icon {
+    width: 16px;
+    height: 16px;
+  }
+  .home-store-badge-name {
+    font-size: 0.84rem;
+  }
+  .home-store-badge-sub {
+    font-size: 0.55rem;
+  }
 }
 
 /* Hero copy lines */
