@@ -43,10 +43,7 @@ export default function StoreBadges() {
         aria-label="Download SobrCircle on the App Store"
       >
         <AppleLogo />
-        <span className="home-store-badge-text">
-          <span className="home-store-badge-sub">Download on the</span>
-          <span className="home-store-badge-name">App Store</span>
-        </span>
+        <span className="home-store-badge-name">App Store</span>
       </a>
       <a
         className="home-store-badge"
@@ -56,10 +53,7 @@ export default function StoreBadges() {
         aria-label="Get SobrCircle on Google Play"
       >
         <GooglePlayLogo />
-        <span className="home-store-badge-text">
-          <span className="home-store-badge-sub">Get it on</span>
-          <span className="home-store-badge-name">Google Play</span>
-        </span>
+        <span className="home-store-badge-name">Google Play</span>
       </a>
     </div>
   )
