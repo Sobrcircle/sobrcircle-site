@@ -32,7 +32,7 @@
       <article class="legal-panel">
         <p class="eyebrow">Legal</p>
         <h1>Privacy Policy</h1>
-        <p class="meta-line">Effective date: April 30, 2026 &nbsp;&middot;&nbsp; Last updated: May 6, 2026</p>
+        <p class="meta-line">Effective date: April 30, 2026 &nbsp;&middot;&nbsp; Last updated: July 20, 2026</p>
 
         <p class="meta-line" style="margin-top:0.75rem; font-style:italic; font-size:0.875rem; opacity:0.75;">
           This Privacy Policy is prepared with care and represents our genuine commitment to protecting your information. It is not a substitute for legal advice. If you have specific questions about your privacy rights in your jurisdiction, we encourage you to consult a qualified lawyer. Nothing here constitutes legal advice to you. We are not lawyers.
@@ -89,8 +89,8 @@
         <ul>
           <li><strong>Account information:</strong> email address, first name, optional last name, display name, optional phone number (for two-factor authentication).</li>
           <li><strong>Profile information:</strong> profile picture, bio, optional age range, optional gender identity, optional field for how you heard about us.</li>
-          <li><strong>Sensitive recovery information (entirely optional):</strong> sobriety or recovery start date, primary recovery goal, a free-text &ldquo;about your recovery&rdquo; bio field. You choose whether to enter any of this. We treat it as sensitive personal information under every applicable law. It is never displayed to other users without your active, explicit opt-in.</li>
-          <li><strong>Content you create:</strong> posts, comments, direct messages, group messages, journal entries, photos, videos, and audio messages you create or upload within the app.</li>
+          <li><strong>Sensitive recovery information (entirely optional):</strong> sobriety or recovery start date (including additional recovery timers you add for more than one goal), primary recovery goal, a free-text &ldquo;about your recovery&rdquo; bio field, and any private check-in entries you record &mdash; mood, craving intensity, and personal notes. You choose whether to enter any of this. We treat it as sensitive personal information under every applicable law. Private check-in entries are visible only to you and are never displayed to other users; the other recovery fields are never displayed to other users without your active, explicit opt-in.</li>
+          <li><strong>Content you create:</strong> posts, comments, direct messages, group messages, journal entries (including any voice notes you attach to a journal entry), photos, videos, and audio messages you create or upload within the app. If you enter optional amounts to calculate money saved, we store those figures with your recovery timers; they are visible only to you.</li>
           <li><strong>Reports and appeals:</strong> if you report content or appeal a moderation decision, we collect the information you provide in that report or appeal.</li>
           <li><strong>Support communications:</strong> if you contact us by email, we collect the content of your message and your contact details.</li>
         </ul>
@@ -116,6 +116,7 @@
         <ul>
           <li><strong>Meeting search (coarse location):</strong> if you use the &ldquo;find meetings near me&rdquo; feature, we pass a coarse location (city or region level) derived from your device to a mapping API to return nearby meeting results. We do not store this location after the search completes.</li>
           <li><strong>Live location sharing (precise, opt-in only):</strong> if you choose to share your precise location in real time with a specific circle member, we temporarily store and transmit that location via Firestore for as long as you have sharing active. You control this feature and can stop it at any time.</li>
+          <li><strong>Member discovery (approximate location, opt-in only):</strong> if you turn on &ldquo;Members near you,&rdquo; we take a single one-time location reading and convert it into an <strong>approximate area</strong> &mdash; a grid cell roughly 5&nbsp;km across &mdash; plus a general area label. We store that approximate area with your first name, profile photo, and the search distance you choose. <strong>We do not store your exact coordinates for this feature.</strong> You are visible only to other members who have also turned discovery on, your recovery information is never shown on discovery results, and turning the feature off immediately removes you from discovery. We may also show a coarse, city-level count of members in an area to indicate community size; that count is aggregated and cannot identify you.</li>
         </ul>
         <p>
           We never collect background location. Location access requires your explicit permission and is never requested at app launch.
@@ -126,12 +127,12 @@
           Every device permission SobrCircle asks for has a single, narrowly-scoped purpose that you control. Each prompt is shown the first time you reach a feature that needs it; you can revoke any of these from your device settings at any time and the rest of the app continues to work.
         </p>
         <ul>
-          <li><strong>Camera</strong> &mdash; used only when you choose to capture and share a photo or video in posts or messages.</li>
-          <li><strong>Microphone</strong> &mdash; used only when you choose to record a video for a check-in or message, or when you tap the microphone to dictate text.</li>
+          <li><strong>Camera</strong> &mdash; used only when you choose to capture and share a photo or video in posts, journal entries, or messages, or when you scan a friend&rsquo;s invite QR code to connect.</li>
+          <li><strong>Microphone</strong> &mdash; used only when you choose to record a voice note (in a chat or a journal entry), record a video for a check-in or message, or tap the microphone to dictate text. Audio is captured only while you are actively recording.</li>
           <li><strong>Speech recognition</strong> (iOS) &mdash; transcribes your dictated voice into text on-device. Apple&rsquo;s Speech framework may forward audio to Apple servers for recognition; we receive only the transcribed text from Apple. We never store the raw audio for that flow.</li>
           <li><strong>Photo library (read)</strong> &mdash; used when you choose images to share in posts or messages.</li>
           <li><strong>Photo library (add)</strong> &mdash; used only when you explicitly tap &ldquo;save image&rdquo; on shared content.</li>
-          <li><strong>Location while in use</strong> &mdash; used only while the app is open and only when you choose to share your live location with circle members. Location data is never read in the background. (Older versions of SobrCircle declared an &ldquo;Always&rdquo; location purpose string; that declaration has been removed since SobrCircle has never run location in the background.)</li>
+          <li><strong>Location while in use</strong> &mdash; used only while the app is open and only when you choose to share your live location with circle members, or when you turn on optional member discovery (a single one-time reading converted to an approximate area). Location data is never read in the background.</li>
           <li><strong>Push notifications</strong> &mdash; used to deliver new-message, friend-request, and milestone notifications you opted into. Manage at any time in device settings.</li>
         </ul>
 
@@ -170,6 +171,7 @@
           <li><strong>Crash and reliability diagnostics</strong> &mdash; triaging and fixing crashes and performance problems using Crashlytics and Performance Monitoring data. <em>Legal basis: legitimate interests (reliability of the service).</em></li>
           <li><strong>Analytics (opt-in only)</strong> &mdash; improving the app based on aggregated, anonymized usage patterns if you have opted into Firebase Analytics. <em>Legal basis: consent (which you can withdraw at any time).</em></li>
           <li><strong>Push notifications you requested</strong> &mdash; delivering notifications about activity in your circle, milestones, and account events. <em>Legal basis: consent; performance of a contract.</em></li>
+          <li><strong>Optional features you turn on</strong> &mdash; approximate-area member discovery, private check-ins and reflections (visible only to you), voice notes, and milestone sharing. We process the information described in Section 5 only for the feature you enabled, and only while it is on. <em>Legal basis: consent (which you can withdraw at any time by turning the feature off in Settings).</em></li>
           <li><strong>Preventing fraud and abuse</strong> &mdash; detecting and responding to suspicious activity, account fraud, and Terms of Service violations. <em>Legal basis: legitimate interests; legal obligation.</em></li>
           <li><strong>Legal compliance and dispute resolution</strong> &mdash; retaining records required by applicable law; responding to valid legal process; resolving disputes. <em>Legal basis: legal obligation; legitimate interests.</em></li>
         </ul>
