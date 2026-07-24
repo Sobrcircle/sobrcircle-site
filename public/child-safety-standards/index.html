@@ -32,13 +32,13 @@
       <article class="legal-panel">
         <p class="eyebrow">Legal</p>
         <h1>Child Safety Standards</h1>
-        <p class="meta-line">Effective date: May 15, 2026 &nbsp;&middot;&nbsp; Last updated: May 15, 2026</p>
+        <p class="meta-line">Effective date: May 15, 2026 &nbsp;&middot;&nbsp; Last updated: July 24, 2026</p>
 
         <p>
           SobrCircle has zero tolerance for child sexual abuse and exploitation (CSAE), child sexual abuse material (CSAM), and any conduct that endangers a minor. This document publishes our standards in compliance with the Google Play <a href="https://support.google.com/googleplay/android-developer/answer/13351177" rel="noopener noreferrer">Child Safety Standards Policy</a> and is incorporated by reference into our <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.
         </p>
         <p>
-          We describe below the controls actually deployed in SobrCircle today. Where a planned control exists in our codebase but is not yet activated in production, we say so plainly. We do not claim controls we do not currently run.
+          We describe below the controls actually deployed in SobrCircle today. We do not claim controls we do not currently run.
         </p>
 
         <h2>1. Who we are</h2>
@@ -79,55 +79,40 @@
 
         <h2>4. How SobrCircle's design reduces CSAE risk</h2>
         <p>
-          SobrCircle is engineered as a closed, invitation-only network. By design, it is structurally hostile to predatory behavior:
+          SobrCircle is engineered as an adults-only community with consent-based connections. By design, it is structurally hostile to predatory behavior:
         </p>
         <ul>
-          <li><strong>18+ at the door.</strong> Account creation is restricted to adults who affirm their age.</li>
-          <li><strong>No public discovery.</strong> SobrCircle has no public feed, no public profiles, no search for strangers, no friend recommendations, and no &ldquo;people you may know&rdquo; surface. Adults cannot browse for or stumble upon other users.</li>
-          <li><strong>Friend-code invitation only.</strong> Connections happen exclusively via a private friend code that one user shares with another out of band. There is no in-app mechanism to contact a stranger.</li>
+          <li><strong>18+ at the door.</strong> Account creation is restricted to adults who affirm their age; there are no minors on the platform.</li>
+          <li><strong>No public feed or public profiles.</strong> SobrCircle has no public feed, no publicly browsable profiles, no friend recommendations, and no &ldquo;people you may know&rdquo; surface. Your posts and recovery information are visible only to people you have connected with.</li>
+          <li><strong>Connections require mutual consent.</strong> You connect either by sharing a private friend code out of band, or by sending a friend request that the other person must accept. Optional &ldquo;Members near you&rdquo; discovery is off by default and shows only other adults who have also turned it on; it reveals only a first name, photo, and approximate area &mdash; never recovery information &mdash; and a connection still requires both people to accept before any messaging. No one can be contacted without a connection both sides agreed to.</li>
           <li><strong>No contact-list syncing.</strong> SobrCircle never reads or uploads your phone&rsquo;s contacts.</li>
-          <li><strong>Closed group and room hosting.</strong> Private groups and meeting rooms are accessible only to users explicitly invited to them.</li>
+          <li><strong>Private groups are invite-only; public rooms are moderated.</strong> Private groups and meeting rooms are accessible only to users explicitly invited to them. Public rooms that a member chooses to open to discovery are available to other adult members, and all room messages are subject to the same automated and human moderation, in-app reporting, and blocking described below.</li>
           <li><strong>No advertising or third-party tracking.</strong> SobrCircle is not monetized through engagement-maximizing recommendation systems, which removes the algorithmic surfaces predators commonly exploit on other platforms.</li>
         </ul>
 
         <h2>5. Detection, scanning, and human review</h2>
 
-        <p><strong>5.1 Image scanning &mdash; in production today</strong></p>
+        <p><strong>5.1 Image scanning</strong></p>
         <p>
           All images uploaded to SobrCircle are scanned by <strong>Google Cloud Vision SafeSearch</strong> for adult, violent, and sexually exploitative content before they become visible to other users. Images that exceed our likelihood thresholds are quarantined and hard-deleted, an audit trail is preserved, and the uploader is notified.
         </p>
 
-        <p><strong>5.2 Video scanning &mdash; in production today</strong></p>
-        <p>
-          All videos uploaded to SobrCircle are scanned by <strong>Google Cloud Video Intelligence</strong> using its explicit-content detection model. Videos are not visible to other users while moderation is pending. Videos that exceed our likelihood thresholds are blocked and removed, with cascade deletion of the underlying storage object.
-        </p>
-
-        <p><strong>5.3 Self-harm signal detection &mdash; in production today</strong></p>
+        <p><strong>5.2 Self-harm signal detection</strong></p>
         <p>
           A curated phrase classifier runs against text in posts, comments, and messages to identify potential crisis or self-harm signals. When a signal is detected, the user is shown an in-app card with crisis hotline resources (9-8-8 Suicide Crisis Helpline, Crisis Text Line, SAMHSA, and others). This is a safety net; it does not block posts.
         </p>
 
-        <p><strong>5.4 Hash-matching against known CSAM &mdash; built, not yet activated</strong></p>
+        <p><strong>5.3 Human review</strong></p>
         <p>
-          Infrastructure to hash-match uploaded images against the Microsoft <strong>PhotoDNA</strong> hash database is implemented in the SobrCircle backend but is currently disabled by feature flag (<code>IMAGE_CSAM_SCAN_ENABLED</code>). Activation is pending the completion of Moradi Labs Inc.&rsquo;s enrollment as a registered Electronic Service Provider (ESP) with PhotoDNA and the affiliated reporting bodies. Until activation, our protection against CSAM relies on Cloud Vision SafeSearch (Section&nbsp;5.1), in-app user reports (Section&nbsp;7), operator review, and manual escalation to the authorities listed in Section&nbsp;6. This page will be updated when hash-matching is activated.
-        </p>
-
-        <p><strong>5.5 Automated text moderation &mdash; built, not yet activated</strong></p>
-        <p>
-          Infrastructure to scan post, comment, and message text via the <strong>Google Jigsaw Perspective API</strong> for toxicity, harassment, threats, and related signals is implemented in the SobrCircle backend but is currently disabled by feature flag (<code>TEXT_MODERATION_ENABLED</code>) while thresholds are tuned. Until activation, text content is moderated through in-app user reporting (Section&nbsp;7) and the self-harm signal detection in Section&nbsp;5.3. This page will be updated when the classifier is activated.
-        </p>
-
-        <p><strong>5.6 Human review</strong></p>
-        <p>
-          Every user report and every quarantined upload is reviewed by Moradi Labs Inc.&rsquo;s trust and safety operator within 24 hours of submission. Confirmed CSAE results in immediate account termination, evidence preservation, and reporting to the authorities listed in Section&nbsp;6.
+          All uploaded content, including video, is subject to in-app reporting and operator review; every user report and every quarantined upload is reviewed by Moradi Labs Inc.&rsquo;s trust and safety operator within 24 hours of submission. Confirmed CSAE results in immediate account termination, evidence preservation, and reporting to the authorities listed in Section&nbsp;6.
         </p>
 
         <h2>6. Reporting to authorities</h2>
         <p>
-          SobrCircle complies with all applicable child safety laws, including statutory reporting obligations. Today, these reports are filed manually by the trust and safety operator; automated reporting infrastructure is built but not yet activated (Section&nbsp;5.4).
+          SobrCircle complies with all applicable child safety laws, including statutory reporting obligations. These reports are filed by our trust and safety operator through the channels below.
         </p>
         <ul>
-          <li><strong>National Center for Missing &amp; Exploited Children (NCMEC) &mdash; CyberTipline.</strong> When apparent CSAM is identified on SobrCircle, Moradi Labs Inc. files a report through the NCMEC CyberTipline (<a href="https://report.cybertip.org" rel="noopener noreferrer">report.cybertip.org</a>), as required by 18 U.S.C. &sect;&nbsp;2258A. Moradi Labs Inc. is in the process of enrolling as a registered Electronic Service Provider (ESP) so that future reporting can be filed programmatically.</li>
+          <li><strong>National Center for Missing &amp; Exploited Children (NCMEC) &mdash; CyberTipline.</strong> When apparent CSAM is identified on SobrCircle, Moradi Labs Inc. files a report through the NCMEC CyberTipline (<a href="https://report.cybertip.org" rel="noopener noreferrer">report.cybertip.org</a>), as required by 18 U.S.C. &sect;&nbsp;2258A.</li>
           <li><strong>Canadian Centre for Child Protection &mdash; Cybertip.ca.</strong> When apparent CSAM with a Canadian nexus is identified, we file a report through <a href="https://www.cybertip.ca" rel="noopener noreferrer">cybertip.ca</a>, as required by Canadian law.</li>
           <li><strong>Law enforcement.</strong> We cooperate with valid subpoenas, preservation requests, and court orders from competent authorities. We preserve relevant data in accordance with applicable preservation obligations.</li>
         </ul>
@@ -186,7 +171,7 @@
 
         <h2>10. Updates</h2>
         <p>
-          We may update these standards as our product and the regulatory environment evolve. The current version is always published at <strong>sobrcircle.com/child-safety-standards</strong>. Material changes, including activation of controls described in Sections&nbsp;5.4 and 5.5, are announced in the app and reflected on this page. The &ldquo;Last updated&rdquo; date at the top of this page reflects the most recent change.
+          We may update these standards as our product and the regulatory environment evolve. The current version is always published at <strong>sobrcircle.com/child-safety-standards</strong>. Material changes to these standards are announced in the app and reflected on this page. The &ldquo;Last updated&rdquo; date at the top of this page reflects the most recent change.
         </p>
 
         <h2>11. Crisis resources</h2>
