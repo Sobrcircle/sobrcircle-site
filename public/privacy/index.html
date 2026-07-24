@@ -171,7 +171,7 @@
 
         <ul>
           <li><strong>Operating the app and your account</strong> &mdash; authenticating you, delivering the feed, messages, circles, milestones, map, and journal; processing your subscription; sending transactional notifications. <em>Legal basis (GDPR/UK GDPR): performance of a contract.</em></li>
-          <li><strong>Content moderation and user safety</strong> &mdash; scanning uploaded photos and videos for prohibited content; scanning text for toxicity, harassment, and self-harm signals; detecting and reporting child sexual abuse material (CSAM) as required by law. <em>Legal basis: legal obligation; legitimate interests (safety of users).</em></li>
+          <li><strong>Content moderation and user safety</strong> &mdash; scanning uploaded photos for prohibited content; detecting self-harm signals in text to surface crisis resources; reviewing content that users report; and detecting and reporting child sexual abuse material (CSAM) as required by law. <em>Legal basis: legal obligation; legitimate interests (safety of users).</em></li>
           <li><strong>Crash and reliability diagnostics</strong> &mdash; triaging and fixing crashes and performance problems using Crashlytics and Performance Monitoring data. <em>Legal basis: legitimate interests (reliability of the service).</em></li>
           <li><strong>Analytics (opt-in only)</strong> &mdash; improving the app based on aggregated, anonymized usage patterns if you have opted into Firebase Analytics. <em>Legal basis: consent (which you can withdraw at any time).</em></li>
           <li><strong>Push notifications you requested</strong> &mdash; delivering notifications about activity in your circle, milestones, and account events. <em>Legal basis: consent; performance of a contract.</em></li>
@@ -190,18 +190,16 @@
         <h2>7. Content moderation and safety processing</h2>
 
         <p>
-          SobrCircle is a recovery community. To protect users from harmful content, we run automated moderation on content you upload or post. We describe below the controls actually deployed today. Where a control is built but not yet activated, we say so plainly. For our full child safety standards, see <a href="/child-safety-standards">sobrcircle.com/child-safety-standards</a>.
+          SobrCircle is a recovery community. To protect users from harmful content, we run automated and human moderation on content you upload or post. For our full child safety standards, see <a href="/child-safety-standards">sobrcircle.com/child-safety-standards</a>.
         </p>
         <ul>
-          <li><strong>Images you upload &mdash; in production:</strong> scanned by Google Cloud Vision SafeSearch for adult, violent, and sexually exploitative content. Images that exceed our likelihood thresholds are quarantined and hard-deleted, an audit trail is preserved, and you are notified.</li>
-          <li><strong>Videos you upload &mdash; in production:</strong> scanned by Google Cloud Video Intelligence using its explicit-content detection model. Videos are not visible to other users while moderation is pending. Videos that exceed our likelihood thresholds are blocked and removed.</li>
-          <li><strong>Self-harm signal detection in text &mdash; in production:</strong> a curated phrase classifier runs against posts, comments, and messages to identify potential crisis or self-harm signals. When a signal is detected, the user is shown an in-app card with crisis hotline resources. This is a safety net; it does not block posts.</li>
-          <li><strong>CSAM hash-matching (Microsoft PhotoDNA) &mdash; built, not yet activated.</strong> Infrastructure to hash-match uploaded images against the PhotoDNA database is implemented in the SobrCircle backend but is currently disabled by feature flag pending completion of Moradi Labs Inc.&rsquo;s enrollment as a registered Electronic Service Provider (ESP) with PhotoDNA and the affiliated reporting bodies. Until activation, protection against CSAM relies on Cloud Vision SafeSearch (above), in-app user reporting, operator review, and manual escalation to authorities (see next bullet). This policy will be updated when hash-matching is activated.</li>
-          <li><strong>Automated text moderation (Google Jigsaw Perspective API) &mdash; built, not yet activated.</strong> Infrastructure to scan post, comment, and message text via the Perspective API is implemented in the SobrCircle backend but is currently disabled by feature flag while thresholds are tuned. Until activation, text content is moderated through in-app user reporting and the self-harm signal detection above. This policy will be updated when the classifier is activated.</li>
-          <li><strong>CSAM reporting to authorities &mdash; in production, manual workflow.</strong> When apparent child sexual abuse material is identified on SobrCircle, Moradi Labs Inc. files reports through the National Center for Missing &amp; Exploited Children (NCMEC) CyberTipline (<a href="https://report.cybertip.org" rel="noopener noreferrer">report.cybertip.org</a>), as required by 18 U.S.C. &sect;&nbsp;2258A, and where applicable through the Canadian Centre for Child Protection (<a href="https://www.cybertip.ca" rel="noopener noreferrer">cybertip.ca</a>), as required by Canadian law. Reports are currently filed manually by the trust and safety operator; automated reporting will be activated together with the PhotoDNA hash-matching above. This reporting obligation applies regardless of context or claimed intent and cannot be opted out of.</li>
+          <li><strong>Images you upload:</strong> scanned by Google Cloud Vision SafeSearch for adult, violent, and sexually exploitative content. Images that exceed our likelihood thresholds are quarantined and hard-deleted, an audit trail is preserved, and you are notified.</li>
+          <li><strong>Self-harm signal detection in text:</strong> a curated phrase classifier runs against posts, comments, and messages to identify potential crisis or self-harm signals. When a signal is detected, the user is shown an in-app card with crisis hotline resources. This is a safety net; it does not block posts.</li>
+          <li><strong>User reporting and human review:</strong> you can report any post, message, or user through the in-app report tools. Reports are reviewed by our trust and safety operator, and content that violates our community rules is removed.</li>
+          <li><strong>Child sexual abuse material (CSAM):</strong> when apparent CSAM is identified &mdash; through the image scanning above, a user report, or operator review &mdash; the content is removed and reported to the National Center for Missing &amp; Exploited Children (NCMEC) CyberTipline (<a href="https://report.cybertip.org" rel="noopener noreferrer">report.cybertip.org</a>), as required by 18 U.S.C. &sect;&nbsp;2258A, and where applicable to the Canadian Centre for Child Protection (<a href="https://www.cybertip.ca" rel="noopener noreferrer">cybertip.ca</a>), as required by Canadian law. This reporting obligation applies regardless of context or claimed intent and cannot be opted out of.</li>
         </ul>
         <p>
-          If your content is removed or restricted, you will be notified. You can appeal by emailing <a href="mailto:support@sobrcircle.com">support@sobrcircle.com</a>. All appeals are reviewed by a human. Image and video data passed to Google Cloud Vision and Google Cloud Video Intelligence is used solely for moderation and is not retained by those providers for training or other purposes beyond the scope of the moderation scan.
+          If your content is removed or restricted, you will be notified. You can appeal by emailing <a href="mailto:support@sobrcircle.com">support@sobrcircle.com</a>. All appeals are reviewed by a human. Image data passed to Google Cloud Vision is used solely for moderation and is not retained by Google for training or other purposes beyond the scope of the moderation scan.
         </p>
 
         <h2>8. Sharing with third parties</h2>
@@ -219,8 +217,8 @@
             Transfer basis (EU/UK/Quebec): see Section&nbsp;10.
           </li>
           <li>
-            <strong>Google LLC &mdash; Cloud Vision SafeSearch and Cloud Video Intelligence</strong> (United States)<br>
-            What they see: image and video bytes uploaded by users, processed for content classification and returned immediately. Google&rsquo;s standard data processing terms apply.<br>
+            <strong>Google LLC &mdash; Cloud Vision SafeSearch</strong> (United States)<br>
+            What they see: image bytes uploaded by users, processed for content classification and returned immediately. Google&rsquo;s standard data processing terms apply.<br>
             DPA: Google Cloud Data Processing Addendum.
           </li>
           <li>
@@ -247,7 +245,7 @@
           </li>
           <li>
             <strong>National Center for Missing &amp; Exploited Children (NCMEC)</strong> (United States)<br>
-            What they see: CyberTip reports filed manually by Moradi Labs Inc.&rsquo;s trust and safety operator when CSAM is identified, including the image, account identifiers, and relevant metadata required by 18 U.S.C. &sect;&nbsp;2258A. Reports are currently filed through the public CyberTipline channel at <a href="https://report.cybertip.org" rel="noopener noreferrer">report.cybertip.org</a>; ESP enrollment for programmatic submission is in progress.<br>
+            What they see: CyberTip reports filed manually by Moradi Labs Inc.&rsquo;s trust and safety operator when CSAM is identified, including the image, account identifiers, and relevant metadata required by 18 U.S.C. &sect;&nbsp;2258A. Reports are filed through the CyberTipline at <a href="https://report.cybertip.org" rel="noopener noreferrer">report.cybertip.org</a>.<br>
             Statutory obligation; no DPA required.
           </li>
           <li>
