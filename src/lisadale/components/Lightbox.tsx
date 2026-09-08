@@ -72,7 +72,8 @@ export default function Lightbox({ photos, index, onClose, onNavigate }: Props) 
           &#8249;
         </button>
 
-        <img src={media.photo(photo.id)} alt={photo.alt} />
+        {/* keyed so the entrance animation replays on every navigation */}
+        <img key={photo.id} src={media.photo(photo.id)} alt={photo.alt} />
 
         <button className="ld-lb-nav ld-lb-next" onClick={() => go(1)} aria-label="Next photo">
           &#8250;

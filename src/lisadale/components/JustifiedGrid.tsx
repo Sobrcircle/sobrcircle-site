@@ -119,6 +119,9 @@ export default function JustifiedGrid({ photos, onOpen, targetHeight, gap = 10 }
                   alt={p.alt}
                   loading={i < 6 ? 'eager' : 'lazy'}
                   decoding="async"
+                  // Fade in on decode instead of snapping in — with lazy
+                  // loading, frames otherwise pop as you scroll.
+                  onLoad={(e) => e.currentTarget.classList.add('is-loaded')}
                 />
               </button>
             )
