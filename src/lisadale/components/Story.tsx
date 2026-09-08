@@ -23,8 +23,9 @@ export default function Story() {
 
       <div className="ld-prose">
         <p data-animate>
-          Faith is not something Lisa and Dale talk about. It is the ground
-          they stand on, and you can tell by where their feet keep taking them.
+          Faith is not only something Lisa and Dale talk about. It is the
+          ground they stand on, and you can tell by where their feet keep
+          taking them.
         </p>
         <p data-animate data-delay="0.1">
           They walk into rooms where hope has gone quiet, and stay long past
