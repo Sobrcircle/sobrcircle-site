@@ -1,0 +1,18 @@
+# Cloudflare Pages configuration for sobrcircle-site.
+#
+# This exists for one reason: the /lisadale gallery's media proxy
+# (functions/lisadale/media) needs an R2 binding, and defining it here keeps
+# it in version control rather than as an invisible dashboard setting.
+#
+# The build command still comes from the Pages dashboard; this file supplies
+# the output directory and the bindings only.
+
+name = "sobrcircle-site"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-09-01"
+
+# Wedding media for /lisadale. Not in the repo: Pages rejects files over
+# 25 MiB and the film is 404 MB.
+[[r2_buckets]]
+binding = "MEDIA"
+bucket_name = "lisadale-media"

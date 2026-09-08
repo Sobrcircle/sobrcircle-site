@@ -1,0 +1,7 @@
+name = "lisadale-r2-uploader"
+main = "worker.js"
+compatibility_date = "2026-09-01"
+
+[[r2_buckets]]
+binding = "MEDIA"
+bucket_name = "lisadale-media"

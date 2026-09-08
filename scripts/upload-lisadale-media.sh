@@ -29,9 +29,13 @@ echo "Creating bucket $BUCKET (ignored if it already exists)…"
 npx wrangler r2 bucket create "$BUCKET" 2>/dev/null || true
 
 echo
-echo "Film (remuxed original — bit-identical streams, MP4 container):"
-put "$FILM"   "film/lisa-dale-film.mp4" video/mp4
-put "$POSTER" "film/poster.jpg"         image/jpeg
+echo "Poster:"
+put "$POSTER" "film/poster.jpg" image/jpeg
+
+# NOTE: `wrangler r2 object put` refuses anything over 300 MiB — with --file
+# *and* with --pipe. The film (404 MiB) and the zip (553 MiB) therefore cannot
+# go through this script; they need a real multipart upload. See
+# scripts/r2-multipart-upload/ for the Worker + client that does it.
 
 echo
 echo "Photographs — display copies (long edge 2400):"
@@ -45,9 +49,8 @@ for f in "$GRADED"/full/*.jpg; do
   put "$f" "photos/full/$(basename "$f")" image/jpeg
 done
 
-echo
-echo "Everything-in-one-download:"
-put "$ZIP" "lisa-and-dale-photos.zip" application/zip
+
+# The zip is 553 MiB — also over the wrangler limit; multipart only.
 
 echo
 echo "Done. Verify with:"
