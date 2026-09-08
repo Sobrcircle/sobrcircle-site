@@ -33,6 +33,18 @@
 /child-safety-standards/
   Cache-Control: no-store, must-revalidate
 
+/lisadale/*
+  X-Robots-Tag: noindex, nofollow, noarchive, noimageindex
+
+/lisadale/
+  Cache-Control: no-store, must-revalidate
+
+/lisadale/index.html
+  Cache-Control: no-store, must-revalidate
+
+/lisadale/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
 /site.css
   Cache-Control: no-store, must-revalidate
 

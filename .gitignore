@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Dev-only placeholder media for /lisadale — real media lives in R2
+public/lisadale/preview/
+
+# Local wrangler state and Python bytecode
+.wrangler/
+scripts/__pycache__/

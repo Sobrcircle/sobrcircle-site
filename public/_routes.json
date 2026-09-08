@@ -1,0 +1,5 @@
+{
+  "version": 1,
+  "include": ["/lisadale/media/*"],
+  "exclude": []
+}
