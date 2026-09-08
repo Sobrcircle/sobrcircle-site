@@ -42,8 +42,15 @@
 /lisadale/index.html
   Cache-Control: no-store, must-revalidate
 
-/lisadale/fonts/*
+# Font binaries are content-specific — safe to pin for a year.
+/lisadale/fonts/*.woff2
   Cache-Control: public, max-age=31536000, immutable
+
+# The stylesheet has a stable name, so it must stay revalidatable. Marking it
+# immutable froze an outdated copy at the edge for a year and the fix was to
+# rename the file.
+/lisadale/fonts/type.css
+  Cache-Control: public, max-age=3600, must-revalidate
 
 /site.css
   Cache-Control: no-store, must-revalidate
