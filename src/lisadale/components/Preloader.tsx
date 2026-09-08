@@ -43,8 +43,8 @@ export default function Preloader({ onDone }: { onDone: () => void }) {
       { opacity: 0, y: 18, filter: 'blur(8px)' },
       { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.6, ease: 'power2.out' }
     )
-      // Held long enough to actually be read, not just glimpsed.
-      .to(innerRef.current, { opacity: 0.9, duration: 0.6 }, '+=3.2')
+      // Long enough to read once, not long enough to wait through.
+      .to(innerRef.current, { opacity: 0.9, duration: 0.6 }, '+=2.2')
       .to(innerRef.current, { opacity: 0, y: -10, duration: 0.8, ease: 'power2.in' })
       .to(curtainRef.current, { y: '-100%', duration: 1.1, ease: 'power3.inOut' }, '-=0.3')
 

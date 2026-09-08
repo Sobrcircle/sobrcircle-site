@@ -32,9 +32,6 @@ export default function GalleryPage() {
 
       <header className="ld-gallery-head">
         <a className="ld-back" href="/lisadale/">&larr; Lisa &amp; Dale</a>
-        <div className="ld-rule" style={{ marginBottom: '1.4rem' }}>
-          <Cross size={16} />
-        </div>
         <p className="ld-label">The Photographs</p>
         <h1 className="ld-title" data-split>Their day, as it happened</h1>
         <p className="ld-sub">

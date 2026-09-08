@@ -11,6 +11,10 @@ interface Props {
 /**
  * Full-screen viewer.
  *
+ * Swipe on touch, arrows or arrow keys on a pointer, Escape to close. The
+ * arrows are bounded rather than wrapping, and each one disappears at the end
+ * of the set it points toward.
+ *
  * The download is a plain anchor pointing at `?download=1` rather than a
  * fetch-to-blob dance: the R2 proxy replies with `Content-Disposition:
  * attachment`, which is the one mechanism that saves a file identically on
@@ -21,8 +25,18 @@ export default function Lightbox({ photos, index, onClose, onNavigate }: Props) 
   const photo = photos[index]
   const touchX = useRef<number | null>(null)
 
+  const atStart = index === 0
+  const atEnd = index === photos.length - 1
+
+  // Bounded, not circular: the first photograph has only a way forward and the
+  // last only a way back, so the arrows always tell the truth about where you
+  // can go.
   const go = useCallback(
-    (delta: number) => onNavigate((index + delta + photos.length) % photos.length),
+    (delta: number) => {
+      const next = index + delta
+      if (next < 0 || next >= photos.length) return
+      onNavigate(next)
+    },
     [index, photos.length, onNavigate]
   )
 
@@ -43,13 +57,15 @@ export default function Lightbox({ photos, index, onClose, onNavigate }: Props) 
     }
   }, [go, onClose])
 
-  // Preload the neighbours so arrowing through feels instant.
+  // Preload the real neighbours so moving through feels instant.
   useEffect(() => {
-    ;[1, -1].forEach((d) => {
-      const n = photos[(index + d + photos.length) % photos.length]
-      const img = new Image()
-      img.src = media.photo(n.id)
-    })
+    ;[1, -1]
+      .map((d) => photos[index + d])
+      .filter(Boolean)
+      .forEach((n) => {
+        const img = new Image()
+        img.src = media.photo(n.id)
+      })
   }, [index, photos])
 
   return (
@@ -68,16 +84,20 @@ export default function Lightbox({ photos, index, onClose, onNavigate }: Props) 
           Close
         </button>
 
-        <button className="ld-lb-nav ld-lb-prev" onClick={() => go(-1)} aria-label="Previous photo">
-          &#8249;
-        </button>
+        {!atStart && (
+          <button className="ld-lb-nav ld-lb-prev" onClick={() => go(-1)} aria-label="Previous photo">
+            &#8249;
+          </button>
+        )}
 
         {/* keyed so the entrance animation replays on every navigation */}
         <img key={photo.id} src={media.photo(photo.id)} alt={photo.alt} />
 
-        <button className="ld-lb-nav ld-lb-next" onClick={() => go(1)} aria-label="Next photo">
-          &#8250;
-        </button>
+        {!atEnd && (
+          <button className="ld-lb-nav ld-lb-next" onClick={() => go(1)} aria-label="Next photo">
+            &#8250;
+          </button>
+        )}
       </div>
 
       <div className="ld-lightbox-bar">

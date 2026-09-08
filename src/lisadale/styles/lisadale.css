@@ -189,7 +189,7 @@ body {
   letter-spacing: 0.42em;
   text-transform: uppercase;
   color: rgba(255, 252, 246, 0.82);
-  margin: 0 0 1.5rem;
+  margin: 0 0 1.3rem;
 }
 
 .ld-names {
@@ -259,7 +259,7 @@ body {
 
 .ld-section {
   position: relative;
-  padding: clamp(5rem, 12vw, 9rem) var(--ld-gutter);
+  padding: clamp(3.75rem, 8.5vw, 6.5rem) var(--ld-gutter);
   max-width: 82rem;
   margin: 0 auto;
 }
@@ -267,7 +267,7 @@ body {
 .ld-section-head {
   text-align: center;
   max-width: 40rem;
-  margin: 0 auto clamp(3rem, 6vw, 4.5rem);
+  margin: 0 auto clamp(2rem, 4vw, 3rem);
 }
 
 .ld-label {
@@ -302,7 +302,7 @@ body {
   text-align: center;
   max-width: 46rem;
   margin: 0 auto;
-  padding: clamp(4.5rem, 10vw, 8rem) var(--ld-gutter);
+  padding: clamp(3.25rem, 7vw, 5.5rem) var(--ld-gutter);
 }
 
 .ld-verse-text {
@@ -312,7 +312,7 @@ body {
   font-size: clamp(1.5rem, 4vw, 2.5rem);
   line-height: 1.4;
   color: var(--ld-ink);
-  margin: 2.4rem 0 0;
+  margin: 1.7rem 0 0;
 }
 
 .ld-verse-ref {
@@ -321,7 +321,7 @@ body {
   letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--ld-gold-deep);
-  margin: 1.8rem 0 0;
+  margin: 1.5rem 0 0;
 }
 
 /* --- film ---------------------------------------------------------------- */
@@ -355,7 +355,7 @@ body {
   flex-wrap: wrap;
   gap: 0.9rem;
   justify-content: center;
-  margin-top: 2.2rem;
+  margin-top: 1.9rem;
 }
 
 /* --- buttons ------------------------------------------------------------- */
@@ -460,7 +460,7 @@ body {
   text-align: center;
   max-width: 42rem;
   margin: 0 auto;
-  padding: clamp(4.5rem, 10vw, 7rem) var(--ld-gutter) clamp(2.5rem, 5vw, 3.5rem);
+  padding: clamp(3.5rem, 8vw, 5.5rem) var(--ld-gutter) clamp(2rem, 4vw, 2.75rem);
 }
 
 .ld-back {
@@ -581,15 +581,20 @@ body {
   z-index: 2;
 }
 
+/* Kept on phones as well as desktop: swipe works, but an arrow is the only
+   affordance that tells you swiping is possible. */
 @media (max-width: 40rem) {
-  .ld-lb-nav { display: none; } /* swipe instead */
+  .ld-lb-nav {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
 }
 
 /* --- footer -------------------------------------------------------------- */
 
 .ld-footer {
   text-align: center;
-  padding: clamp(4rem, 9vw, 7rem) var(--ld-gutter) 4rem;
+  padding: clamp(3.25rem, 7vw, 5.5rem) var(--ld-gutter) 3.25rem;
   border-top: 1px solid var(--ld-line-soft);
 }
 
@@ -660,7 +665,7 @@ body {
   font-weight: 300;
   line-height: 1.75;
   color: var(--ld-ink-soft);
-  margin: 0 0 1.5rem;
+  margin: 0 0 1.3rem;
 }
 
 .ld-prose p:last-child {

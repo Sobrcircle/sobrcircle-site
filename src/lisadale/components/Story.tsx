@@ -1,4 +1,3 @@
-import Cross from './Cross'
 
 /**
  * Their calling.
@@ -12,9 +11,6 @@ export default function Story() {
   return (
     <section className="ld-section ld-story" id="story">
       <div className="ld-section-head">
-        <div className="ld-rule" data-animate style={{ marginBottom: '1.6rem' }}>
-          <Cross size={16} />
-        </div>
         <p className="ld-label" data-animate>Their Calling</p>
         <h2 className="ld-title" data-split data-split-delay="0.1">
           A faith you can see from the outside

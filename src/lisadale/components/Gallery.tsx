@@ -2,7 +2,6 @@ import { useCallback, useState } from 'react'
 import { PREVIEW_IDS, photos, type Photo } from '../data/gallery'
 import JustifiedGrid from './JustifiedGrid'
 import Lightbox from './Lightbox'
-import Cross from './Cross'
 
 /**
  * Front-page preview only. A wedding gallery reads better when the story page
@@ -20,9 +19,6 @@ export default function Gallery() {
   return (
     <section className="ld-section" id="gallery">
       <div className="ld-section-head">
-        <div className="ld-rule" data-animate style={{ marginBottom: '1.6rem' }}>
-          <Cross size={16} />
-        </div>
         <p className="ld-label" data-animate>The Photographs</p>
         <h2 className="ld-title" data-split data-split-delay="0.1">
           The day they were given
