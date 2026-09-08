@@ -530,8 +530,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
+  gap: clamp(0.9rem, 3vw, 1.6rem);
   padding: 1.2rem var(--ld-gutter) calc(1.4rem + env(safe-area-inset-bottom));
   border-top: 1px solid rgba(201, 170, 120, 0.22);
 }
@@ -554,25 +553,40 @@ body {
   color: rgba(243, 237, 226, 0.62);
 }
 
+/* Arrows live in the bar beneath the photograph, as a matched pair either
+   side of the download. Over the image they collided with tall frames. */
 .ld-lb-nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3rem;
-  height: 3rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex: 0 0 auto;
   display: grid;
   place-items: center;
   border-radius: 999px;
-  border: 1px solid rgba(201, 170, 120, 0.35);
-  background: rgba(28, 24, 20, 0.4);
+  border: 1px solid rgba(201, 170, 120, 0.4);
+  background: transparent;
   color: var(--ld-cream);
+  font-size: 1.4rem;
+  line-height: 1;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
-.ld-lb-nav:hover { background: rgba(176, 141, 87, 0.75); }
-.ld-lb-prev { left: clamp(0.5rem, 2vw, 1.5rem); }
-.ld-lb-next { right: clamp(0.5rem, 2vw, 1.5rem); }
+.ld-lb-nav:hover {
+  background: var(--ld-gold);
+  border-color: var(--ld-gold);
+  color: #fff;
+}
+
+.ld-lb-nav:focus-visible {
+  outline: 2px solid var(--ld-gold);
+  outline-offset: 3px;
+}
+
+/* Hidden rather than removed, so the row never reflows. */
+.ld-lb-nav.is-hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
 
 .ld-lb-close {
   position: absolute;
@@ -581,14 +595,6 @@ body {
   z-index: 2;
 }
 
-/* Kept on phones as well as desktop: swipe works, but an arrow is the only
-   affordance that tells you swiping is possible. */
-@media (max-width: 40rem) {
-  .ld-lb-nav {
-    width: 2.5rem;
-    height: 2.5rem;
-  }
-}
 
 /* --- footer -------------------------------------------------------------- */
 

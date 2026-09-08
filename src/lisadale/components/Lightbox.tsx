@@ -11,9 +11,12 @@ interface Props {
 /**
  * Full-screen viewer.
  *
- * Swipe on touch, arrows or arrow keys on a pointer, Escape to close. The
- * arrows are bounded rather than wrapping, and each one disappears at the end
- * of the set it points toward.
+ * Swipe on touch, arrows or arrow keys on a pointer, Escape to close.
+ *
+ * The arrows sit below the photograph rather than floating over its edges —
+ * on a portrait frame they used to land on top of the picture. They are
+ * bounded rather than wrapping, and the one pointing past the end of the set
+ * is hidden (not unmounted, so the download button stays put).
  *
  * The download is a plain anchor pointing at `?download=1` rather than a
  * fetch-to-blob dance: the R2 proxy replies with `Content-Disposition:
@@ -84,26 +87,38 @@ export default function Lightbox({ photos, index, onClose, onNavigate }: Props) 
           Close
         </button>
 
-        {!atStart && (
-          <button className="ld-lb-nav ld-lb-prev" onClick={() => go(-1)} aria-label="Previous photo">
-            &#8249;
-          </button>
-        )}
 
         {/* keyed so the entrance animation replays on every navigation */}
         <img key={photo.id} src={media.photo(photo.id)} alt={photo.alt} />
 
-        {!atEnd && (
-          <button className="ld-lb-nav ld-lb-next" onClick={() => go(1)} aria-label="Next photo">
-            &#8250;
-          </button>
-        )}
       </div>
 
       <div className="ld-lightbox-bar">
+        {/* Kept mounted and merely hidden at the ends, so the download button
+            never shifts sideways as you move through the set. */}
+        <button
+          className={`ld-lb-nav${atStart ? ' is-hidden' : ''}`}
+          onClick={() => go(-1)}
+          aria-label="Previous photo"
+          aria-hidden={atStart}
+          tabIndex={atStart ? -1 : 0}
+        >
+          &#8249;
+        </button>
+
         <a className="ld-btn" href={media.photoDownload(photo.id)}>
           Download this photo
         </a>
+
+        <button
+          className={`ld-lb-nav${atEnd ? ' is-hidden' : ''}`}
+          onClick={() => go(1)}
+          aria-label="Next photo"
+          aria-hidden={atEnd}
+          tabIndex={atEnd ? -1 : 0}
+        >
+          &#8250;
+        </button>
       </div>
     </div>
   )
