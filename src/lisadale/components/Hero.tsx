@@ -1,4 +1,3 @@
-import Cross from './Cross'
 import { HERO_ID, media, photos } from '../data/gallery'
 
 /**
@@ -22,10 +21,10 @@ export default function Hero() {
 
       <div className="ld-hero-inner">
         <p className="ld-hero-eyebrow">The Wedding Of</p>
-        <h1 className="ld-script">Lisa &amp; Dale</h1>
-        <div className="ld-rule" style={{ marginTop: '2rem' }}>
-          <Cross size={18} />
-        </div>
+        <h1 className="ld-names">
+          Lisa &amp; Dale
+          <span className="ld-surname">Laporte</span>
+        </h1>
         <p className="ld-hero-date">September 7, 2026</p>
       </div>
 

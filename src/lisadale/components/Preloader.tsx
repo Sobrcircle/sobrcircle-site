@@ -67,10 +67,10 @@ export default function Preloader({ onDone }: { onDone: () => void }) {
           <Cross size={20} />
         </div>
         <p className="ld-preloader-verse">
-          &ldquo;Two are better than one&hellip;<br />
-          and a threefold cord<br />is not quickly broken.&rdquo;
+          &ldquo;Above all, put on love,<br />
+          which is the bond<br />of perfection.&rdquo;
         </p>
-        <p className="ld-preloader-ref">Ecclesiastes 4:9, 12</p>
+        <p className="ld-preloader-ref">Colossians 3:14</p>
       </div>
     </div>
   )

@@ -1,10 +1,10 @@
 import Cross from './Cross'
 
 /**
- * The heart of the page. Everything factual here came from Ben directly —
- * that they walk with God, that they came through battles, that Dale walks
- * with the men and Lisa with the women, that they are a light. Nothing about
- * how they met, when, or where is invented to fill space.
+ * The heart of the page, and it honours them rather than narrating them.
+ * Everything factual came from Ben directly: that they walk with God, that
+ * Dale walks with the men and Lisa with the women, that they are a light.
+ * Nothing about how they met, when, or where is invented to fill space.
  *
  * Scripture is the World English Bible (public domain), chosen over KJV so the
  * language reads plainly to every guest.
@@ -16,26 +16,25 @@ export default function Story() {
         <div className="ld-rule" data-animate style={{ marginBottom: '1.6rem' }}>
           <Cross size={16} />
         </div>
-        <p className="ld-label" data-animate>Two Made One</p>
+        <p className="ld-label" data-animate>Their Calling</p>
         <h2 className="ld-title" data-split data-split-delay="0.1">
-          Perfectly imperfect, and held the whole way
+          Two lives already given in service
         </h2>
       </div>
 
       <div className="ld-prose">
         <p data-animate>
-          Lisa and Dale did not come to this day by an easy road. They came
-          through battles — the kind that test what a person is made of, and
-          the kind no one is meant to fight alone.
+          Lisa and Dale walk with God, and they walk toward people. It is the
+          plainest thing about them and the truest.
         </p>
         <p data-animate data-delay="0.1">
-          What carried them was never their own strength. It was the third
-          strand in the cord: a God who does not let go, who takes two people
-          and makes them one, and who finishes what He begins.
+          Dale walks alongside the men. Lisa walks alongside the women. They
+          sit with people in the hardest hours and stay until hope comes back
+          into the room &mdash; not as duty, but as the shape their love takes.
         </p>
         <p data-animate data-delay="0.2">
-          Perfectly imperfect. Still standing. Still choosing each other.
-          Still His.
+          Today two lives already spent on others are joined into one. What
+          they carry, they carry together now.
         </p>
       </div>
 

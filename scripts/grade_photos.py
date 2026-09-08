@@ -53,47 +53,63 @@ from PIL import Image, ImageChops, ImageEnhance, ImageFilter
 Image.MAX_IMAGE_PIXELS = None  # these are 48 MP by design
 
 LOOKS = {
-    # Lightest and most lifted — strongest "angelic" reading.
-    "angelic": {
+    # THE LOOK — matched to the reference photographs: bright and glowing, but
+    # punchy. The earlier "matte film" approach (lifted blacks, saturation and
+    # contrast pulled *down*) read as flat and is gone.
+    #
+    # Order matters here and is the whole trick:
+    #   1. bloom first  — screen a blurred copy to get the backlit glow
+    #   2. curve after  — an S-curve then RESTORES the contrast the bloom ate,
+    #                     so highlights glow while blacks stay genuinely black
+    #   3. saturation   — pushed up, not down; greens and skin should sing
+    "radiant": {
+        "bloom_first": True,
+        "bloom_sigma": 0.005, "bloom_opacity": 0.07,
+        "halation_sigma": 0.016, "halation_opacity": 0.42,
+        "halation_threshold": 0.62, "halation_warmth": 0.07,
+        # S-curve: shadows held down, midtones and highlights lifted.
+        "curve": {
+            "r": [(0, 0.0), (0.15, 0.125), (0.35, 0.365), (0.5, 0.550), (0.75, 0.822), (0.9, 0.945), (1, 1.0)],
+            "g": [(0, 0.0), (0.15, 0.124), (0.35, 0.362), (0.5, 0.546), (0.75, 0.818), (0.9, 0.943), (1, 1.0)],
+            "b": [(0, 0.0), (0.15, 0.128), (0.35, 0.360), (0.5, 0.540), (0.75, 0.808), (0.9, 0.938), (1, 1.0)],
+        },
+        "shadow": (-0.006, 0.000, 0.014),   # a whisper of cool in the shadows
+        "mid":    ( 0.011, 0.004, -0.012),  # warm, but no extra red
+        "high":   ( 0.006, 0.002, -0.004),  # highlights stay clean white
+        "vibrance": 0.55, "saturation": 1.0, "contrast": 1.07, "brightness": 1.035,
+        "sharpen": 0.85,
+    },
+    # Same look, dialled back — for frames that are already contrasty.
+    "radiant-soft": {
+        "bloom_first": True,
+        "bloom_sigma": 0.005, "bloom_opacity": 0.06,
+        "halation_sigma": 0.014, "halation_opacity": 0.30,
+        "halation_threshold": 0.66, "halation_warmth": 0.06,
+        "curve": {
+            "r": [(0, 0.0), (0.15, 0.135), (0.35, 0.368), (0.5, 0.545), (0.75, 0.815), (0.9, 0.942), (1, 1.0)],
+            "g": [(0, 0.0), (0.15, 0.134), (0.35, 0.365), (0.5, 0.542), (0.75, 0.812), (0.9, 0.940), (1, 1.0)],
+            "b": [(0, 0.0), (0.15, 0.138), (0.35, 0.363), (0.5, 0.537), (0.75, 0.804), (0.9, 0.936), (1, 1.0)],
+        },
+        "shadow": (-0.005, 0.000, 0.012),
+        "mid":    ( 0.014, 0.003, -0.012),
+        "high":   ( 0.005, 0.002, -0.003),
+        "vibrance": 0.38, "saturation": 1.0, "contrast": 1.04, "brightness": 1.025,
+        "sharpen": 0.75,
+    },
+    # Kept only so the flat original can be compared against. Do not ship this.
+    "matte-old": {
+        "bloom_first": False,
         "curve": {
             "r": [(0, 0.070), (0.25, 0.315), (0.5, 0.560), (0.75, 0.800), (1, 1.0)],
             "g": [(0, 0.072), (0.25, 0.315), (0.5, 0.558), (0.75, 0.798), (1, 1.0)],
             "b": [(0, 0.090), (0.25, 0.325), (0.5, 0.560), (0.75, 0.795), (1, 0.998)],
         },
-        "shadow": (-0.020, 0.000, 0.042),   # cool
-        "mid":    ( 0.038, 0.010, -0.032),  # warm gold
-        "high":   ( 0.010, 0.002, -0.006),  # near-neutral
+        "shadow": (-0.025, 0.000, 0.050),
+        "mid":    ( 0.040, 0.010, -0.035),
+        "high":   ( 0.012, 0.000, -0.008),
         "saturation": 0.88, "contrast": 0.94, "brightness": 1.022,
         "bloom_sigma": 0.0055, "bloom_opacity": 0.13,
         "sharpen": 0.5,
-    },
-    # Matte with antique-gold midtones — tuned to the Syl Haus palette.
-    "ivory": {
-        "curve": {
-            "r": [(0, 0.045), (0.25, 0.290), (0.5, 0.532), (0.75, 0.782), (1, 1.0)],
-            "g": [(0, 0.048), (0.25, 0.290), (0.5, 0.530), (0.75, 0.780), (1, 1.0)],
-            "b": [(0, 0.062), (0.25, 0.300), (0.5, 0.532), (0.75, 0.778), (1, 0.998)],
-        },
-        "shadow": (-0.016, 0.000, 0.034),
-        "mid":    ( 0.030, 0.008, -0.026),
-        "high":   ( 0.012, 0.003, -0.008),
-        "saturation": 0.92, "contrast": 0.97, "brightness": 1.012,
-        "bloom_sigma": 0.0045, "bloom_opacity": 0.09,
-        "sharpen": 0.6,
-    },
-    # Closest to straight-out-of-camera; just cleans and warms.
-    "classic": {
-        "curve": {
-            "r": [(0, 0.030), (0.5, 0.515), (1, 1.0)],
-            "g": [(0, 0.032), (0.5, 0.514), (1, 1.0)],
-            "b": [(0, 0.042), (0.5, 0.512), (1, 0.998)],
-        },
-        "shadow": (-0.010, 0.000, 0.020),
-        "mid":    ( 0.020, 0.005, -0.016),
-        "high":   ( 0.008, 0.002, -0.005),
-        "saturation": 0.95, "contrast": 0.99, "brightness": 1.008,
-        "bloom_sigma": 0.0035, "bloom_opacity": 0.06,
-        "sharpen": 0.7,
     },
 }
 
@@ -118,20 +134,89 @@ def build_luts(look):
     return np.concatenate(luts).tolist()
 
 
-def grade(img, look):
-    """Apply the full look. Radii scale with the image so every size matches."""
-    img = img.convert("RGB")
-    img = img.point(build_luts(look))
+def halation(img, sigma, opacity, threshold, warmth):
+    """Light bleeding outward from bright edges — the glow in the reference.
 
-    img = ImageEnhance.Color(img).enhance(look["saturation"])
+    A plain blurred-and-screened copy hazes the whole frame uniformly. Real
+    halation comes only from the highlights: isolate what is already bright,
+    blur *that* generously, and screen it back, and the light spills around
+    edges — rim-lit hair, a white dress against dark trees, sun through leaves.
+
+    On film the bleed happens most in the red layer, so the glow is tinted
+    faintly warm. That is what stops it reading as a digital blur.
+    """
+    if opacity <= 0 or sigma < 0.5:
+        return img
+
+    # Soft threshold: nothing below `threshold`, ramping smoothly to full.
+    t = np.arange(256, dtype=np.float32) / 255.0
+    x = np.clip((t - threshold) / max(1e-6, 1.0 - threshold), 0, 1)
+    ramp = (x * x * (3 - 2 * x) * 255).astype(np.uint8)          # smoothstep
+    mask = img.convert("L").point(ramp.tolist())
+
+    highlights = ImageChops.multiply(img, Image.merge("RGB", (mask, mask, mask)))
+    glow = highlights.filter(ImageFilter.GaussianBlur(radius=sigma))
+
+    if warmth:
+        r, g, b = glow.split()
+        r = r.point(lambda v: min(255, int(v * (1 + warmth))))
+        b = b.point(lambda v: int(v * (1 - warmth * 0.6)))
+        glow = Image.merge("RGB", (r, g, b))
+
+    return Image.blend(img, ImageChops.screen(img, glow), opacity)
+
+
+def apply_vibrance(img, amount):
+    """Saturation weighted by how unsaturated a pixel already is.
+
+    Flat saturation pushes skin that is already ruddy further red — very
+    visible on a sunburned face. Vibrance scales by (1 - S), so muted greens,
+    sky and whites gain a lot while saturated skin barely moves. Done as a
+    256-entry LUT on the HSV S channel, so it stays fast at 48 MP.
+    """
+    if amount == 0:
+        return img
+    hsv = img.convert("HSV")
+    h, sat, v = hsv.split()
+    t = np.arange(256, dtype=np.float32) / 255.0
+    lut = np.clip(t * (1.0 + amount * (1.0 - t)), 0, 1) * 255.0
+    sat = sat.point(lut.astype(np.uint8).tolist())
+    return Image.merge("HSV", (h, sat, v)).convert("RGB")
+
+
+def grade(img, look):
+    """Apply the look. Radii scale with the image so every size matches."""
+    img = img.convert("RGB")
+    long_edge = max(img.size)
+
+    def bloom(im):
+        sigma = look["bloom_sigma"] * long_edge
+        if sigma < 0.5 or look["bloom_opacity"] <= 0:
+            return im
+        blurred = im.filter(ImageFilter.GaussianBlur(radius=sigma))
+        return Image.blend(im, ImageChops.screen(im, blurred), look["bloom_opacity"])
+
+    # Glow first, then the curve restores contrast on top of it. Doing this the
+    # other way round is what made the first attempt look washed out.
+    if look.get("bloom_first"):
+        img = bloom(img)
+        img = halation(
+            img,
+            sigma=look.get("halation_sigma", 0) * long_edge,
+            opacity=look.get("halation_opacity", 0),
+            threshold=look.get("halation_threshold", 0.66),
+            warmth=look.get("halation_warmth", 0.06),
+        )
+        img = img.point(build_luts(look))
+    else:
+        img = img.point(build_luts(look))
+        img = bloom(img)
+
+    img = apply_vibrance(img, look.get("vibrance", 0.0))
+    if look.get("saturation", 1.0) != 1.0:
+        img = ImageEnhance.Color(img).enhance(look["saturation"])
     img = ImageEnhance.Contrast(img).enhance(look["contrast"])
     img = ImageEnhance.Brightness(img).enhance(look["brightness"])
-
-    long_edge = max(img.size)
-    sigma = look["bloom_sigma"] * long_edge
-    if sigma >= 0.5 and look["bloom_opacity"] > 0:
-        blurred = img.filter(ImageFilter.GaussianBlur(radius=sigma))
-        img = Image.blend(img, ImageChops.screen(img, blurred), look["bloom_opacity"])
 
     if look["sharpen"] > 0:
         img = img.filter(
@@ -192,7 +277,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--in", dest="indir")
     ap.add_argument("--out", dest="outdir", default="./graded")
-    ap.add_argument("--look", default="ivory", choices=list(LOOKS))
+    ap.add_argument("--look", default="radiant", choices=list(LOOKS))
     ap.add_argument("--contact")
     ap.add_argument("--web-long-edge", type=int, default=2400)
     ap.add_argument("--full-quality", type=int, default=95)

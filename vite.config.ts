@@ -36,6 +36,7 @@ export default defineConfig({
         main: path.resolve(__dirname, 'index.html'),
         twentyfour: path.resolve(__dirname, 'twentyfour/index.html'),
         lisadale: path.resolve(__dirname, 'lisadale/index.html'),
+        lisadaleGallery: path.resolve(__dirname, 'lisadale/gallery/index.html'),
       },
     },
   },

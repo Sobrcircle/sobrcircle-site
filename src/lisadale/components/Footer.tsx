@@ -7,7 +7,7 @@ export default function Footer() {
         <Cross size={18} />
       </div>
       <p className="ld-footer-script" data-animate data-delay="0.15">
-        Lisa &amp; Dale
+        Lisa &amp; Dale Laporte
       </p>
       <p className="ld-footer-note" data-animate data-delay="0.3">
         Filmed &amp; photographed by Moradi Labs

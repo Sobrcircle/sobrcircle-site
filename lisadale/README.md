@@ -9,7 +9,9 @@ repo, this domain, and this deploy. No second site, no second host.
 | Path | What |
 | --- | --- |
 | `lisadale/index.html` | Entry point (registered in `vite.config.ts`) |
-| `src/lisadale/` | The page — components, styles, reveal hook |
+| `src/lisadale/` | The story page — components, styles, reveal hook |
+| `lisadale/gallery/` | The full gallery, its own entry point |
+| `src/lisadale/components/JustifiedGrid.tsx` | Row-packing layout engine |
 | `src/lisadale/data/gallery.ts` | **The only file you edit to change photos** |
 | `functions/lisadale/media/[[path]].ts` | R2 proxy (video + full-res downloads) |
 | `public/lisadale/fonts/` | Self-hosted Cormorant Garamond + Parisienne |
@@ -106,7 +108,23 @@ done
 ## Colour grading
 
 One look across every frame is what makes the set read as a single body of
-work. Three are defined — compare them on any photo before committing:
+work. The look is **radiant**, matched to reference photographs the couple
+supplied — bright and glowing but *punchy*:
+
+- **halation** — highlights are isolated, blurred and screened back with a warm
+  tint, so light bleeds around bright edges. This is the "angelic" glow; a
+  plain blurred-and-screened copy just hazes the whole frame instead.
+- **bloom before curve** — the S-curve runs *after* the glow, restoring the
+  contrast the glow ate. Blacks stay black while highlights bloom.
+- **vibrance, not saturation** — scaled by (1 − S), so muted greens and sky
+  gain while already-saturated skin barely moves. Flat saturation pushed a
+  sunburned face redder.
+
+An earlier attempt used a matte film emulation (lifted blacks, saturation and
+contrast pulled *down*). It read as flat and was rejected. It survives as
+`matte-old` only for comparison — do not ship it.
+
+Compare looks on any photo before committing:
 
 ```bash
 node scripts/grade-lisadale.mjs --contact ~/wedding/selects/DSC0142.jpg

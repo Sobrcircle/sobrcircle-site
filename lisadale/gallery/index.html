@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#faf7f2" />
+    <meta name="apple-mobile-web-app-title" content="Lisa & Dale" />
+
+    <!-- Unlisted: never indexed, never followed, never cached by search engines.
+         Mirrored by an X-Robots-Tag header in public/_headers, and deliberately
+         absent from public/sitemap.xml. -->
+    <meta name="robots" content="noindex, nofollow, noarchive, noimageindex" />
+    <meta name="googlebot" content="noindex, nofollow, noimageindex" />
+
+    <title>Lisa &amp; Dale — All Photographs</title>
+    <meta name="description" content="All 47 photographs from Lisa and Dale Laporte's wedding day." />
+
+    <!-- Open Graph so the link previews beautifully when it's texted to family.
+         OG tags do not cause indexing — the robots directives above still hold. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Lisa &amp; Dale" />
+    <meta property="og:description" content="The film and photographs from their wedding day." />
+    <meta property="og:url" content="https://sobrcircle.com/lisadale/gallery/" />
+    <meta property="og:image" content="https://sobrcircle.com/lisadale/og-share.jpg?v=1" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="stylesheet" href="/lisadale/fonts/fonts.css" />
+    <style>
+      html::-webkit-scrollbar { width: 0; display: none; }
+      html { scrollbar-width: none; -ms-overflow-style: none; }
+      body { margin: 0; background: #faf7f2; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/lisadale/gallery.tsx"></script>
+  </body>
+</html>
