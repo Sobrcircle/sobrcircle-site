@@ -25,7 +25,7 @@ export default function Gallery() {
         </div>
         <p className="ld-label" data-animate>The Photographs</p>
         <h2 className="ld-title" data-split data-split-delay="0.1">
-          Forty&#8209;seven frames of one day
+          The day they were given
         </h2>
       </div>
 
@@ -35,7 +35,7 @@ export default function Gallery() {
 
       <div className="ld-film-actions" data-animate style={{ marginTop: '2.6rem' }}>
         <a className="ld-btn ld-btn--solid" href="/lisadale/gallery/">
-          View all 47 photographs
+          View the full gallery
         </a>
       </div>
 

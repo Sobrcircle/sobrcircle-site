@@ -330,20 +330,24 @@ body {
   position: relative;
   max-width: 68rem;
   margin: 0 auto;
+  /* A black slab fought the ivory page. This is a mat and a frame: warm
+     panel, gold hairline, generous shadow — closer to a print on a wall. */
+  padding: clamp(0.5rem, 1.2vw, 0.9rem);
   border: 1px solid var(--ld-line);
-  border-radius: 2px;
-  background: #000;
-  box-shadow: var(--ld-shadow);
-  overflow: hidden;
-  aspect-ratio: 16 / 9;
+  border-radius: 3px;
+  background: var(--ld-panel);
+  box-shadow:
+    0 30px 80px rgba(43, 37, 32, 0.16),
+    0 2px 8px rgba(43, 37, 32, 0.06);
 }
 
 .ld-film-frame video {
   width: 100%;
-  height: 100%;
   display: block;
-  object-fit: contain;
-  background: #000;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: var(--ld-cream);
+  border-radius: 1px;
 }
 
 .ld-film-actions {
@@ -469,85 +473,10 @@ body {
 
 .ld-back:hover { text-decoration: underline; text-underline-offset: 0.4em; }
 
-/* Chapter rail — sticky, so you always know where in the day you are. */
-.ld-rail {
-  position: sticky;
-  top: 0;
-  z-index: 40;
-  display: flex;
-  gap: clamp(1rem, 3vw, 2.2rem);
-  justify-content: center;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  scrollbar-width: none;
-  padding: 1rem var(--ld-gutter);
-  background: rgba(250, 247, 242, 0.86);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--ld-line-soft);
-}
-
-.ld-rail::-webkit-scrollbar { display: none; }
-
-.ld-rail a {
-  flex: 0 0 auto;
-  font-family: var(--ld-sans);
-  font-size: 0.64rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--ld-ink-faint);
-  text-decoration: none;
-  padding-bottom: 0.35rem;
-  border-bottom: 1px solid transparent;
-  transition: color 0.35s ease, border-color 0.35s ease;
-}
-
-.ld-rail a:hover { color: var(--ld-ink-soft); }
-
-.ld-rail a.is-active {
-  color: var(--ld-gold-deep);
-  border-bottom-color: var(--ld-gold);
-}
-
 .ld-gallery-main {
   max-width: 100rem;
   margin: 0 auto;
   padding: 0 clamp(0.75rem, 2.5vw, 2.5rem) 2rem;
-}
-
-.ld-chapter { padding: clamp(3.5rem, 8vw, 6rem) 0 0; }
-
-.ld-chapter-head {
-  text-align: center;
-  max-width: 34rem;
-  margin: 0 auto clamp(2rem, 4vw, 3rem);
-}
-
-.ld-chapter-num {
-  display: block;
-  font-family: var(--ld-sans);
-  font-size: 0.62rem;
-  letter-spacing: 0.3em;
-  color: var(--ld-gold);
-  margin-bottom: 0.9rem;
-}
-
-.ld-chapter-title {
-  font-family: var(--ld-serif);
-  font-weight: 300;
-  font-size: clamp(1.6rem, 4vw, 2.4rem);
-  letter-spacing: 0.02em;
-  color: var(--ld-ink);
-  margin: 0;
-}
-
-.ld-chapter-note {
-  font-family: var(--ld-serif);
-  font-style: italic;
-  font-weight: 300;
-  font-size: clamp(0.95rem, 2vw, 1.1rem);
-  color: var(--ld-ink-faint);
-  margin: 0.7rem 0 0;
 }
 
 /* --- lightbox ------------------------------------------------------------ */
@@ -692,6 +621,16 @@ body {
   display: inline-block;
   will-change: opacity, transform, filter;
 }
+
+/* --- scripture opening the story --- */
+
+.ld-light-verse-block {
+  text-align: center;
+  max-width: 44rem;
+  margin: 0 auto clamp(3.5rem, 8vw, 6rem);
+}
+
+.ld-light-verse-block .ld-verse-text { margin-top: 0; }
 
 /* --- their story --------------------------------------------------------- */
 

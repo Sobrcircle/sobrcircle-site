@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useLenis } from '../../components/home/hooks/useLenis'
 import { useReveal } from '../hooks/useReveal'
 import { useSplitReveal } from '../../components/home/hooks/useSplitReveal'
-import { chapters, media, photos, type Photo } from '../data/gallery'
+import { media, photos, type Photo } from '../data/gallery'
 import Grain from './Grain'
 import ScrollProgress from './ScrollProgress'
 import JustifiedGrid from './JustifiedGrid'
@@ -10,13 +10,12 @@ import Lightbox from './Lightbox'
 import Cross from './Cross'
 
 /**
- * The gallery, on its own page. All 47 photographs are here, in chapters
- * following the day, so the front page can stay a story rather than ending in
- * an endless scroll of thumbnails.
+ * The gallery, on its own page — one continuous set in the order the day
+ * happened, so the story page can end on an invitation rather than on a wall
+ * of thumbnails.
  */
 export default function GalleryPage() {
   const [open, setOpen] = useState<number | null>(null)
-  const [active, setActive] = useState(0)
 
   useLenis()
   useReveal(true)
@@ -24,21 +23,6 @@ export default function GalleryPage() {
 
   const openPhoto = useCallback((p: Photo) => {
     setOpen(photos.findIndex((x) => x.id === p.id))
-  }, [])
-
-  // Highlight the chapter currently in view.
-  useEffect(() => {
-    const sections = chapters.map((_, i) => document.getElementById(`ch-${i}`))
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) setActive(Number(e.target.id.split('-')[1]))
-        }
-      },
-      { rootMargin: '-45% 0px -50% 0px' }
-    )
-    sections.forEach((s) => s && io.observe(s))
-    return () => io.disconnect()
   }, [])
 
   return (
@@ -52,7 +36,7 @@ export default function GalleryPage() {
           <Cross size={16} />
         </div>
         <p className="ld-label">The Photographs</p>
-        <h1 className="ld-title" data-split>All forty&#8209;seven</h1>
+        <h1 className="ld-title" data-split>Their day, as it happened</h1>
         <p className="ld-sub">
           Tap any photograph to open it, then download it in full resolution.
           On a phone you can also press and hold to save it straight to your
@@ -63,26 +47,8 @@ export default function GalleryPage() {
         </div>
       </header>
 
-      {/* Chapter rail — jump straight to a moment in the day. */}
-      <nav className="ld-rail" aria-label="Chapters">
-        {chapters.map((c, i) => (
-          <a key={i} href={`#ch-${i}`} className={i === active ? 'is-active' : undefined}>
-            {c.title}
-          </a>
-        ))}
-      </nav>
-
       <main className="ld-gallery-main">
-        {chapters.map((c, i) => (
-          <section key={i} id={`ch-${i}`} className="ld-chapter">
-            <div className="ld-chapter-head">
-              <span className="ld-chapter-num">{String(i + 1).padStart(2, '0')}</span>
-              <h2 className="ld-chapter-title">{c.title}</h2>
-              <p className="ld-chapter-note">{c.note}</p>
-            </div>
-            <JustifiedGrid photos={photos.filter((p) => p.ch === i)} onOpen={openPhoto} />
-          </section>
-        ))}
+        <JustifiedGrid photos={photos} onOpen={openPhoto} />
       </main>
 
       <footer className="ld-footer">

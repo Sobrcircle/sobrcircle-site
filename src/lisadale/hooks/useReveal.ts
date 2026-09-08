@@ -58,21 +58,12 @@ export function useReveal(booted: boolean) {
     if (document.fonts?.ready) document.fonts.ready.then(run)
     else run()
 
-    // Hero entrance, played as the curtain lifts.
-    const tl = gsap.timeline({ delay: 0.15 })
-    const eyebrow = document.querySelector('.ld-hero-eyebrow')
-    const name = document.querySelector('.ld-script')
-    const rule = document.querySelector('.ld-hero-inner .ld-rule')
-    const date = document.querySelector('.ld-hero-date')
-
-    if (eyebrow) tl.fromTo(eyebrow, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' })
-    if (name) tl.fromTo(name, { opacity: 0, y: 26, filter: 'blur(10px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.6, ease: 'power3.out' }, 0.25)
-    if (rule) tl.fromTo(rule, { opacity: 0, scaleX: 0.4 }, { opacity: 1, scaleX: 1, duration: 1.2, ease: 'power2.out' }, 0.9)
-    if (date) tl.fromTo(date, { opacity: 0 }, { opacity: 1, duration: 1, ease: 'power2.out' }, 1.2)
+    // The hero is deliberately NOT animated: the eyebrow used to arrive after
+    // the names, which read as a mistake rather than as choreography. It is
+    // simply there when the curtain lifts.
 
     return () => {
       triggers.forEach((t) => t.kill())
-      tl.kill()
     }
   }, [booted])
 }

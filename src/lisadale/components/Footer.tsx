@@ -9,9 +9,6 @@ export default function Footer() {
       <p className="ld-footer-script" data-animate data-delay="0.15">
         Lisa &amp; Dale Laporte
       </p>
-      <p className="ld-footer-note" data-animate data-delay="0.3">
-        Filmed &amp; photographed by Moradi Labs
-      </p>
     </footer>
   )
 }

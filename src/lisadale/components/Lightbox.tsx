@@ -80,9 +80,6 @@ export default function Lightbox({ photos, index, onClose, onNavigate }: Props) 
       </div>
 
       <div className="ld-lightbox-bar">
-        <span className="ld-lb-count">
-          {index + 1} / {photos.length}
-        </span>
         <a className="ld-btn" href={media.photoDownload(photo.id)}>
           Download this photo
         </a>
