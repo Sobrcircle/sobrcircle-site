@@ -36,11 +36,10 @@ export const media = {
   allPhotos: `${BASE}/lisa-and-dale-photos.zip?download=1&filename=Lisa-and-Dale-Photographs.zip`,
 }
 
-/** The frame behind the title. 046 is chosen because both faces are clear and
- *  smiling, the bouquet reads, and the lower third is rock rather than people —
- *  so the title never lands on them. Alternates: 047 (sunset, more
- *  atmospheric) or 005. Change this one id to swap the hero. */
-export const HERO_ID = '046'
+/** The frame behind the title: the two of them on the rock in the last of the
+ *  sun. Chosen by Lisa and Dale. The halation in this frame does the most
+ *  work of any in the set, and the title lands on rock rather than on them. */
+export const HERO_ID = '047'
 
 /** The day, in chapters — a wedding gallery reads better as a story with
  *  movements than as one uninterrupted scroll. */
