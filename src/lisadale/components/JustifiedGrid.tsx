@@ -90,7 +90,14 @@ export default function JustifiedGrid({ photos, onOpen, targetHeight, gap = 10 }
     return () => window.removeEventListener('resize', set)
   }, [targetHeight])
 
-  const rows = width > 0 ? buildRows(photos, width, target, gap) : []
+  // Fall back to the viewport if the container measures implausibly small.
+  // A real device is never narrower than ~320px, so a sub-200px measurement
+  // means the observer has not reported yet — and rendering nothing at all
+  // would leave the gallery blank.
+  const usable =
+    width >= 200 ? width : typeof window !== 'undefined' ? Math.max(0, window.innerWidth - 32) : 0
+
+  const rows = usable >= 200 ? buildRows(photos, usable, target, gap) : []
   let index = 0
 
   return (
