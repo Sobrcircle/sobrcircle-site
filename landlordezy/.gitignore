@@ -1,0 +1,4 @@
+# Prerender scratch output (regenerated on every build)
+.generated/
+# Production build for landlordezy.ca (deployed separately, never committed here)
+dist-production/

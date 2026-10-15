@@ -1,0 +1,423 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------------------------------------------------------
+   LandlordEzy — design system
+   Apple-style marketing: system type (SF Pro on Apple devices, zero font
+   downloads), white and #f5f5f7 canvases, brand colour reserved for actions
+   and product moments. Every page renders fully without JavaScript; the client
+   script only adds motion and interactivity on top.
+--------------------------------------------------------------------------- */
+
+@layer base {
+  :root {
+    --nav-h: 52px;
+    --gutter: clamp(1.25rem, 4.5vw, 2.75rem);
+    color-scheme: light;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-padding-top: calc(var(--nav-h) + 56px);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
+
+  body {
+    @apply bg-canvas font-sans text-body text-ink antialiased;
+    font-feature-settings: 'kern';
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+
+  h1, h2, h3, h4 { @apply font-display text-ink; text-wrap: balance; }
+  p { text-wrap: pretty; }
+
+  a { @apply text-brand-text; text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 0.18em; }
+  /* Links inside running text are underlined so they never rely on colour alone. */
+  main p a:not([class]), main li a:not([class]), main td a:not([class]), main dd a:not([class]), footer p a:not([class]) {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+  }
+
+  ::selection { background: rgba(9, 110, 249, 0.18); }
+
+  :focus-visible {
+    outline: 3px solid rgba(9, 110, 249, 0.55);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  [hidden] { display: none !important; }
+
+  img, svg, video { display: block; max-width: 100%; }
+
+  summary { list-style: none; cursor: pointer; }
+  summary::-webkit-details-marker { display: none; }
+
+  table { border-collapse: collapse; }
+
+  input, select, textarea, button { font: inherit; color: inherit; }
+}
+
+@layer components {
+  /* --- layout ----------------------------------------------------------- */
+  .wrap { width: 100%; max-width: 75rem; margin-inline: auto; padding-inline: var(--gutter); }
+  .wrap-content { width: 100%; max-width: calc(61.25rem + 2 * var(--gutter)); margin-inline: auto; padding-inline: var(--gutter); }
+  .wrap-text { width: 100%; max-width: calc(42rem + 2 * var(--gutter)); margin-inline: auto; padding-inline: var(--gutter); }
+
+  .section { padding-block: clamp(4rem, 8.5vw, 7.5rem); }
+  .section-tight { padding-block: clamp(3.25rem, 7vw, 5.5rem); }
+
+  /* --- type ------------------------------------------------------------- */
+  .eyebrow { @apply text-[0.9375rem] font-semibold tracking-[-0.005em] text-brand-text; }
+  .eyebrow-dark { @apply text-[0.9375rem] font-semibold text-brand-glow; }
+  .muted { @apply text-ink-3; }
+  .prose-le { @apply text-body text-ink-2; }
+  .prose-le h2 { @apply mt-14 text-headline; }
+  .prose-le h3 { @apply mt-10 text-title; }
+  .prose-le p, .prose-le ul, .prose-le ol { @apply mt-5; }
+  .prose-le ul { @apply list-disc pl-6; }
+  .prose-le ol { @apply list-decimal pl-6; }
+  .prose-le li { @apply mt-2 pl-1; }
+  .prose-le strong { @apply font-semibold text-ink; }
+  .prose-le table { @apply mt-6 w-full text-left text-[0.9375rem]; }
+  .prose-le th { @apply border-b border-line py-3 pr-4 font-semibold text-ink; }
+  .prose-le td { @apply border-b border-line-soft py-3 pr-4 align-top; }
+
+  /* --- buttons (Apple pills) ------------------------------------------- */
+  .btn {
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 whitespace-nowrap rounded-full px-[1.375rem] text-[1.0625rem] font-normal leading-none tracking-[-0.01em] transition-colors duration-200 ease-apple;
+  }
+  .btn:hover { text-decoration: none; }
+  .btn-primary { @apply btn bg-brand text-white hover:bg-brand-hover; }
+  .btn-secondary { @apply btn border border-brand bg-transparent text-brand-text hover:bg-brand hover:text-white; }
+  .btn-light { @apply btn bg-white text-ink hover:bg-canvas-alt; }
+  .btn-ghost-dark { @apply btn border border-white/40 text-white hover:bg-white hover:text-ink; }
+  .btn-sm { @apply min-h-[32px] px-[0.95rem] text-[0.875rem]; }
+  .btn-lg { @apply min-h-[52px] px-7 text-[1.0625rem]; }
+
+  .link-more { @apply inline-flex items-center gap-1 text-[1.0625rem] text-brand-text; }
+  .link-more::after { content: ''; width: 0.5em; height: 0.5em; border-right: 1.6px solid currentColor; border-top: 1.6px solid currentColor; transform: rotate(45deg) translateY(-1px); margin-left: 0.1em; }
+  .link-more-dark { @apply link-more text-brand-glow; }
+
+  /* --- surfaces ---------------------------------------------------------- */
+  .tile { @apply relative overflow-hidden rounded-4xl bg-canvas-alt; }
+  .tile-white { @apply relative overflow-hidden rounded-4xl bg-white shadow-card; }
+  .tile-dark { @apply relative overflow-hidden rounded-4xl bg-brand-ink text-white; }
+  .card { @apply rounded-3xl border border-line-soft bg-white; }
+
+  .chip { @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.75rem] font-semibold leading-none; }
+  .chip-go { @apply chip bg-go-soft text-go-ink; }
+  .chip-warn { @apply chip bg-warn-soft text-warn-ink; }
+  .chip-bad { @apply chip bg-bad-soft text-bad; }
+  .chip-brand { @apply chip bg-brand-soft text-brand-text; }
+  .chip-gray { @apply chip bg-canvas-alt text-ink-3; }
+
+  .icon-badge { @apply inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-soft text-brand; }
+
+  /* --- forms ------------------------------------------------------------ */
+  .field { @apply block w-full rounded-xl border border-line bg-white px-4 py-3 text-[1.0625rem] text-ink placeholder:text-ink-4 transition-shadow; }
+  .field:focus { outline: none; @apply border-brand shadow-[0_0_0_4px_rgba(9,110,249,0.15)]; }
+  .label { @apply mb-1.5 block text-[0.875rem] font-semibold text-ink-2; }
+
+  /* --- segmented control ------------------------------------------------ */
+  .segmented { @apply inline-flex rounded-full bg-canvas-deep p-1; }
+  .segmented button { @apply rounded-full px-4 py-2 text-[0.9375rem] font-medium text-ink-2 transition-all duration-200; }
+  .segmented button[aria-pressed='true'] { @apply bg-white text-ink shadow-[0_1px_3px_rgba(0,0,0,0.12)]; }
+}
+
+/* ---------------------------------------------------------------------------
+   Global navigation — translucent bar, Apple-style flyouts on desktop and a
+   full-screen sheet on mobile. Works without JS: links are plain anchors and
+   the mobile sheet falls back to a CSS :target toggle.
+--------------------------------------------------------------------------- */
+.gnav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: var(--nav-h);
+  background: rgba(255, 255, 255, 0.8);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+.gnav a { text-decoration: none; }
+.gnav-link {
+  @apply rounded-full px-3 py-2 text-[0.8125rem] font-normal text-ink-2 transition-colors duration-200;
+}
+.gnav-link:hover, .gnav-link[aria-expanded='true'] { @apply text-ink; }
+.gnav-link[aria-current='page'] { @apply text-ink; }
+
+.flyout {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--nav-h);
+  background: rgba(255, 255, 255, 0.97);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: opacity 0.24s cubic-bezier(0.28, 0.11, 0.32, 1), transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear 0.32s;
+}
+.flyout[data-open='true'] {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition-delay: 0s;
+}
+.flyout a { color: inherit; }
+.flyout a:hover { text-decoration: none; }
+
+.scrim {
+  position: fixed;
+  inset: var(--nav-h) 0 0 0;
+  background: rgba(232, 232, 237, 0.4);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+  z-index: 40;
+}
+.scrim[data-open='true'] { opacity: 1; visibility: visible; transition-delay: 0s; }
+
+/* Mobile sheet */
+.msheet {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: #fff;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0s linear 0.25s;
+}
+.msheet[data-open='true'], .msheet:target { opacity: 1; visibility: visible; transition-delay: 0s; }
+.msheet a { color: inherit; text-decoration: none; }
+.msheet-item { opacity: 0; transform: translateY(-6px); transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+.msheet[data-open='true'] .msheet-item, .msheet:target .msheet-item { opacity: 1; transform: none; }
+
+/* Local (product) nav — sits under the global nav on product pages */
+.lnav {
+  position: sticky;
+  top: var(--nav-h);
+  z-index: 45;
+  background: rgba(255, 255, 255, 0.82);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+.lnav a { text-decoration: none; }
+
+/* Sticky mobile CTA, revealed once the hero scrolls away */
+.mcta {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: max(12px, env(safe-area-inset-bottom));
+  z-index: 30;
+  transform: translateY(140%);
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.mcta[data-show='true'] { transform: none; }
+@media (min-width: 834px) { .mcta { display: none; } }
+
+/* Concept preview strip */
+.preview-bar a { color: #9cc7ff; }
+
+/* ---------------------------------------------------------------------------
+   Motion. Content is visible by default; the client script opts elements in
+   (below the fold only) so a slow script can never hide the page.
+--------------------------------------------------------------------------- */
+.reveal-ready [data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.9s cubic-bezier(0.28, 0.11, 0.32, 1), transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0s);
+}
+.reveal-ready [data-reveal='scale'] { transform: scale(0.94); }
+.reveal-ready [data-reveal].is-in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-ready [data-reveal] { opacity: 1 !important; transform: none !important; transition: none !important; }
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}
+
+/* Hero device entrance — CSS only, never delays the headline (the LCP element). */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-rise { animation: hero-rise 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
+  .hero-rise-2 { animation: hero-rise 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both; }
+  .hero-float { animation: hero-float 7s ease-in-out 1.6s infinite; }
+}
+@keyframes hero-rise { from { opacity: 0; transform: translateY(48px) scale(0.98); } to { opacity: 1; transform: none; } }
+@keyframes hero-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+/* Scroll-linked parallax where the browser supports it natively. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .parallax-slow { animation: parallax linear both; animation-timeline: view(); animation-range: entry 0% exit 100%; }
+  }
+}
+@keyframes parallax { from { transform: translateY(40px); } to { transform: translateY(-40px); } }
+
+/* ---------------------------------------------------------------------------
+   Product mock-ups (illustrative UI, drawn in HTML so it stays razor sharp
+   and weighs almost nothing). Sequences play once when scrolled into view.
+--------------------------------------------------------------------------- */
+.mock { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif; letter-spacing: -0.01em; }
+.mock * { text-wrap: nowrap; }
+.mock .wrap-ok { text-wrap: wrap; }
+
+.browser { @apply overflow-hidden rounded-[14px] bg-white shadow-device ring-1 ring-black/5; }
+.browser-bar { @apply flex h-9 items-center gap-2 border-b border-black/5 bg-[#f6f6f8] px-3.5; }
+.browser-dot { @apply h-[11px] w-[11px] rounded-full; }
+
+.phone {
+  position: relative;
+  border-radius: 46px;
+  padding: 11px;
+  background: linear-gradient(145deg, #2b2d33, #0f1013 45%, #26282d);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.08), 0 50px 90px -30px rgba(5, 12, 59, 0.55), 0 24px 40px -24px rgba(5, 12, 59, 0.4);
+}
+.phone-screen { position: relative; overflow: hidden; border-radius: 36px; background: #fff; }
+.phone-island { position: absolute; top: 10px; left: 50%; width: 30%; height: 26px; transform: translateX(-50%); border-radius: 20px; background: #000; z-index: 5; }
+
+/* sequenced steps inside a mock: [data-seq] children get --i */
+.play [data-step] { opacity: 0; transform: translateY(10px); }
+.play.is-playing [data-step] { animation: step-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: calc(var(--i, 0) * 0.55s + 0.2s); }
+@keyframes step-in { to { opacity: 1; transform: none; } }
+
+.play [data-type] { clip-path: inset(0 100% 0 0); }
+.play.is-playing [data-type] { animation: type-in 0.9s steps(24, end) forwards; animation-delay: calc(var(--i, 0) * 0.55s + 0.2s); }
+@keyframes type-in { to { clip-path: inset(0 0 0 0); } }
+
+.play [data-stamp] { opacity: 0; transform: scale(1.6) rotate(-8deg); }
+.play.is-playing [data-stamp] { animation: stamp 0.5s cubic-bezier(0.2, 1.4, 0.4, 1) forwards; animation-delay: calc(var(--i, 0) * 0.55s + 0.2s); }
+@keyframes stamp { to { opacity: 1; transform: scale(1) rotate(-8deg); } }
+
+.play [data-fill] { transform-origin: left center; transform: scaleX(0); }
+.play.is-playing [data-fill] { animation: fill-x 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: calc(var(--i, 0) * 0.55s + 0.2s); }
+@keyframes fill-x { to { transform: scaleX(1); } }
+
+.play [data-ring] { stroke-dashoffset: var(--ring-len, 300); }
+.play.is-playing [data-ring] { animation: ring 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: calc(var(--i, 0) * 0.55s + 0.2s); }
+@keyframes ring { to { stroke-dashoffset: var(--ring-to, 0); } }
+
+/* Without JS (or before the observer fires) every sequence simply shows its end state. */
+html:not(.js) .play [data-step], html:not(.js) .play [data-type], html:not(.js) .play [data-stamp], html:not(.js) .play [data-fill] { opacity: 1; transform: none; clip-path: none; }
+html:not(.js) .play [data-ring] { stroke-dashoffset: var(--ring-to, 0); }
+@media (prefers-reduced-motion: reduce) {
+  .play [data-step], .play [data-type], .play [data-stamp], .play [data-fill] { opacity: 1 !important; transform: none !important; clip-path: none !important; }
+  .play [data-ring] { stroke-dashoffset: var(--ring-to, 0) !important; }
+}
+
+/* Journey (sticky scrollytelling) */
+.journey-screen { opacity: 0; transform: scale(0.97); transition: opacity 0.6s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+.journey-screen[data-active='true'] { opacity: 1; transform: none; }
+.journey-step { transition: opacity 0.5s ease; }
+@media (min-width: 1068px) {
+  .js .journey-step { opacity: 0.32; }
+  .js .journey-step[data-active='true'] { opacity: 1; }
+}
+
+/* Glow behind dark product moments */
+.glow-blue { background: radial-gradient(60% 60% at 50% 40%, rgba(76, 155, 255, 0.35), rgba(76, 155, 255, 0) 70%); }
+
+/* Range input (pricing slider) */
+.range { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 999px; background: linear-gradient(to right, #096ef9 var(--pct, 10%), #d2d2d7 var(--pct, 10%)); outline: none; }
+.range::-webkit-slider-thumb { -webkit-appearance: none; width: 28px; height: 28px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 0.5px rgba(0,0,0,0.04), 0 3px 8px rgba(0,0,0,0.15), 0 3px 1px rgba(0,0,0,0.06); cursor: grab; }
+.range::-moz-range-thumb { width: 28px; height: 28px; border: 0; border-radius: 50%; background: #fff; box-shadow: 0 3px 8px rgba(0,0,0,0.2); cursor: grab; }
+
+/* FAQ disclosure */
+.faq summary .faq-icon { transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+.faq[open] summary .faq-icon { transform: rotate(45deg); }
+
+/* Marquee of credentials */
+@media (prefers-reduced-motion: no-preference) {
+  .marquee-track { animation: marquee 40s linear infinite; }
+}
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* Utility: hide scrollbar on horizontal scrollers */
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* Print: guides and calculators print cleanly */
+@media print {
+  .gnav, .lnav, .mcta, .preview-bar, footer, .no-print { display: none !important; }
+  body { color: #000; }
+}
+
+/* ---------------------------------------------------------------------------
+   Mock-up kit. Every dimension inside .mock is in em, and .mock-fit sets the
+   em from the container width (container query units), so a mock scales like
+   a screenshot: same composition at 320px or 1200px, no JavaScript.
+--------------------------------------------------------------------------- */
+.mock-fit { container-type: inline-size; }
+.mock { font-size: 13px; line-height: 1.35; color: #1d1d1f; }
+@supports (width: 1cqw) {
+  .mock-fit > .mock { font-size: calc(100cqw / var(--em, 64)); }
+}
+.mock .m-ico { width: 1.15em; height: 1.15em; flex-shrink: 0; }
+.mock .m-ico-s { width: 0.95em; height: 0.95em; flex-shrink: 0; }
+.mock .m-ico-l { width: 1.5em; height: 1.5em; flex-shrink: 0; }
+.mock .m-title { font-size: 1.55em; font-weight: 700; letter-spacing: -0.025em; line-height: 1.15; }
+.mock .m-h { font-size: 1.08em; font-weight: 650; letter-spacing: -0.012em; }
+.mock .m-num { font-size: 2.1em; font-weight: 700; letter-spacing: -0.035em; line-height: 1; font-variant-numeric: tabular-nums; }
+.mock .m-label { font-size: 0.76em; color: #6e6e73; font-weight: 500; }
+.mock .m-sm { font-size: 0.86em; }
+.mock .m-xs { font-size: 0.74em; }
+.mock .m-muted { color: #58585d; }
+.mock .m-faint { color: #6e6e73; }
+.mock .tabnum { font-variant-numeric: tabular-nums; }
+.mock .m-card { background: #fff; border-radius: 0.95em; box-shadow: 0 0 0 1px rgba(0,0,0,0.06), 0 0.15em 0.6em rgba(0,0,0,0.04); padding: 1.05em 1.15em; }
+.mock .m-panel { background: #f5f5f7; border-radius: 0.8em; padding: 0.85em 1em; }
+.mock .m-row { display: flex; align-items: center; justify-content: space-between; gap: 0.8em; padding: 0.62em 0; border-bottom: 1px solid #efeff2; }
+.mock .m-row:last-child { border-bottom: 0; }
+.mock .m-pill { display: inline-flex; align-items: center; gap: 0.3em; border-radius: 999px; padding: 0.32em 0.62em; font-size: 0.72em; font-weight: 650; line-height: 1; white-space: nowrap; }
+.mock .m-pill.go { background: #ecf8e1; color: #1f7a16; }
+.mock .m-pill.warn { background: #fff3e0; color: #9a4f00; }
+.mock .m-pill.bad { background: #fdecee; color: #d70015; }
+.mock .m-pill.brand { background: #eaf2ff; color: #0659d6; }
+.mock .m-pill.gray { background: #f0f0f3; color: #55555a; }
+.mock .m-pill.dark { background: rgba(255,255,255,0.12); color: #fff; }
+.mock .m-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.4em; border-radius: 999px; padding: 0.55em 1.05em; font-size: 0.82em; font-weight: 650; background: #096ef9; color: #fff; white-space: nowrap; }
+.mock .m-btn.ghost { background: #f0f0f3; color: #1d1d1f; }
+.mock .m-avatar { display: inline-flex; align-items: center; justify-content: center; width: 2.3em; height: 2.3em; border-radius: 999px; font-size: 0.82em; font-weight: 700; flex-shrink: 0; }
+.mock .m-check { display: inline-flex; align-items: center; justify-content: center; width: 1.35em; height: 1.35em; border-radius: 999px; background: #1f7a16; color: #fff; flex-shrink: 0; }
+.mock .m-check svg { width: 0.85em; height: 0.85em; }
+.mock .m-bar { height: 0.45em; border-radius: 999px; background: #efeff2; overflow: hidden; }
+.mock .m-bar > span { display: block; height: 100%; border-radius: 999px; background: #096ef9; }
+.mock .m-divider { height: 1px; background: #efeff2; }
+.mock .m-side-item { display: flex; align-items: center; gap: 0.6em; border-radius: 0.6em; padding: 0.5em 0.7em; font-size: 0.86em; color: #424245; }
+.mock .m-side-item.on { background: #eaf2ff; color: #0659d6; font-weight: 600; }
+.mock .m-doc { background: #fff; border-radius: 0.5em; box-shadow: 0 0 0 1px rgba(0,0,0,0.08), 0 1.2em 3em -1.2em rgba(5,12,59,0.35); }
+.mock .m-mono { font-family: ui-monospace, 'SF Mono', Menlo, monospace; letter-spacing: 0; }
+.mock-dark { color: #f5f5f7; }
+.mock-dark .m-card { background: rgba(255,255,255,0.06); box-shadow: 0 0 0 1px rgba(255,255,255,0.1); }
+.mock-dark .m-label, .mock-dark .m-faint { color: rgba(255,255,255,0.55); }
+.mock-dark .m-muted { color: rgba(255,255,255,0.7); }
+.mock-dark .m-row { border-color: rgba(255,255,255,0.08); }
+
+/* Hero lock-screen notifications arrive one by one (CSS only, no JS needed). */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-notif { animation: notif-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both; }
+}
+@keyframes notif-in { from { opacity: 0; transform: translateY(-1.2em) scale(0.96); } to { opacity: 1; transform: none; } }
+
+/* A mock that was already on screen at load shows its finished state, no replay. */
+.play.is-static [data-step], .play.is-static [data-type], .play.is-static [data-stamp], .play.is-static [data-fill] { opacity: 1; transform: none; clip-path: none; animation: none; }
+.play.is-static [data-stamp] { transform: rotate(-8deg); }
+.play.is-static [data-ring] { stroke-dashoffset: var(--ring-to, 0); animation: none; }

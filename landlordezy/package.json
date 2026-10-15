@@ -1,0 +1,12 @@
+{
+  "name": "landlordezy-concept",
+  "private": true,
+  "type": "module",
+  "description": "LandlordEzy website concept. Prerendered React + Tailwind, built with Vite. Dependencies resolve from the parent sobrcircle-site node_modules.",
+  "scripts": {
+    "build": "tsx scripts/build.tsx",
+    "build:production": "tsx scripts/build.tsx --production",
+    "typecheck": "tsc -p tsconfig.json",
+    "serve": "node scripts/serve.mjs"
+  }
+}

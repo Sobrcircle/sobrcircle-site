@@ -78,3 +78,16 @@
 
 /badges/v2/*
   Cache-Control: public, max-age=3600, must-revalidate
+
+# /landlordezy — concept redesign for LandlordEzy (source: landlordezy/).
+# Kept out of search: it previews another company's site, and sobrcircle.com's
+# topical authority should stay about recovery. Mirrors the robots meta tag.
+/landlordezy/*
+  X-Robots-Tag: noindex, nofollow, noarchive, noimageindex
+
+# Fingerprinted bundles are content-addressed — safe to cache for a year.
+/landlordezy/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/landlordezy/og/*
+  Cache-Control: public, max-age=86400, must-revalidate
