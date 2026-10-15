@@ -323,13 +323,17 @@ html:not(.js) .play [data-ring] { stroke-dashoffset: var(--ring-to, 0); }
   .play [data-ring] { stroke-dashoffset: var(--ring-to, 0) !important; }
 }
 
-/* Journey (sticky scrollytelling) */
-.journey-screen { opacity: 0; transform: scale(0.97); transition: opacity 0.6s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-.journey-screen[data-active='true'] { opacity: 1; transform: none; }
-.journey-step { transition: opacity 0.5s ease; }
+/* Journey (sticky scrollytelling). The active step is shown by its number
+   lighting up and its visual settling to full size; text is never dimmed,
+   so every step keeps full contrast (WCAG 1.4.3). */
 @media (min-width: 1068px) {
-  .js .journey-step { opacity: 0.32; }
-  .js .journey-step[data-active='true'] { opacity: 1; }
+  .js .journey-step .journey-badge { background: #d2d2d7; color: #1d1d1f; transition: background-color 0.35s ease, color 0.35s ease; }
+  .js .journey-step[data-active='true'] .journey-badge { background: #096ef9; color: #fff; }
+  .js .journey-step .journey-visual { transform: scale(0.94); transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+  .js .journey-step[data-active='true'] .journey-visual { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .js .journey-step .journey-visual { transform: none; }
 }
 
 /* Glow behind dark product moments */

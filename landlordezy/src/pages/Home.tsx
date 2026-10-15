@@ -240,7 +240,7 @@ export function Home() {
               >
                 <div className="max-w-[30rem]">
                   <p className="flex items-center gap-3 text-[0.9375rem] font-semibold text-brand-text">
-                    <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-brand text-[0.8125rem] text-white">
+                    <span className="journey-badge inline-flex h-7 w-7 items-center justify-center rounded-full bg-brand text-[0.8125rem] text-white">
                       {idx + 1}
                     </span>
                     {s.step}
@@ -253,7 +253,7 @@ export function Home() {
                     {s.link}
                   </a>
                 </div>
-                <div className="flex justify-center lg:sticky lg:top-[20vh] lg:self-start lg:py-8">{s.visual}</div>
+                <div className="journey-visual flex justify-center lg:sticky lg:top-[20vh] lg:self-start lg:py-8">{s.visual}</div>
               </article>
             ))}
           </div>
