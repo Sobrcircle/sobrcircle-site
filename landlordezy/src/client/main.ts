@@ -572,7 +572,7 @@ function setupJourney() {
   )
   steps.forEach((s) => desktopIo.observe(s))
 
-  if (!tabs.length || !tabRow) return
+  if (!tabs.length || !tabRow || !steps.length) return
   // Never scroll anything during load: Chrome stops measuring the largest paint
   // (LCP) at the first scroll, so a needless nudge here would hide the page's
   // load speed. Only move the chip row when the chip is actually out of view.
@@ -583,23 +583,56 @@ function setupJourney() {
     const hidden = tab.offsetLeft < tabRow.scrollLeft || tab.offsetLeft + tab.offsetWidth > tabRow.scrollLeft + tabRow.clientWidth
     if (hidden) tabRow.scrollTo({ left: tab.offsetLeft - 16, behavior: scrollBehavior })
   }
+  // Where the row rests with this card centred: the snap point. The first and
+  // last cards can't be centred, so theirs clamp to the ends of the row.
+  const snapPoint = (step: HTMLElement) =>
+    Math.min(journey.scrollWidth - journey.clientWidth, Math.max(0, step.offsetLeft - (journey.clientWidth - step.offsetWidth) / 2))
+  // The current step is the card whose snap point is nearest. "Most visible"
+  // breaks on tablets, where two whole cards fit side by side.
+  const nearest = () =>
+    steps.reduce((best, s) => (Math.abs(snapPoint(s) - journey.scrollLeft) < Math.abs(snapPoint(best) - journey.scrollLeft) ? s : best))
+      .dataset.journeyStep!
+  let lockedUntil = 0
+  let frame = 0
+  const sync = (force = false) => {
+    frame = 0
+    if (desktop.matches || (!force && performance.now() < lockedUntil)) return
+    mark(nearest())
+  }
+  journey.addEventListener('scroll', () => (frame ||= requestAnimationFrame(() => sync())), { passive: true })
+  journey.addEventListener('scrollend', () => sync(true))
+
   tabs.forEach((t) =>
     t.addEventListener('click', (e) => {
       if (desktop.matches) return
       e.preventDefault()
       const step = steps.find((s) => s.dataset.journeyStep === t.dataset.journeyTab)
       if (!step) return
-      journey.scrollTo({ left: step.offsetLeft - (journey.clientWidth - step.offsetWidth) / 2, behavior: scrollBehavior })
+      // Light the tapped chip now, not each chip the row passes on the way.
+      lockedUntil = performance.now() + 900
+      journey.scrollTo({ left: snapPoint(step), behavior: scrollBehavior })
       mark(t.dataset.journeyTab!)
     }),
   )
-  const swipeIo = new IntersectionObserver(
-    (entries) => {
-      for (const e of entries) if (e.isIntersecting && !desktop.matches) mark((e.target as HTMLElement).dataset.journeyStep!)
-    },
-    { root: journey, threshold: 0.6 },
-  )
-  steps.forEach((s) => swipeIo.observe(s))
+
+  // Keyboard focus never lands off screen. The browser won't scroll these rows
+  // to a focused element that's partly visible, and the snapping card row
+  // would pull back to the old card anyway, so do it here.
+  journey.addEventListener('focusin', (e) => {
+    const el = e.target as HTMLElement
+    const step = el.closest<HTMLElement>('[data-journey-step]')
+    if (desktop.matches || !step || !el.matches(':focus-visible')) return
+    journey.scrollTo({ left: snapPoint(step), behavior: scrollBehavior })
+  })
+  tabRow.addEventListener('focusin', (e) => {
+    const tab = e.target as HTMLElement
+    if (!tab.matches('[data-journey-tab]:focus-visible')) return
+    const room = 16
+    const left = tab.offsetLeft - room
+    const right = tab.offsetLeft + tab.offsetWidth + room - tabRow.clientWidth
+    if (tabRow.scrollLeft > left) tabRow.scrollTo({ left, behavior: scrollBehavior })
+    else if (tabRow.scrollLeft < right) tabRow.scrollTo({ left: right, behavior: scrollBehavior })
+  })
 }
 
 /* ---- folding groups: footer columns and the pricing table on phones ------- */
