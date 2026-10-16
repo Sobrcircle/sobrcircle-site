@@ -1,6 +1,8 @@
-import { ChevronDown, Menu, X, ArrowUpRight } from 'lucide-react'
+import { ArrowUpRight, ChevronDown, Search, X } from 'lucide-react'
 import { site, url } from '../site'
 import { footerColumns, productMenu, resourcesMenu, type NavGroup, type NavLink } from '../content/nav'
+import { alert } from '../content/alert'
+import { jobs } from '../content/jobs'
 import { Logo } from './Logo'
 
 function linkHref(l: NavLink): string {
@@ -116,22 +118,15 @@ export function GlobalNav({ current }: { current: string }) {
               </a>
             </li>
           </ul>
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <a href={site.app.login} className="gnav-link hidden lg:inline-flex">
               Sign in
             </a>
-            <a href={site.app.signup} className="btn-primary btn-sm" data-cta="nav-start">
-              Start free
+            <a href="#menu" className="menu-pill lg:hidden" aria-controls="menu" aria-expanded="false" data-menu-open data-track="menu:open">
+              Menu <ChevronDown className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden />
             </a>
-            <a
-              href="#menu"
-              className="-mr-2 inline-flex h-11 w-11 items-center justify-center rounded-full text-ink lg:hidden"
-              aria-label="Open menu"
-              aria-controls="menu"
-              aria-expanded="false"
-              data-menu-open
-            >
-              <Menu className="h-[22px] w-[22px]" strokeWidth={1.6} aria-hidden />
+            <a href={site.app.signup} className="btn-primary btn-sm" data-track="start-free:nav">
+              Start free
             </a>
           </div>
         </div>
@@ -141,54 +136,118 @@ export function GlobalNav({ current }: { current: string }) {
   )
 }
 
-export function MobileSheet() {
-  const groups = [productMenu[0], productMenu[1], resourcesMenu[0], resourcesMenu[1]]
-  let i = 0
+/** The slim rule-change line under the header (content/alert.ts). Scrolls away with the page. */
+export function AlertBar({ current }: { current: string }) {
+  if (!alert || current === alert.link.path) return null
   return (
-    <div id="menu" className="msheet lg:hidden" role="dialog" aria-modal="true" aria-label="Menu" data-open="false">
-      <div className="wrap flex h-[var(--nav-h)] items-center justify-between">
-        <a href={url()} aria-label="LandlordEzy home">
-          <Logo />
+    <aside className="alertbar" aria-label="Rule change">
+      <p className="wrap flex min-h-[36px] flex-wrap items-center justify-center gap-x-2 gap-y-0.5 py-1.5 text-center text-[0.75rem] leading-snug sm:text-[0.8125rem]">
+        <span className="chip-brand hidden !bg-white sm:inline-flex">{alert.label}</span>
+        <span className="text-ink-2">
+          <strong className="font-semibold text-ink sm:hidden">{alert.label}: </strong>
+          {alert.text}
+        </span>
+        <a href={url(alert.link.path)} className="whitespace-nowrap font-semibold" data-track="alert">
+          {alert.link.label} ›
         </a>
-        <a href="#" className="-mr-2 inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Close menu" data-menu-close>
-          <X className="h-6 w-6" strokeWidth={1.6} aria-hidden />
-        </a>
-      </div>
-      <div className="wrap pb-16 pt-4">
-        <ul className="space-y-1">
-          {[
-            { label: 'Pricing', path: 'pricing/' },
-            { label: 'Property managers', path: 'property-managers/' },
-            { label: 'About', path: 'about/' },
-          ].map((l) => (
-            <li key={l.label} className="msheet-item" style={{ transitionDelay: `${0.04 * i++}s` }}>
-              <a href={url(l.path)} className="block py-1.5 font-display text-[1.75rem] font-semibold tracking-[-0.02em]">
-                {l.label}
+      </p>
+    </aside>
+  )
+}
+
+const goTo: { label: string; path?: string; href?: string }[] = [
+  { label: 'Product', path: 'product/' },
+  { label: 'Pricing', path: 'pricing/' },
+  { label: 'Property managers', path: 'property-managers/' },
+  { label: 'Free calculators', path: 'tools/' },
+  { label: 'Ontario guides', path: 'guides/' },
+  { label: 'Live demo', path: 'demo/' },
+  { label: 'About', path: 'about/' },
+  { label: 'Sign in', href: site.app.login },
+]
+
+/**
+ * The Menu: one bottom sheet instead of a hamburger list. Search answers "what do
+ * you need to do?", the page's chapters sit under "On this page", and the main
+ * pages under "Go to". It opens from the Menu button or the chapter bar, closes
+ * with a swipe down, the Back gesture, Escape or a tap outside, and works without
+ * JavaScript through :target (search and chapters need the script and stay hidden
+ * without it).
+ */
+export function MenuSheet() {
+  return (
+    <div
+      id="menu"
+      className="sheet"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="menu-title"
+      data-open="false"
+      data-sheet
+      data-base={site.base}
+      data-ask={site.app.askEzy}
+    >
+      <a href="#" className="sheet-scrim" tabIndex={-1} aria-hidden="true" data-menu-close />
+      <div className="sheet-panel" data-sheet-panel>
+        <div className="sheet-grab" data-sheet-grab aria-hidden="true">
+          <span />
+        </div>
+        <div className="sheet-head" data-sheet-grab>
+          <h2 id="menu-title" className="font-display text-[1.25rem] font-semibold tracking-[-0.015em]">
+            Menu
+          </h2>
+          <a href="#" className="sheet-close" aria-label="Close menu" data-menu-close>
+            <X className="h-5 w-5" strokeWidth={2} aria-hidden />
+          </a>
+        </div>
+        <div className="sheet-body" data-sheet-body>
+          <form role="search" className="sheet-search" data-sheet-search hidden>
+            <label htmlFor="sheet-q" className="sr-only">
+              Search LandlordEzy
+            </label>
+            <Search className="h-[18px] w-[18px] shrink-0 text-ink-3" aria-hidden />
+            <input
+              id="sheet-q"
+              name="q"
+              type="search"
+              placeholder="What do you need to do?"
+              autoComplete="off"
+              autoCapitalize="off"
+              spellCheck={false}
+              enterKeyHint="search"
+              aria-controls="sheet-results"
+            />
+          </form>
+          <div className="sheet-suggest" data-sheet-suggest>
+            {jobs.map((j) => (
+              <a key={j.key} href={url(j.path)} data-track={`menu:job:${j.key}`}>
+                {j.label}
               </a>
-            </li>
-          ))}
-        </ul>
-        {groups.map((g) => (
-          <div key={g.heading} className="msheet-item mt-8" style={{ transitionDelay: `${0.04 * i++}s` }}>
-            <p className="mb-2 text-[0.8125rem] font-medium text-ink-3">{g.heading}</p>
-            <ul className="space-y-1">
-              {g.links.map((l) => (
-                <li key={l.label}>
-                  <a href={linkHref(l)} className="block py-1.5 text-[1.125rem] font-medium text-ink-2">
-                    {l.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
+            ))}
           </div>
-        ))}
-        <div className="msheet-item mt-10 grid grid-cols-2 gap-3" style={{ transitionDelay: `${0.04 * i++}s` }}>
-          <a href={site.app.signup} className="btn-primary">
+          <div id="sheet-results" className="sheet-results" data-sheet-results aria-live="polite" hidden />
+
+          <div data-sheet-chapters hidden>
+            <p className="sheet-label">On this page</p>
+            <ol className="sheet-chapters" data-sheet-chapter-list />
+          </div>
+
+          <p className="sheet-label">Go to</p>
+          <ul className="sheet-go">
+            {goTo.map((l) => (
+              <li key={l.label}>
+                <a href={l.path !== undefined ? url(l.path) : l.href} data-track={`menu:go:${l.label.toLowerCase().replace(/\s+/g, '-')}`}>
+                  {l.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="sheet-foot">
+          <a href={site.app.signup} className="btn-primary w-full" data-track="start-free:menu">
             Start free
           </a>
-          <a href={site.app.login} className="btn-secondary">
-            Sign in
-          </a>
+          <p className="mt-2 text-center text-[0.75rem] text-ink-4">Free for 2 tenants · No card · About 30 seconds</p>
         </div>
       </div>
     </div>
@@ -197,16 +256,16 @@ export function MobileSheet() {
 
 export function MobileCTA() {
   return (
-    <div className="mcta" data-mcta aria-hidden="true">
+    <aside className="mcta" data-mcta aria-label="Get started" aria-hidden="true">
       <div className="flex items-center gap-2 rounded-full bg-white/85 p-1.5 shadow-float ring-1 ring-black/5 backdrop-blur-xl">
-        <a href={url('pricing/')} className="btn btn-sm flex-1 text-ink" tabIndex={-1}>
+        <a href={url('pricing/')} className="btn btn-sm flex-1 text-ink" tabIndex={-1} data-track="pricing:sticky">
           See pricing
         </a>
-        <a href={site.app.signup} className="btn-primary btn-sm flex-[1.4]" tabIndex={-1}>
-          Start free — no card
+        <a href={site.app.signup} className="btn-primary btn-sm flex-[1.4]" tabIndex={-1} data-track="start-free:sticky">
+          Start free · no card
         </a>
       </div>
-    </div>
+    </aside>
   )
 }
 
@@ -237,12 +296,16 @@ export function Breadcrumbs({ trail }: { trail: { name: string; path: string }[]
 export function SiteFooter() {
   return (
     <footer className="border-t border-line-soft bg-canvas-alt text-[0.8125rem] text-ink-3">
-      <div className="wrap py-14">
-        <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-5">
+      <div className="wrap py-10 md:py-14">
+        {/* Open by default; on phones the script folds each group into a tap-to-open row. */}
+        <div className="divide-y divide-line md:grid md:grid-cols-5 md:gap-x-6 md:divide-y-0">
           {footerColumns.map((col) => (
-            <div key={col.heading}>
-              <h2 className="mb-3 font-sans text-[0.8125rem] font-semibold text-ink-2">{col.heading}</h2>
-              <ul className="space-y-2.5">
+            <details key={col.heading} className="fgroup" open data-footer-group>
+              <summary className="fgroup-head">
+                <h2 className="font-sans text-[0.8125rem] font-semibold text-ink-2">{col.heading}</h2>
+                <ChevronDown className="fgroup-icon h-4 w-4 text-ink-3" aria-hidden />
+              </summary>
+              <ul className="space-y-2.5 pb-5 md:pb-0">
                 {col.links.map((l) => (
                   <li key={l.label}>
                     <a href={linkHref(l)} className="text-ink-3 hover:text-ink">
@@ -251,11 +314,11 @@ export function SiteFooter() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </details>
           ))}
         </div>
 
-        <div className="mt-12 space-y-3 border-t border-line pt-8 leading-relaxed">
+        <div className="mt-6 space-y-3 border-t border-line pt-8 leading-relaxed md:mt-12">
           <p>
             LandlordEzy is software and general information for Ontario landlords, not legal advice. Paralegal services are
             delivered by licensed Ontario paralegals. Tenant placement and MLS® listings are provided by List It Realty

@@ -79,3 +79,94 @@ export function today(): Date {
   const n = new Date()
   return new Date(n.getFullYear(), n.getMonth(), n.getDate(), 12)
 }
+
+/* ---- remembering inputs and sharing a result ------------------------------ */
+
+type Field = HTMLInputElement | HTMLSelectElement
+
+function fieldsNamed(form: HTMLFormElement, name: string): Field[] {
+  return Array.from(form.querySelectorAll<Field>(`[name="${name}"]`))
+}
+
+/** The form's current values: radios by their checked value, checkboxes as "1"/"0". */
+export function values(form: HTMLFormElement, names: string[]): Record<string, string> {
+  const out: Record<string, string> = {}
+  for (const name of names) {
+    const els = fieldsNamed(form, name)
+    const first = els[0]
+    if (!first) continue
+    if (first instanceof HTMLInputElement && first.type === 'radio') {
+      const checked = els.find((el) => (el as HTMLInputElement).checked)
+      if (checked) out[name] = checked.value
+    } else if (first instanceof HTMLInputElement && first.type === 'checkbox') {
+      out[name] = first.checked ? '1' : '0'
+    } else if (first.value) out[name] = first.value
+  }
+  return out
+}
+
+/**
+ * Fill the form from a shared link (?served=…) if there is one, otherwise from
+ * the last visit on this device. Only the calculator's own numbers and dates are
+ * kept, never anything that identifies a person.
+ */
+export function restore(form: HTMLFormElement, key: string, names: string[]) {
+  const params = new URLSearchParams(window.location.search)
+  let saved: Record<string, string> = {}
+  try {
+    saved = JSON.parse(window.localStorage.getItem(key) ?? '{}')
+  } catch {
+    saved = {}
+  }
+  const fromLink = names.some((n) => params.has(n))
+  for (const name of names) {
+    const v = fromLink ? params.get(name) : saved[name]
+    if (v == null) continue
+    for (const el of fieldsNamed(form, name)) {
+      if (el instanceof HTMLInputElement && el.type === 'radio') el.checked = el.value === v
+      else if (el instanceof HTMLInputElement && el.type === 'checkbox') el.checked = v === '1'
+      else el.value = v
+    }
+  }
+}
+
+function linkFor(form: HTMLFormElement, names: string[]): string {
+  const query = new URLSearchParams(values(form, names)).toString()
+  const page = new URL(form.dataset.toolUrl ?? window.location.pathname, window.location.href)
+  page.search = query
+  return page.href
+}
+
+/**
+ * After each change: remember the inputs on this device and, on the calculator's
+ * own page, keep the address bar pointing at this exact result.
+ */
+export function remember(form: HTMLFormElement, key: string, names: string[]) {
+  try {
+    window.localStorage.setItem(key, JSON.stringify(values(form, names)))
+  } catch {
+    /* storage unavailable */
+  }
+  const page = new URL(form.dataset.toolUrl ?? window.location.pathname, window.location.href)
+  if (page.pathname === window.location.pathname) history.replaceState(history.state, '', linkFor(form, names))
+}
+
+/** "Copy a link to this result": the clipboard where allowed, a share sheet or prompt otherwise. */
+export function setupCopy(form: HTMLFormElement, names: string[]) {
+  const button = form.querySelector<HTMLButtonElement>('[data-tool-copy]')
+  const label = button?.querySelector<HTMLElement>('[data-tool-copy-label]')
+  if (!button || !label) return
+  const original = label.textContent
+  let timer = 0
+  button.addEventListener('click', async () => {
+    const link = linkFor(form, names)
+    try {
+      await navigator.clipboard.writeText(link)
+      label.textContent = 'Link copied'
+    } catch {
+      window.prompt('Copy this link:', link)
+    }
+    window.clearTimeout(timer)
+    timer = window.setTimeout(() => (label.textContent = original), 2200)
+  })
+}

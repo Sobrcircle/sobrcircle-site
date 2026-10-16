@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react'
 import {
   ArrowRight,
-  BadgeCheck,
   BookOpenCheck,
   Building2,
   Calculator,
@@ -18,11 +17,16 @@ import {
   ShieldCheck,
   Sparkles,
   Users,
+  Wrench,
   X,
 } from 'lucide-react'
 import { site, url } from '../site'
-import { Actions, CTABand, FAQList, Heading, Section, Stat } from '../components/ui'
+import { Actions, CTABand, FAQList, Heading, Section, Stat, Voices } from '../components/ui'
+import { ChapterNav } from '../components/ChapterNav'
+import { JobChips } from '../components/JobChips'
+import { LiveRentals } from '../components/LiveRentals'
 import { homeFaqs } from '../content/faqs'
+import { voicesFor } from '../content/voices'
 import {
   CollectCard,
   DashboardScreen,
@@ -93,7 +97,6 @@ const journey: { key: string; step: string; title: string; body: string; href: s
   },
 ]
 
-
 const credentials = [
   { icon: ShieldCheck, text: 'Equifax-connected rent reporting' },
   { icon: Building2, text: 'Licensed Ontario brokerage' },
@@ -102,25 +105,46 @@ const credentials = [
   { icon: Leaf, text: 'Canadian-owned and operated' },
 ]
 
+const chapters = [
+  { id: 'overview', label: 'Overview' },
+  { id: 'how', label: 'How it works' },
+  { id: 'n4', label: 'The N4 in 60 seconds' },
+  { id: 'features', label: 'Everything included' },
+  { id: 'pricing', label: 'Pricing' },
+  { id: 'founder', label: 'Who’s behind it' },
+  { id: 'tools', label: 'Free calculators' },
+  { id: 'faq', label: 'Questions' },
+]
+
+/** On phones the visuals step aside and every tile becomes a compact, tappable card. */
 function Bento() {
-  const tile = 'tile flex flex-col overflow-hidden p-7 sm:p-9'
+  const tile = 'tile group flex flex-col overflow-hidden p-5 text-ink hover:no-underline sm:p-7 md:p-9'
+  const smallTitle = 'mt-1 text-[1rem] font-semibold leading-snug tracking-[-0.01em] md:text-title'
   return (
-    <div className="grid gap-5 md:grid-cols-6">
-      <a href={url('ezy-ai/')} className={`${tile} group text-ink hover:no-underline md:col-span-3 md:row-span-2`} data-reveal>
+    <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-6 md:gap-5">
+      <a href={url('ezy-ai/')} className={`${tile} col-span-2 md:col-span-3 md:row-span-2`} data-reveal>
+        <span className="icon-badge mb-4 md:hidden">
+          <Sparkles className="h-[22px] w-[22px]" strokeWidth={1.7} aria-hidden />
+        </span>
         <p className="eyebrow">Ezy AI</p>
-        <h3 className="mt-2 text-headline">Tell it what you need. It does the paperwork.</h3>
-        <p className="mt-3 max-w-[26rem] text-ink-3">
-          Entry notices, letters and reminders drafted from the tenancy’s real details, sent by email and text, with proof
-          they were opened.
+        <h3 className="mt-1 text-[1.125rem] font-semibold leading-snug tracking-[-0.015em] md:mt-2 md:text-headline">
+          Tell it what you need. It does the paperwork.
+        </h3>
+        <p className="mt-3 hidden max-w-[26rem] text-ink-3 md:block">
+          Entry notices, letters and reminders drafted from the tenancy’s real details, sent by email and text, with proof they
+          were opened.
         </p>
-        <div className="mt-8 flex flex-1 items-end justify-center">
+        <div className="mt-8 hidden flex-1 items-end justify-center md:flex">
           <EzyChatPhone className="w-[62%] max-w-[17rem] translate-y-10" />
         </div>
       </a>
-      <a href={url('maintenance/')} className={`${tile} group text-ink hover:no-underline md:col-span-3`} data-reveal>
+      <a href={url('maintenance/')} className={`${tile} md:col-span-3`} data-reveal>
+        <span className="icon-badge mb-4 md:hidden">
+          <Wrench className="h-[22px] w-[22px]" strokeWidth={1.7} aria-hidden />
+        </span>
         <p className="eyebrow">Maintenance</p>
-        <h3 className="mt-1 text-title">One tap sends a repair to tenant, owner and vendor.</h3>
-        <div className="mt-6 grid grid-cols-3 gap-2" aria-hidden="true">
+        <h3 className={smallTitle}>One tap sends a repair to tenant, owner and vendor.</h3>
+        <div className="mt-6 hidden grid-cols-3 gap-2 md:grid" aria-hidden="true">
           {[
             ['Tenant', 'Thu 1–3 p.m.'],
             ['Owner', 'Approved'],
@@ -133,10 +157,13 @@ function Bento() {
           ))}
         </div>
       </a>
-      <a href={url('maintenance/')} className={`${tile} group text-ink hover:no-underline md:col-span-3`} data-reveal>
+      <a href={url('maintenance/')} className={`${tile} md:col-span-3`} data-reveal>
+        <span className="icon-badge mb-4 md:hidden">
+          <Flame className="h-[22px] w-[22px]" strokeWidth={1.7} aria-hidden />
+        </span>
         <p className="eyebrow">Fire safety</p>
-        <h3 className="mt-1 text-title">Ontario Fire Code inspections from your phone.</h3>
-        <div className="mt-6 rounded-2xl bg-white p-4 shadow-card" aria-hidden="true">
+        <h3 className={smallTitle}>Ontario Fire Code inspections from your phone.</h3>
+        <div className="mt-6 hidden rounded-2xl bg-white p-4 shadow-card md:block" aria-hidden="true">
           <div className="flex items-center justify-between text-[0.8125rem]">
             <span className="flex items-center gap-2 font-semibold">
               <Flame className="h-4 w-4 text-warn" aria-hidden /> 48 Maple Ave
@@ -163,12 +190,12 @@ function Bento() {
         { href: 'property-managers/', icon: Users, eyebrow: 'Teams', title: 'Notes, @mentions and roles for your whole team.' },
         { href: 'legal-help/', icon: Landmark, eyebrow: 'Legal help', title: 'Licensed paralegals, one tap away.' },
       ].map((t) => (
-        <a key={t.title} href={url(t.href)} className={`${tile} group text-ink hover:no-underline md:col-span-2`} data-reveal>
+        <a key={t.title} href={url(t.href)} className={`${tile} md:col-span-2`} data-reveal>
           <span className="icon-badge">
             <t.icon className="h-[22px] w-[22px]" strokeWidth={1.7} aria-hidden />
           </span>
-          <p className="eyebrow mt-6">{t.eyebrow}</p>
-          <h3 className="mt-1 text-title">{t.title}</h3>
+          <p className="eyebrow mt-4 md:mt-6">{t.eyebrow}</p>
+          <h3 className={smallTitle}>{t.title}</h3>
         </a>
       ))}
     </div>
@@ -179,20 +206,31 @@ export function Home() {
   const self = landlordPlans[1]
   return (
     <>
+      <ChapterNav chapters={chapters} cta={null} />
+
       {/* ---- Hero ------------------------------------------------------- */}
-      <section data-hero className="relative overflow-hidden bg-white pb-10 pt-14 sm:pt-20">
+      <section id="overview" data-hero className="relative overflow-hidden bg-white pb-10 pt-8 sm:pt-16">
         <div className="wrap text-center">
           <p className="eyebrow">Landlord software for Ontario</p>
           <h1 className="mx-auto mt-3 max-w-[16ch] text-display-xl">Your rentals, on autopilot.</h1>
-          <p className="mx-auto mt-6 max-w-[40rem] text-lead text-ink-3">
-            Collect rent by e-Transfer, screen tenants with Equifax and serve a correct N4 in 60 seconds. One app built around
-            Ontario’s rules, with licensed paralegals behind it.
+          <p className="mx-auto mt-5 max-w-[40rem] text-lead text-ink-3">
+            Collect rent by e-Transfer, screen tenants with Equifax and serve a correct N4 in 60 seconds. Built for Ontario’s rules,
+            with licensed paralegals behind it.
           </p>
-          <div className="mt-9">
-            <Actions secondary={{ label: 'Try the live demo', href: url('demo/') }} note="Free plan · No credit card · Prices in CAD" />
+          <div className="mt-7">
+            <Actions
+              secondary={{ label: 'Try the live demo', href: url('demo/') }}
+              note={
+                <>
+                  <strong className="font-semibold text-ink-2">Free for 2 tenants</strong> · then $9.99 + $1 a door · No card · About
+                  30 seconds
+                </>
+              }
+            />
           </div>
+          <JobChips className="mx-auto mt-9 max-w-[60rem]" />
         </div>
-        <div className="wrap relative mt-14 sm:mt-16">
+        <div className="wrap relative mt-12 sm:mt-16">
           <div className="hero-rise relative mx-auto max-w-[66rem]">
             <DashboardScreen />
             <NotificationsPhone className="hero-rise-2 absolute -bottom-10 right-[-1%] w-[27%] min-w-[7.5rem] max-w-[17rem] sm:-bottom-14 md:right-[-3%]" />
@@ -201,9 +239,9 @@ export function Home() {
       </section>
 
       {/* ---- Credentials + proof ---------------------------------------- */}
-      <section aria-label="Why landlords trust LandlordEzy" className="bg-white pb-16 pt-24 sm:pb-20 sm:pt-28">
+      <section aria-label="Why landlords trust LandlordEzy" className="bg-white pb-14 pt-20 sm:pb-20 sm:pt-28">
         <div className="wrap">
-          <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-[0.9375rem] text-ink-3">
+          <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-[0.9375rem] text-ink-3">
             {credentials.map((c) => (
               <li key={c.text} className="flex items-center gap-2">
                 <c.icon className="h-[18px] w-[18px] text-brand" strokeWidth={1.8} aria-hidden />
@@ -211,7 +249,7 @@ export function Home() {
               </li>
             ))}
           </ul>
-          <div className="mx-auto mt-14 grid max-w-[60rem] grid-cols-2 gap-x-6 gap-y-10 text-center md:grid-cols-4">
+          <div className="mx-auto mt-12 grid max-w-[60rem] grid-cols-2 gap-x-6 gap-y-9 text-center md:grid-cols-4">
             <Stat value="31,700+" count={31700} label="landlords in the Ontario Landlord Help community" />
             <Stat value="23 years" label="in Ontario property management" />
             <Stat value="60 sec" label="to serve a correct N4" />
@@ -221,19 +259,35 @@ export function Home() {
       </section>
 
       {/* ---- The journey ------------------------------------------------ */}
-      <Section tone="alt" labelledBy="journey-title">
+      <Section id="how" tone="alt" labelledBy="journey-title">
         <div className="wrap">
           <Heading
             id="journey-title"
             eyebrow="One app, start to finish"
             title="The whole tenancy. One login."
-            lead="Most landlords juggle a listing site, a screening service, a lease tool, a spreadsheet, a paralegal and a forum. LandlordEzy connects every step, so nothing falls through the cracks."
+            lead="Every step shares one record, so nothing falls through the cracks."
           />
-          <div className="mt-16 space-y-6 lg:mt-20 lg:space-y-0" data-journey>
+          {/* Phones: six labelled chips over a swipeable row of steps. Laptops: the pinned scroll story. */}
+          <div className="journey-tabs no-scrollbar lg:hidden" role="group" aria-label="Jump to a step" data-journey-tabs>
+            {journey.map((s, idx) => (
+              <a
+                key={s.key}
+                href={`#journey-step-${s.key}`}
+                className="journey-tab"
+                data-journey-tab={s.key}
+                aria-current={idx === 0 ? 'step' : undefined}
+                data-track={`journey:${s.key}`}
+              >
+                <span className="journey-tab-n">{idx + 1}</span> {s.step}
+              </a>
+            ))}
+          </div>
+          <div className="journey-track mt-5 lg:mt-20" data-journey>
             {journey.map((s, idx) => (
               <article
                 key={s.key}
-                className="journey-step grid items-center gap-8 rounded-4xl bg-white p-7 shadow-card sm:p-10 lg:min-h-[64vh] lg:grid-cols-2 lg:gap-16 lg:rounded-none lg:bg-transparent lg:p-0 lg:shadow-none"
+                id={`journey-step-${s.key}`}
+                className="journey-step grid items-center gap-7 rounded-4xl bg-white p-6 shadow-card sm:p-10 lg:min-h-[64vh] lg:grid-cols-2 lg:gap-16 lg:rounded-none lg:bg-transparent lg:p-0 lg:shadow-none"
                 data-journey-step={s.key}
                 data-active={idx === 0 ? 'true' : 'false'}
                 aria-labelledby={`journey-${s.key}`}
@@ -245,11 +299,11 @@ export function Home() {
                     </span>
                     {s.step}
                   </p>
-                  <h3 id={`journey-${s.key}`} className="mt-4 text-display-md">
+                  <h3 id={`journey-${s.key}`} className="mt-3 text-display-md lg:mt-4">
                     {s.title}
                   </h3>
-                  <p className="mt-4 text-lead text-ink-3">{s.body}</p>
-                  <a href={url(s.href)} className="link-more mt-6">
+                  <p className="mt-3 text-lead text-ink-3 lg:mt-4">{s.body}</p>
+                  <a href={url(s.href)} className="link-more mt-5 lg:mt-6">
                     {s.link}
                   </a>
                 </div>
@@ -257,13 +311,14 @@ export function Home() {
               </article>
             ))}
           </div>
+          <LiveRentals className="mx-auto mt-6 lg:mt-12" />
         </div>
       </Section>
 
       {/* ---- N4 spotlight ------------------------------------------------- */}
-      <section aria-labelledby="n4-title" className="relative overflow-hidden bg-brand-ink py-24 text-white sm:py-32">
+      <section id="n4" aria-labelledby="n4-title" className="relative overflow-hidden bg-brand-ink py-20 text-white sm:py-32">
         <div className="glow-blue pointer-events-none absolute -right-40 top-10 h-[40rem] w-[40rem] opacity-70" aria-hidden />
-        <div className="wrap relative grid items-center gap-16 lg:grid-cols-[1fr_1.05fr]">
+        <div className="wrap relative grid items-center gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
           <div data-reveal>
             <p className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[0.8125rem] font-medium text-white/80">
               <Sparkles className="h-3.5 w-3.5 text-brand-glow" aria-hidden /> Bill 60-ready since September 21, 2026
@@ -287,10 +342,10 @@ export function Home() {
               )}
             </ul>
             <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-3">
-              <a href={url('notices/')} className="btn-primary">
+              <a href={url('notices/')} className="btn-primary" data-track="n4:notices">
                 See how notices work
               </a>
-              <a href={url('tools/n4-date-calculator/')} className="link-more-dark">
+              <a href={url('tools/n4-date-calculator/')} className="link-more-dark" data-track="n4:calculator">
                 Free N4 date calculator
               </a>
             </div>
@@ -300,13 +355,13 @@ export function Home() {
       </section>
 
       {/* ---- Everything else --------------------------------------------- */}
-      <Section labelledBy="more-title">
+      <Section id="features" labelledBy="more-title">
         <div className="wrap">
           <Heading id="more-title" eyebrow="And everything in between" title="Built for the work nobody sees." size="md" />
-          <div className="mt-14">
+          <div className="mt-10 md:mt-14">
             <Bento />
           </div>
-          <div className="mt-10 text-center">
+          <div className="mt-8 text-center md:mt-10">
             <a href={url('product/')} className="link-more">
               Explore every feature
             </a>
@@ -314,74 +369,39 @@ export function Home() {
         </div>
       </Section>
 
-      {/* ---- Replace six tools -------------------------------------------- */}
-      <Section tone="alt" labelledBy="replace-title">
+      <Voices items={voicesFor('')} tone="white" />
+
+      {/* ---- Pricing: the usual stack against one price -------------------- */}
+      <Section id="pricing" tone="alt" labelledBy="price-title">
         <div className="wrap">
           <Heading
-            id="replace-title"
-            eyebrow="Why landlords switch"
-            title="Six logins and six bills. Or one."
-            lead="Each of those tools does one job and none of them talk to each other. LandlordEzy shares one record across every step, so a payment updates the ledger, the ledger fills the N4, and the N4 lands in the tenant’s file."
+            id="price-title"
+            eyebrow="Pricing"
+            title="A dollar a door."
+            lead="Six logins and six bills, or one record for the whole tenancy. Start free, and pay by the door when you want the automation."
             size="md"
           />
-          <div className="mx-auto mt-14 grid max-w-[60rem] gap-5 md:grid-cols-2">
-            <div className="rounded-4xl bg-white p-8 shadow-card" data-reveal>
+          <div className="mx-auto mt-10 grid max-w-[62rem] gap-4 md:mt-12 lg:grid-cols-[1fr_1.2fr] lg:gap-5">
+            <div className="flex flex-col rounded-4xl bg-white p-7 shadow-card sm:p-8" data-reveal>
               <p className="text-[0.9375rem] font-semibold text-ink-3">The usual stack</p>
-              <ul className="mt-5 space-y-3.5">
+              <ul className="mt-4 grid gap-x-6 gap-y-2.5 text-[0.9375rem] sm:grid-cols-2 lg:grid-cols-1 lg:gap-y-3">
                 {['A listing site', 'A screening service', 'An e-signature tool', 'A rent spreadsheet', 'A paralegal for the paperwork', 'A credit-reporting service'].map(
                   (t) => (
-                    <li key={t} className="flex items-center gap-3 text-ink-3">
-                      <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-canvas-alt text-ink-4">
-                        <X className="h-3.5 w-3.5" strokeWidth={2.4} aria-hidden />
+                    <li key={t} className="flex items-center gap-2.5 text-ink-3">
+                      <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-canvas-alt text-ink-4">
+                        <X className="h-3 w-3" strokeWidth={2.4} aria-hidden />
                       </span>
                       <span className="line-through decoration-ink-4/50">{t}</span>
                     </li>
                   ),
                 )}
               </ul>
-            </div>
-            <div className="relative overflow-hidden rounded-4xl bg-brand-ink p-8 text-white shadow-float" data-reveal>
-              <div className="glow-blue pointer-events-none absolute -right-24 -top-24 h-72 w-72 opacity-60" aria-hidden />
-              <p className="relative text-[0.9375rem] font-semibold text-white/60">LandlordEzy</p>
-              <p className="relative mt-5 font-display text-[2.25rem] font-bold leading-tight tracking-[-0.03em]">
-                One login.
-                <br />
-                One record.
-                <br />
-                From $0.
+              <p className="mt-6 border-t border-line-soft pt-5 text-[0.875rem] leading-relaxed text-ink-3 lg:mt-auto">
+                Or one big suite: <a href="https://www.buildium.com/pricing/" rel="noopener">Buildium</a> starts at US$62 a month, and{' '}
+                <a href="https://www.doorloop.com/pricing" rel="noopener">DoorLoop</a>’s minimum is US$199.
               </p>
-              <ul className="relative mt-6 space-y-2.5 text-white/80">
-                {['Listings, screening, leases and rent', 'Equifax reporting and LTB notices', 'Licensed humans when you need them'].map((t) => (
-                  <li key={t} className="flex gap-3">
-                    <BadgeCheck className="mt-0.5 h-5 w-5 shrink-0 text-brand-glow" strokeWidth={1.8} aria-hidden />
-                    {t}
-                  </li>
-                ))}
-              </ul>
-              <a href={site.app.signup} className="btn-light relative mt-8">
-                Start free
-              </a>
             </div>
-          </div>
-        </div>
-      </Section>
-
-      {/* ---- Pricing teaser --------------------------------------------- */}
-      <Section labelledBy="price-title">
-        <div className="wrap">
-          <Heading id="price-title" eyebrow="Pricing" title="A dollar a door." lead="Start free. Pay by the door when you want the automation. Cancel anytime." size="md" />
-          <div className="mx-auto mt-14 grid max-w-[62rem] gap-5 lg:grid-cols-[1fr_1.25fr_1fr]">
-            <div className="flex flex-col rounded-4xl bg-canvas-alt p-8" data-reveal>
-              <p className="font-semibold">Free</p>
-              <p className="mt-4 font-display text-[3rem] font-bold leading-none tracking-[-0.035em]">$0</p>
-              <p className="mt-2 text-ink-3">Up to 2 tenants. No card.</p>
-              <div className="mt-auto pt-8">
-                <a href={site.app.signup} className="btn-secondary w-full">
-                  Start free
-                </a>
-              </div>
-            </div>
-            <div className="flex flex-col rounded-4xl bg-white p-8 shadow-float ring-2 ring-brand" data-reveal data-pricing>
+            <div className="flex flex-col rounded-4xl bg-white p-7 shadow-float ring-2 ring-brand sm:p-8" data-reveal data-pricing>
               <div className="flex items-center justify-between">
                 <p className="font-semibold">{self.name}</p>
                 <span className="chip-brand">Most popular</span>
@@ -400,20 +420,22 @@ export function Home() {
                 <input type="range" min={1} max={60} defaultValue={5} className="range" aria-label="Number of doors" />
               </label>
               <p className="mt-6 text-[0.9375rem] text-ink-3">Equifax reporting, automated N4/N1, e-lease, screening and e-Transfer rent collection.</p>
-              <a href={site.app.signup} className="btn-primary mt-7">
+              <a href={site.app.signup} className="btn-primary mt-7" data-track="start-free:pricing">
                 Start free, upgrade anytime
               </a>
-            </div>
-            <div className="flex flex-col rounded-4xl bg-canvas-alt p-8" data-reveal>
-              <p className="font-semibold">Property managers</p>
-              <p className="mt-4 font-display text-[3rem] font-bold leading-none tracking-[-0.035em]">$29.99</p>
-              <p className="mt-2 text-ink-3">+ $1 per door. Owner accounting, statements, CRM.</p>
-              <a href={url('property-managers/')} className="link-more mt-auto pt-6">
-                For property managers
-              </a>
+              <p className="mt-3 text-center text-[0.8125rem] text-ink-4">No card · Cancel anytime</p>
             </div>
           </div>
-          <div className="mt-10 text-center">
+          <div className="mx-auto mt-5 flex max-w-[62rem] flex-col gap-2 px-1 text-[0.9375rem] text-ink-3 sm:flex-row sm:justify-between">
+            <p>
+              <strong className="font-semibold text-ink-2">Free:</strong> $0 for up to 2 tenants, no card.
+            </p>
+            <p>
+              <strong className="font-semibold text-ink-2">Property managers:</strong> $29.99/month + $1 per door.{' '}
+              <a href={url('property-managers/')}>See the plans</a>
+            </p>
+          </div>
+          <div className="mt-8 text-center">
             <a href={url('pricing/')} className="link-more">
               Compare every plan
             </a>
@@ -422,9 +444,9 @@ export function Home() {
       </Section>
 
       {/* ---- Founder ------------------------------------------------------ */}
-      <Section tone="alt" labelledBy="founder-title">
+      <Section id="founder" labelledBy="founder-title">
         <div className="wrap grid items-center gap-14 lg:grid-cols-[1fr_1.2fr]">
-          <div className="relative mx-auto aspect-[4/5] w-full max-w-[24rem] overflow-hidden rounded-5xl bg-[linear-gradient(160deg,#0b1a5c_0%,#050c3b_60%,#02061f_100%)] text-white shadow-float" data-reveal="scale">
+          <div className="relative mx-auto hidden aspect-[4/5] w-full max-w-[24rem] overflow-hidden rounded-5xl bg-[linear-gradient(160deg,#0b1a5c_0%,#050c3b_60%,#02061f_100%)] text-white shadow-float lg:block" data-reveal="scale">
             <div className="glow-blue absolute inset-x-0 top-0 h-2/3 opacity-70" aria-hidden />
             <div className="relative flex h-full flex-col justify-between p-9">
               <p className="font-display text-[1.75rem] font-semibold leading-snug tracking-[-0.02em]">“We need each other.”</p>
@@ -438,20 +460,29 @@ export function Home() {
             </div>
           </div>
           <div data-reveal>
+            <div className="mb-6 flex items-center gap-4 lg:hidden">
+              <span className="inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-brand-ink font-display text-[1.125rem] font-bold text-white">
+                PR
+              </span>
+              <span>
+                <span className="block font-semibold">Paul J. Rouillard</span>
+                <span className="block text-[0.875rem] text-ink-3">Founder · Broker of Record</span>
+              </span>
+            </div>
             <p className="eyebrow">Built by a landlord</p>
             <h2 id="founder-title" className="mt-3 text-display-md">
               Made by people who’ve stood in front of the Board.
             </h2>
-            <p className="mt-6 text-lead text-ink-3">
+            <p className="mt-5 text-lead text-ink-3">
               Paul J. Rouillard collected his first rent at 14 and started his own property management company at 22. Twenty-three
               years later he’s Broker of Record at List It Realty, founder of OLH Property Management, and moderator of the
               31,700-member Ontario Landlord Help community.
             </p>
             <p className="mt-4 text-ink-3">
-              LandlordEzy is the platform he wished he’d had: built in-house by realtors, paralegals, property managers and
-              engineers working side by side, and improved almost every week from what landlords ask for.
+              LandlordEzy is the platform he wished he’d had, built in-house by realtors, paralegals, property managers and engineers.
+              The next goal is bigger: a rental credit system for Canada, where every on-time rent payment counts.
             </p>
-            <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3">
+            <div className="mt-7 flex flex-wrap gap-x-6 gap-y-3">
               <a href={url('about/')} className="link-more">
                 Our story
               </a>
@@ -464,7 +495,7 @@ export function Home() {
       </Section>
 
       {/* ---- Free tools ---------------------------------------------------- */}
-      <Section labelledBy="tools-title">
+      <Section id="tools" tone="alt" labelledBy="tools-title">
         <div className="wrap">
           <Heading
             id="tools-title"
@@ -473,21 +504,24 @@ export function Home() {
             lead="Calculators that follow the official rules, updated for Bill 60 and the 2027 guideline."
             size="md"
           />
-          <div className="mt-12 grid gap-5 md:grid-cols-3">
+          <div className="mt-10 grid gap-3 sm:gap-5 md:mt-12 md:grid-cols-3">
             {[
               { href: 'tools/n4-date-calculator/', icon: Calculator, t: 'N4 termination date', d: 'The 7-day rule, with courier and mail days added.' },
               { href: 'tools/rent-increase-calculator/', icon: PiggyBank, t: 'Rent increase', d: '1.9% for 2027, the earliest legal date and when to serve.' },
               { href: 'tools/rent-deposit-interest-calculator/', icon: Landmark, t: 'Deposit interest', d: 'Interest owed on last month’s rent, and the top-up.' },
             ].map((x) => (
-              <a key={x.t} href={url(x.href)} className="tile group flex flex-col p-8 text-ink hover:no-underline" data-reveal>
-                <span className="icon-badge">
+              <a key={x.t} href={url(x.href)} className="group flex items-center gap-4 rounded-4xl bg-white p-5 text-ink shadow-card hover:no-underline md:flex-col md:items-start md:p-8" data-reveal>
+                <span className="icon-badge shrink-0">
                   <x.icon className="h-[22px] w-[22px]" strokeWidth={1.7} aria-hidden />
                 </span>
-                <h3 className="mt-6 text-title">{x.t}</h3>
-                <p className="mt-2 text-ink-3">{x.d}</p>
-                <span className="mt-6 inline-flex items-center gap-1 text-brand-text">
+                <span className="flex-1">
+                  <span className="block font-display text-[1.125rem] font-semibold tracking-[-0.01em] md:mt-6 md:text-title">{x.t}</span>
+                  <span className="mt-1 block text-[0.9375rem] text-ink-3 md:mt-2 md:text-body">{x.d}</span>
+                </span>
+                <span className="hidden items-center gap-1 text-brand-text md:mt-6 md:inline-flex">
                   Open calculator <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
                 </span>
+                <ArrowRight className="h-5 w-5 shrink-0 text-brand md:hidden" aria-hidden />
               </a>
             ))}
           </div>
@@ -495,12 +529,12 @@ export function Home() {
       </Section>
 
       {/* ---- FAQ ------------------------------------------------------------ */}
-      <Section tone="alt" labelledBy="faq-title">
+      <Section id="faq" labelledBy="faq-title">
         <div className="wrap-content">
           <h2 id="faq-title" className="text-display-md">
             Questions, answered.
           </h2>
-          <FAQList className="mt-10" items={homeFaqs} />
+          <FAQList className="mt-8 md:mt-10" items={homeFaqs} />
           <a href={url('faq/')} className="link-more mt-8">
             More questions
           </a>
@@ -511,3 +545,4 @@ export function Home() {
     </>
   )
 }
+

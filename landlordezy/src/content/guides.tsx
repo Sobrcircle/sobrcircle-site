@@ -8,7 +8,13 @@ import type { ReactNode } from 'react'
 import { site, url } from '../site'
 import { FormTable, type FormRow } from '../components/FormTable'
 
-export type GuideSection = { id: string; title: string; body: ReactNode }
+export type GuideSection = {
+  id: string
+  title: string
+  body: ReactNode
+  /** A calculator shown right after this section. */
+  tool?: 'n4' | 'rent' | 'lmr'
+}
 export type Guide = {
   slug: string
   title: string
@@ -17,6 +23,8 @@ export type Guide = {
   dek: string
   minutes: number
   card: string
+  /** The answer in two or three sentences, shown above the guide. Omit when the first section already is one. */
+  answer?: ReactNode
   sections: GuideSection[]
   sources: { label: string; href: string }[]
 }
@@ -258,6 +266,13 @@ export const guides: Guide[] = [
     dek: 'The N4 is the first step when a tenant doesn’t pay rent. Get the amounts and the date right, serve it properly, and you can apply to the Landlord and Tenant Board the day after it expires.',
     minutes: 7,
     card: 'When you can serve it, filling in the rent table, the 7-day date, and filing the L1.',
+    answer: (
+      <>
+        Give an N4 once rent is due and unpaid. The termination date must be at least <strong>7 days</strong> after you give it,
+        plus one business day by courier or five days by mail. If the tenant pays everything owing by then, the notice is void; if
+        not, you can file an L1 the next day.
+      </>
+    ),
     sources: [
       { label: 'LTB: N4 instructions', href: official.n4Instructions },
       { label: 'Tribunals Ontario: LTB operational update, September 21, 2026', href: official.bill60Update },
@@ -343,6 +358,7 @@ export const guides: Guide[] = [
       {
         id: 'date',
         title: 'Step 2: Set the termination date',
+        tool: 'n4',
         body: (
           <>
             <p>
@@ -351,7 +367,7 @@ export const guides: Guide[] = [
               days. A courier adds one business day.
             </p>
             <p>
-              The <a href={url('tools/n4-date-calculator/')}>N4 date calculator</a> does this for you.
+              Work out yours below. The calculator applies the same rule, with courier and mail days added.
             </p>
           </>
         ),
@@ -427,6 +443,13 @@ export const guides: Guide[] = [
     dek: 'Ontario’s rent increase guideline for 2027 is 1.9%, down from 2.1% in 2026. Here’s how much you can raise the rent, when, and how to give notice.',
     minutes: 5,
     card: 'The 1.9% guideline, the N1 rules, exempt units and the deposit top-up.',
+    answer: (
+      <>
+        In 2027 you can raise most rents by up to <strong>1.9%</strong>: once every 12 months, with at least 90 days’ written
+        notice on Form N1. Units first occupied after November 15, 2018 are exempt from the guideline, but not from the notice and
+        timing rules.
+      </>
+    ),
     sources: [
       { label: 'Ontario.ca: residential rent increases', href: official.rentIncreases },
       { label: 'Residential Tenancies Act, 2006 (e-Laws)', href: official.rta },
@@ -494,12 +517,12 @@ export const guides: Guide[] = [
       {
         id: 'example',
         title: 'An example',
+        tool: 'rent',
         body: (
           <p>
             The rent is $1,950 and the last increase took effect January 1, 2026. The next increase can take effect January 1, 2027,
             at up to 1.9%: a new rent of $1,987.05, or $37.05 more a month. Served by hand, the N1 must reach the tenant by October 3,
-            2026, or by September 28 if you mail it. The <a href={url('tools/rent-increase-calculator/')}>rent increase calculator</a>{' '}
-            works this out for any tenancy.
+            2026, or by September 28 if you mail it. Work out any tenancy below.
           </p>
         ),
       },
@@ -546,6 +569,13 @@ export const guides: Guide[] = [
     dek: 'Every Landlord and Tenant Board form a landlord is likely to meet, what it’s for, and how it’s filed. Updated for the forms that changed on September 21, 2026.',
     minutes: 8,
     card: 'Every N, L, T and A form in one place, with what it’s for and how to file it.',
+    answer: (
+      <>
+        Use the current forms: the N5, N6, N8, N12, N13, L1, L2, L9, L10 and T5 changed on September 21, 2026, and old versions
+        stop being accepted on <strong>November 30, 2026</strong>. Notices go to the other side; applications are filed with the
+        Board, most of them online through the Tribunals Ontario Portal.
+      </>
+    ),
     sources: [
       { label: 'Tribunals Ontario: forms, filing and fees', href: official.ltbForms },
       { label: 'Tribunals Ontario: LTB operational update, September 21, 2026', href: official.bill60Update },
@@ -565,11 +595,11 @@ export const guides: Guide[] = [
           </p>
         ),
       },
-      { id: 'landlord-notices', title: 'Notices a landlord gives', body: <FormTable rows={landlordNotices} /> },
-      { id: 'tenant-notices', title: 'Notices a tenant gives', body: <FormTable rows={tenantNotices} /> },
-      { id: 'landlord-applications', title: 'Landlord applications', body: <FormTable rows={landlordApplications} filing /> },
-      { id: 'tenant-applications', title: 'Tenant applications', body: <FormTable rows={tenantApplications} filing /> },
-      { id: 'either', title: 'Applications either side can file', body: <FormTable rows={otherApplications} filing /> },
+      { id: 'landlord-notices', title: 'Notices a landlord gives', body: <FormTable rows={landlordNotices} label="Notices a landlord gives" /> },
+      { id: 'tenant-notices', title: 'Notices a tenant gives', body: <FormTable rows={tenantNotices} label="Notices a tenant gives" /> },
+      { id: 'landlord-applications', title: 'Landlord applications', body: <FormTable rows={landlordApplications} label="Landlord applications" filing /> },
+      { id: 'tenant-applications', title: 'Tenant applications', body: <FormTable rows={tenantApplications} label="Tenant applications" filing /> },
+      { id: 'either', title: 'Applications either side can file', body: <FormTable rows={otherApplications} label="Applications either side can file" filing /> },
       {
         id: 'tips',
         title: 'Before you file',

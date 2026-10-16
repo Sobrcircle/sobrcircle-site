@@ -21,6 +21,7 @@ import {
   Leaf,
 } from 'lucide-react'
 import { site, url } from '../site'
+import { JobChips } from '../components/JobChips'
 import { CheckList, CTABand, FAQList, FeatureTile, Fine, Heading, Section, Steps } from '../components/ui'
 import { demoFaqs, faqGroups } from '../content/faqs'
 import { DashboardScreen } from '../components/mocks/screens'
@@ -488,6 +489,7 @@ export function NotFound() {
             </a>
           ))}
         </div>
+        <JobChips className="mx-auto mt-12 max-w-[60rem] text-left" heading="Or start with what you came to do" />
       </div>
     </section>
   )

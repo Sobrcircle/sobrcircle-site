@@ -1,4 +1,6 @@
-import { addDays, fmtDate, nextBusinessDay, parseDate, set, show, today, toInputValue } from './shared'
+import { addDays, fmtDate, nextBusinessDay, parseDate, remember, restore, set, setupCopy, show, today, toInputValue } from './shared'
+
+const FIELDS = ['served', 'method']
 
 /** Bill 60: N4s given on or after this date use the 7-day minimum. */
 const BILL_60 = new Date(2026, 8, 21, 12)
@@ -22,6 +24,7 @@ export function mount() {
   const form = document.querySelector<HTMLFormElement>('[data-tool="n4"]')
   if (!form) return
   const date = form.querySelector<HTMLInputElement>('input[name="served"]')!
+  restore(form, 'le-tool-n4', FIELDS)
   if (!date.value) date.value = toInputValue(today())
 
   const run = () => {
@@ -46,8 +49,13 @@ export function mount() {
     )
     show(form, 'old-rule', r.days === 14)
   }
-  form.addEventListener('input', run)
-  form.addEventListener('change', run)
+  const changed = () => {
+    run()
+    remember(form, 'le-tool-n4', FIELDS)
+  }
+  form.addEventListener('input', changed)
+  form.addEventListener('change', changed)
   form.addEventListener('submit', (e) => e.preventDefault())
+  setupCopy(form, FIELDS)
   run()
 }

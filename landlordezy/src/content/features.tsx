@@ -64,6 +64,10 @@ export type Feature = {
   title: string
   description: string
   eyebrow: string
+  /** The job a visitor arrives with, asked as a question above the headline. */
+  job: string
+  /** The price, in one line, for the first screen. */
+  priceLine: string
   h1: string
   lead: string
   visual: Visual
@@ -90,6 +94,8 @@ export const features: Feature[] = [
     description:
       'Tenants keep paying by Interac e-Transfer. LandlordEzy matches each payment, updates the ledger, sends the receipt and flags arrears. No processing fees.',
     eyebrow: 'Rent collection',
+    job: 'Tired of matching e-Transfers?',
+    priceLine: 'Included in Self Management: $9.99/month + $1 a door · Free for 2 tenants',
     h1: 'Rent that reconciles itself.',
     lead: 'Tenants keep paying by Interac e-Transfer, exactly as they do today. LandlordEzy reads each deposit notice, matches it to the right tenant and month, and sends the receipt. Your money never leaves your bank.',
     visual: 'ledger',
@@ -150,6 +156,8 @@ export const features: Feature[] = [
     description:
       'Free pre-screening, then a real Equifax credit report read by AI from $29.99. Identity checks, bank-statement analysis and a clear verdict. Tenant can pay.',
     eyebrow: 'Tenant screening',
+    job: 'Choosing between applicants?',
+    priceLine: 'Pre-screening free · Equifax credit check $29.99 · The applicant can pay',
     h1: 'Know who you’re renting to.',
     lead: 'Start with a free pre-screening link. When you’re ready, run a real Equifax credit report with AI that reads the documents, checks identity and gives you a clear recommendation, from $29.99.',
     visual: 'screening',
@@ -210,6 +218,8 @@ export const features: Feature[] = [
     description:
       'Report on-time rent to Equifax so good tenants build credit and everyone has a reason to pay on the first. Consent handled for you. Included in Self Management.',
     eyebrow: 'Rent reporting',
+    job: 'Want rent paid on the first?',
+    priceLine: 'Included in Self Management: $9.99/month + $1 a door',
     h1: 'Reward the tenants who pay on time.',
     lead: 'Rent is most tenants’ biggest monthly bill, yet it rarely shows up on a credit file. LandlordEzy reports it to Equifax every month, so on-time tenants build credit and every tenant has a reason to pay on the first.',
     visual: 'reporting',
@@ -267,6 +277,8 @@ export const features: Feature[] = [
     description:
       'Serve a correct Ontario N4 in under a minute: filled from your ledger, with the 7-day termination date and a certificate of service. Automate N1 rent increases too.',
     eyebrow: 'Notices & LTB forms',
+    job: 'Tenant hasn’t paid?',
+    priceLine: 'N4 and N1 included in Self Management: $9.99/month + $1 a door',
     h1: 'The N4, in 60 seconds.',
     lead: 'LandlordEzy fills the N4 from your rent ledger, calculates the arrears and the 7-day termination date, and generates the Certificate of Service. No drafting, no arithmetic, no paralegal bill for the paperwork.',
     visual: 'n4',
@@ -322,6 +334,8 @@ export const features: Feature[] = [
     description:
       'Create the Ontario Standard Lease, check it with AI and e-sign with your tenant from any device. Add photo move-in inspections your tenant approves.',
     eyebrow: 'Leases & inspections',
+    job: 'New tenant moving in?',
+    priceLine: 'E-lease included in Self Management: $9.99/month + $1 a door · Inspections on every plan',
     h1: 'Sign the Ontario lease from anywhere.',
     lead: 'Build the Ontario Standard Lease in minutes, let AI check it for missing details, and collect signatures on any device. Then document the unit with a move-in inspection your tenant approves.',
     visual: 'lease',
@@ -376,6 +390,8 @@ export const features: Feature[] = [
     description:
       'List your vacancy free on EzyRent with pre-screening and self-booked showings, or go on REALTOR.ca for a flat $549 + HST with a Legal Guarantee included.',
     eyebrow: 'Listings & tenant placement',
+    job: 'Unit sitting empty?',
+    priceLine: 'EzyRent listings free on every plan · Flat-fee MLS® from $549 + HST',
     h1: 'Fill your vacancy faster.',
     lead: 'With more vacancies on the market, speed matters. List free on EzyRent and meet only pre-screened renters, or put your unit on REALTOR.ca and the MLS® system for one flat fee.',
     visual: 'listing',
@@ -424,6 +440,8 @@ export const features: Feature[] = [
     description:
       'Turn a repair request into a coordinated job in one tap, run Ontario Fire Code inspections from your phone, and scan receipts with AI. For landlords and managers.',
     eyebrow: 'Maintenance & compliance',
+    job: 'Something needs fixing?',
+    priceLine: 'Included in Self Management: $9.99/month + $1 a door',
     h1: 'Repairs, dispatched in one tap.',
     lead: 'A tenant reports a leak. You tick three boxes: ask for their availability, get the owner’s approval, assign a vendor. LandlordEzy notifies everyone with one shared link, tracks photos and costs, and posts the bill.',
     visual: 'maintenance',
@@ -465,6 +483,8 @@ export const features: Feature[] = [
     description:
       'Tell Ezy what you need. It drafts the notice or letter from the tenancy’s real details, sends it by email and text, and shows you when the tenant opens it.',
     eyebrow: 'Ezy AI',
+    job: 'Need a notice or a letter?',
+    priceLine: 'Ezy AI: $29.99/month + $1 a door · 3 free drafts a month with Self Management',
     h1: 'Tell it what you need.',
     lead: 'Ezy lives on every tenant profile and already knows the tenancy. Ask in plain English and it drafts the notice or letter, sends it by email and text, and shows you the moment it’s opened.',
     visual: 'ezy',
@@ -506,6 +526,8 @@ export const features: Feature[] = [
     description:
       'A free 15-minute call with a licensed Ontario paralegal team, hands-off VirtualPM Legal Shield, a Legal Guarantee on placements, and CaseBuilder for LTB hearings.',
     eyebrow: 'Legal help',
+    job: 'Heading to the Board?',
+    priceLine: 'Free 15-minute call · Paralegal time $75 an hour · Legal Shield from $49 a month',
     h1: 'A paralegal team, one tap away.',
     lead: 'Software handles the routine. When a tenancy turns into a Landlord and Tenant Board matter, LandlordEzy connects you with licensed Ontario paralegals who handle these files every day.',
     visual: 'casebuilder',

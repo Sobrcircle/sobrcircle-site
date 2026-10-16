@@ -1,6 +1,7 @@
 import type { ComponentType, ReactNode, SVGProps } from 'react'
 import { Check, Plus } from 'lucide-react'
 import { site, url } from '../site'
+import type { Voice } from '../content/voices'
 
 export type IconType = ComponentType<SVGProps<SVGSVGElement> & { strokeWidth?: number }>
 
@@ -93,12 +94,12 @@ export function Actions({
     <div className={align === 'center' ? 'text-center' : ''}>
       <div className={`flex flex-wrap items-center gap-x-6 gap-y-3 ${align === 'center' ? 'justify-center' : ''}`}>
         {primary && (
-          <a href={primary.href} className="btn-primary">
+          <a href={primary.href} className="btn-primary" data-track="start-free:hero">
             {primary.label}
           </a>
         )}
         {secondary && (
-          <a href={secondary.href} className={dark ? 'link-more-dark' : 'link-more'}>
+          <a href={secondary.href} className={dark ? 'link-more-dark' : 'link-more'} data-track="secondary:hero">
             {secondary.label}
           </a>
         )}
@@ -224,10 +225,10 @@ export function CTABand({
         <h2 className="text-display-lg !text-white">{title}</h2>
         <p className="mx-auto mt-5 max-w-[36rem] text-lead text-white/70">{lead}</p>
         <div className="mt-9 flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
-          <a href={site.app.signup} className="btn-primary btn-lg">
+          <a href={site.app.signup} className="btn-primary btn-lg" data-track="start-free:cta-band">
             Start free
           </a>
-          <a href={secondary.href} className="link-more-dark">
+          <a href={secondary.href} className="link-more-dark" data-track="secondary:cta-band">
             {secondary.label}
           </a>
         </div>
@@ -237,35 +238,32 @@ export function CTABand({
   )
 }
 
-export function LocalNav({
-  title,
-  links,
-  cta = { label: 'Start free', href: site.app.signup },
-}: {
-  title: string
-  links: { label: string; href: string }[]
-  cta?: { label: string; href: string }
-}) {
+/**
+ * Real customers, in their own words (content/voices.ts). Renders nothing until
+ * a permissioned quote exists for this page, so the site never shows a made-up
+ * testimonial or an empty box.
+ */
+export function Voices({ items, tone = 'white' }: { items: Voice[]; tone?: 'white' | 'alt' }) {
+  if (!items.length) return null
   return (
-    <div className="lnav" data-lnav>
-      <div className="wrap flex h-[52px] items-center justify-between gap-4">
-        <p className="truncate font-display text-[1.1875rem] font-semibold tracking-[-0.015em] sm:text-[1.3125rem]">{title}</p>
-        <div className="flex items-center gap-1">
-          <ul className="no-scrollbar hidden items-center gap-1 overflow-x-auto md:flex">
-            {links.map((l) => (
-              <li key={l.href}>
-                <a href={l.href} className="rounded-full px-3 py-1.5 text-[0.75rem] text-ink-2 hover:text-ink">
-                  {l.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-          <a href={cta.href} className="btn-primary btn-sm ml-2 !min-h-[28px] !px-3 !text-[0.75rem]">
-            {cta.label}
-          </a>
+    <Section tone={tone} tight labelledBy="voices-title">
+      <div className="wrap">
+        <h2 id="voices-title" className="text-center text-headline">
+          From Ontario landlords
+        </h2>
+        <div className={`mx-auto mt-10 grid max-w-[62rem] gap-5 ${items.length > 1 ? 'md:grid-cols-2 lg:grid-cols-3' : ''}`}>
+          {items.map((v) => (
+            <figure key={v.quote} className={`${tone === 'alt' ? 'bg-white' : 'bg-canvas-alt'} flex flex-col rounded-4xl p-7`} data-reveal>
+              <blockquote className="text-[1.0625rem] leading-relaxed text-ink">“{v.quote}”</blockquote>
+              <figcaption className="mt-5 text-[0.875rem] text-ink-3">
+                <span className="font-semibold text-ink-2">{v.name}</span> · {v.place}
+                {v.doors ? ` · ${v.doors} ${v.doors === 1 ? 'door' : 'doors'}` : ''}
+              </figcaption>
+            </figure>
+          ))}
         </div>
       </div>
-    </div>
+    </Section>
   )
 }
 

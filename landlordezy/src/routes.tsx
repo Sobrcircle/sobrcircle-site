@@ -73,6 +73,8 @@ const guideRoutes: Route[] = guides.map((g) => ({
     { name: 'Guides', path: 'guides/' },
     { name: g.h1, path: `guides/${g.slug}/` },
   ],
+  // The visible trail is drawn by the guide itself, under its chapter bar.
+  hideCrumbs: true,
   schema: guideSchema(g.slug),
   ogImage: `og/guide-${g.slug}.png`,
   ogType: 'article',

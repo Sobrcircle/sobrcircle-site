@@ -2,19 +2,30 @@ import { Smartphone, Laptop, Tablet, Download } from 'lucide-react'
 import { site, url } from '../site'
 import { features } from '../content/features'
 import { Actions, CTABand, Heading, Section } from '../components/ui'
+import { ChapterNav } from '../components/ChapterNav'
+import { JobChips } from '../components/JobChips'
 import { DashboardScreen, TenantPortalPhone } from '../components/mocks/screens'
 
-const groups: { title: string; lead: string; slugs: string[] }[] = [
-  { title: 'Fill and screen', lead: 'Find the right tenant, faster.', slugs: ['listings', 'tenant-screening'] },
-  { title: 'Sign and collect', lead: 'Paperwork and payments that run themselves.', slugs: ['leases', 'rent-collection', 'rent-reporting'] },
-  { title: 'Protect and maintain', lead: 'Stay compliant and keep the place in shape.', slugs: ['notices', 'maintenance', 'legal-help'] },
-  { title: 'Work smarter', lead: 'An assistant on every tenant profile.', slugs: ['ezy-ai'] },
+const groups: { id: string; title: string; lead: string; slugs: string[] }[] = [
+  { id: 'fill', title: 'Fill and screen', lead: 'Find the right tenant, faster.', slugs: ['listings', 'tenant-screening'] },
+  { id: 'collect', title: 'Sign and collect', lead: 'Paperwork and payments that run themselves.', slugs: ['leases', 'rent-collection', 'rent-reporting'] },
+  { id: 'protect', title: 'Protect and maintain', lead: 'Stay compliant and keep the place in shape.', slugs: ['notices', 'maintenance', 'legal-help'] },
+  { id: 'smarter', title: 'Work smarter', lead: 'An assistant on every tenant profile.', slugs: ['ezy-ai'] },
 ]
 
 export function Product() {
   return (
     <>
-      <section data-hero className="overflow-hidden bg-white pb-16 pt-14 sm:pt-20">
+      <ChapterNav
+        title="Product"
+        chapters={[
+          { id: 'overview', label: 'Overview' },
+          ...groups.map((g) => ({ id: g.id, label: g.title })),
+          { id: 'devices', label: 'Every screen' },
+          { id: 'ontario', label: 'Built for Ontario' },
+        ]}
+      />
+      <section id="overview" data-hero className="overflow-hidden bg-white pb-14 pt-10 sm:pb-16 sm:pt-20">
         <div className="wrap text-center">
           <p className="eyebrow">The LandlordEzy platform</p>
           <h1 className="mx-auto mt-3 max-w-[18ch] text-display-xl">Everything you do as a landlord. In one place.</h1>
@@ -23,8 +34,16 @@ export function Product() {
             lease, rent, reporting and notices.
           </p>
           <div className="mt-9">
-            <Actions secondary={{ label: 'See pricing', href: url('pricing/') }} note="Free plan · No credit card" />
+            <Actions
+              secondary={{ label: 'See pricing', href: url('pricing/') }}
+              note={
+                <>
+                  <strong className="font-semibold text-ink-2">Free for 2 tenants</strong> · then $9.99 + $1 a door · No card
+                </>
+              }
+            />
           </div>
+          <JobChips className="mx-auto mt-9 max-w-[60rem]" heading="Start with the job in front of you" />
         </div>
         <div className="wrap mt-16">
           <div className="hero-rise mx-auto max-w-[64rem]">
@@ -34,7 +53,7 @@ export function Product() {
       </section>
 
       {groups.map((g, gi) => (
-        <Section key={g.title} tone={gi % 2 === 0 ? 'alt' : 'white'} labelledBy={`g-${gi}`}>
+        <Section key={g.title} id={g.id} tone={gi % 2 === 0 ? 'alt' : 'white'} labelledBy={`g-${gi}`}>
           <div className="wrap">
             <Heading id={`g-${gi}`} title={g.title} lead={g.lead} size="md" align="left" />
             <div className={`mt-10 grid gap-5 ${g.slugs.length === 1 ? 'md:grid-cols-1' : g.slugs.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'}`}>
@@ -67,7 +86,7 @@ export function Product() {
         </Section>
       ))}
 
-      <Section tone="dark" labelledBy="devices-title">
+      <Section id="devices" tone="dark" labelledBy="devices-title">
         <div className="wrap grid items-center gap-14 lg:grid-cols-[1.1fr_auto]">
           <div data-reveal>
             <p className="eyebrow-dark">On every screen</p>
@@ -96,7 +115,7 @@ export function Product() {
         </div>
       </Section>
 
-      <Section labelledBy="ontario-title">
+      <Section id="ontario" labelledBy="ontario-title">
         <div className="wrap-content text-center">
           <p className="eyebrow">Built for Ontario’s rules</p>
           <h2 id="ontario-title" className="mx-auto mt-3 max-w-[22ch] text-display-md">

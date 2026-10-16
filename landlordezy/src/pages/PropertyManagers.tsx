@@ -10,10 +10,11 @@ import {
   Users,
 } from 'lucide-react'
 import { site, url } from '../site'
-import { Actions, CheckList, CTABand, FAQList, FeatureTile, Fine, Heading, LocalNav, Section, Steps } from '../components/ui'
+import { CheckList, CTABand, FAQList, FeatureTile, Fine, Heading, Section, Steps } from '../components/ui'
+import { ChapterNav } from '../components/ChapterNav'
 import { pmFaqs } from '../content/faqs'
 import { MaintenanceScreen, OwnerStatementScreen } from '../components/mocks/screens'
-import { pmPlans } from '../content/pricing'
+import { monthly, pmPlans } from '../content/pricing'
 
 
 export function PropertyManagers() {
@@ -21,28 +22,38 @@ export function PropertyManagers() {
   const growth = pmPlans[2]
   return (
     <>
-      <LocalNav
+      <ChapterNav
         title="For property managers"
-        links={[
-          { label: 'Overview', href: '#overview' },
-          { label: 'Owners', href: '#owners' },
-          { label: 'Growth', href: '#growth' },
-          { label: 'Plans', href: '#plans' },
-          { label: 'FAQ', href: '#faq' },
+        chapters={[
+          { id: 'overview', label: 'Overview' },
+          { id: 'owners', label: 'Owners' },
+          { id: 'growth', label: 'CRM' },
+          { id: 'operations', label: 'Operations' },
+          { id: 'switch', label: 'Switching' },
+          { id: 'plans', label: 'Plans' },
+          { id: 'faq', label: 'Questions' },
         ]}
-        cta={{ label: 'Start free', href: site.app.signup }}
       />
-      <section id="overview" data-hero className="overflow-hidden bg-white pb-16 pt-14 sm:pt-20">
+      <section id="overview" data-hero className="overflow-hidden bg-white pb-14 pt-10 sm:pb-16 sm:pt-20">
         <div className="wrap text-center">
           <p className="eyebrow">For property management companies</p>
           <h1 className="mx-auto mt-3 max-w-[16ch] text-display-xl">Win the door. Then run it beautifully.</h1>
           <p className="mx-auto mt-6 max-w-[42rem] text-lead text-ink-3">
-            Canadian property management software built by a company that manages hundreds of Ontario doors itself: owner
-            accounting and statements, a CRM that wins clients, and the Ontario legal tools in one team login.
+            Bring your whole book over in minutes: AI imports owners, units, tenants and leases from Buildium, AppFolio, Yardi or a
+            spreadsheet. Then run owner accounting, statements, a CRM that wins clients and Ontario’s legal tools from one team login.
           </p>
-          <div className="mt-9">
-            <Actions secondary={{ label: 'Try the live demo', href: url('demo/') }} note="Free to start · $29.99/month + $1/door for full management" />
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <a href={site.app.signup} className="btn-primary" data-track="start-free:hero">
+              Start free
+            </a>
+            <a href={site.app.book} className="btn-secondary" data-track="book-call:pm-hero">
+              Book a call
+            </a>
           </div>
+          <p className="mt-4 text-[0.8125rem] text-ink-4">
+            <strong className="font-semibold text-ink-2">Free to start</strong> · $29.99/month + $1 a door for full management ·{' '}
+            <a href={url('demo/')}>Try the live demo</a>
+          </p>
         </div>
         <div className="wrap mt-16">
           <div className="hero-rise mx-auto max-w-[64rem]">
@@ -124,7 +135,7 @@ export function PropertyManagers() {
         </div>
       </Section>
 
-      <Section tone="alt" labelledBy="ops-title">
+      <Section id="operations" tone="alt" labelledBy="ops-title">
         <div className="wrap grid items-center gap-14 lg:grid-cols-[1.1fr_1fr]">
           <MaintenanceScreen className="mx-auto w-full max-w-[32rem]" />
           <div data-reveal>
@@ -143,7 +154,7 @@ export function PropertyManagers() {
         </div>
       </Section>
 
-      <Section labelledBy="switch-title">
+      <Section id="switch" labelledBy="switch-title">
         <div className="wrap">
           <Heading
             id="switch-title"
@@ -191,6 +202,35 @@ export function PropertyManagers() {
                 </a>
               </div>
             ))}
+          </div>
+          <div className="mx-auto mt-6 max-w-[62rem] overflow-hidden rounded-4xl bg-white shadow-card" data-reveal>
+            <table className="w-full text-left text-[0.9375rem]">
+              <caption className="px-4 pb-1 pt-5 text-left font-semibold text-ink sm:px-8">What you’d pay a month</caption>
+              <thead>
+                <tr className="border-b border-line">
+                  <th scope="col" className="whitespace-nowrap px-4 py-3 font-semibold text-ink-3 sm:px-8">
+                    Doors
+                  </th>
+                  <th scope="col" className="whitespace-nowrap px-4 py-3 text-right font-semibold sm:px-8">
+                    {manage.name}
+                  </th>
+                  <th scope="col" className="whitespace-nowrap px-4 py-3 text-right font-semibold sm:px-8">
+                    {growth.name}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {[50, 100, 250].map((d) => (
+                  <tr key={d} className="border-b border-line-soft last:border-0">
+                    <th scope="row" className="whitespace-nowrap px-4 py-3.5 font-normal text-ink-2 sm:px-8">
+                      {d} doors
+                    </th>
+                    <td className="whitespace-nowrap px-4 py-3.5 text-right font-semibold tabular-nums sm:px-8">{monthly(manage.base, manage.perDoor, d)}</td>
+                    <td className="whitespace-nowrap px-4 py-3.5 text-right font-semibold tabular-nums sm:px-8">{monthly(growth.base, growth.perDoor, d)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
           <Fine className="mt-8 text-center">
             PM Free costs nothing and includes unlimited owners, properties and units. Prices in CAD, plus HST.{' '}

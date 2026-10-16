@@ -1,4 +1,6 @@
-import { GUIDELINES, money, roundCents, set, show } from './shared'
+import { GUIDELINES, money, remember, restore, roundCents, set, setupCopy, show } from './shared'
+
+const FIELDS = ['deposit', 'year', 'newrent']
 
 /**
  * Last month's rent deposit interest (RTA s.106). Each year the landlord owes
@@ -22,6 +24,7 @@ export function mount() {
   const form = document.querySelector<HTMLFormElement>('[data-tool="lmr"]')
   if (!form) return
   const f = (n: string) => form.querySelector<HTMLInputElement | HTMLSelectElement>(`[name="${n}"]`)!
+  restore(form, 'le-tool-lmr', FIELDS)
 
   const run = () => {
     const deposit = Number(f('deposit').value)
@@ -43,8 +46,13 @@ export function mount() {
     show(form, 'has-gap', r.gap > 0)
     show(form, 'no-gap', r.gap === 0)
   }
-  form.addEventListener('input', run)
-  form.addEventListener('change', run)
+  const changed = () => {
+    run()
+    remember(form, 'le-tool-lmr', FIELDS)
+  }
+  form.addEventListener('input', changed)
+  form.addEventListener('change', changed)
   form.addEventListener('submit', (e) => e.preventDefault())
+  setupCopy(form, FIELDS)
   run()
 }

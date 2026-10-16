@@ -9,7 +9,8 @@
  *      as real HTML (fast first paint, fully crawlable); React never runs in the browser.
  *   2. Hand those HTML files to Vite, which compiles Tailwind, bundles the small
  *      progressive-enhancement script in src/client, and fingerprints both.
- *   3. Production only: write sitemap.xml, robots.txt, _redirects and _headers.
+ *   3. Write search-index.json for the Menu sheet's search (both modes).
+ *   4. Production only: write sitemap.xml, robots.txt, _redirects and _headers.
  */
 import { mkdir, rm, writeFile, readdir, stat } from 'node:fs/promises'
 import path from 'node:path'
@@ -31,6 +32,7 @@ const { routes, notFound } = await import('../src/routes')
 const { renderDocument } = await import('../src/document')
 const { Layout } = await import('../src/components/Layout')
 const { productionExtras } = await import('./production-extras')
+const { searchIndex } = await import('../src/content/search')
 
 async function writeRoute(route: (typeof routes)[number], file: string) {
   const body = renderToStaticMarkup(
@@ -78,6 +80,7 @@ await build({
   },
 })
 
+await writeFile(path.join(OUT, 'search-index.json'), JSON.stringify(searchIndex(routes)))
 if (production) await productionExtras(OUT, routes)
 
 const kb = Math.round((await sizeOf(OUT)) / 1024)

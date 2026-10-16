@@ -2,12 +2,22 @@ import { ArrowRight, BookOpen, Calculator, LifeBuoy, PlayCircle, Scale, Messages
 import { site, url } from '../site'
 import { guideBySlug, guides } from '../content/guides'
 import { CTABand, Fine, Section } from '../components/ui'
+import { ChapterNav } from '../components/ChapterNav'
+import { Breadcrumbs } from '../components/Chrome'
+import { LmrForm, N4Form, RentForm } from '../components/ToolForms'
 
 export function GuideArticle({ slug }: { slug: string }) {
   const g = guideBySlug(slug)
   const others = guides.filter((x) => x.slug !== slug)
   return (
     <>
+      <ChapterNav chapters={g.sections.map((s) => ({ id: s.id, label: s.title }))} mode="label" cta={null} />
+      <Breadcrumbs
+        trail={[
+          { name: 'Guides', path: 'guides/' },
+          { name: g.h1, path: `guides/${g.slug}/` },
+        ]}
+      />
       <article className="bg-white pb-16 pt-8 sm:pt-12" aria-labelledby="guide-title">
         <header data-hero className="wrap-content">
           <p className="eyebrow">Ontario landlord guide</p>
@@ -24,28 +34,29 @@ export function GuideArticle({ slug }: { slug: string }) {
             <span aria-hidden>·</span>
             <span>LandlordEzy team</span>
           </p>
+          {g.answer && (
+            <div className="mt-8 max-w-[42rem] rounded-3xl bg-brand-soft p-6 sm:p-7">
+              <p className="text-[0.875rem] font-semibold text-brand-text">The short answer</p>
+              <p className="mt-2 text-[1.0625rem] leading-relaxed text-ink">{g.answer}</p>
+            </div>
+          )}
         </header>
 
-        <div className="wrap-content mt-12 grid gap-12 lg:grid-cols-[1fr_15rem]">
+        <div className="wrap-content mt-6 grid gap-12 lg:mt-10 lg:grid-cols-[1fr_15rem]">
           <div className="min-w-0">
-            <details className="mb-10 rounded-3xl bg-canvas-alt p-5 lg:hidden">
-              <summary className="font-semibold">On this page</summary>
-              <ol className="mt-3 space-y-2 text-[0.9375rem]">
-                {g.sections.map((s) => (
-                  <li key={s.id}>
-                    <a href={`#${s.id}`}>{s.title}</a>
-                  </li>
-                ))}
-              </ol>
-            </details>
-            <div className="prose-le max-w-[42rem]">
-              {g.sections.map((s) => (
-                <section key={s.id} id={s.id} aria-labelledby={`${s.id}-h`}>
+            {g.sections.map((s) => (
+              <section key={s.id} id={s.id} aria-labelledby={`${s.id}-h`}>
+                <div className="prose-le max-w-[42rem]">
                   <h2 id={`${s.id}-h`}>{s.title}</h2>
                   {s.body}
-                </section>
-              ))}
-            </div>
+                </div>
+                {s.tool && (
+                  <div className="mt-8">
+                    {s.tool === 'n4' ? <N4Form /> : s.tool === 'rent' ? <RentForm /> : <LmrForm />}
+                  </div>
+                )}
+              </section>
+            ))}
 
             <aside className="mt-14 max-w-[42rem] rounded-4xl bg-brand-ink p-8 text-white sm:p-9" aria-labelledby="next-h">
               <h2 id="next-h" className="text-title !text-white">
@@ -56,7 +67,7 @@ export function GuideArticle({ slug }: { slug: string }) {
                 start.
               </p>
               <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
-                <a href={site.app.signup} className="btn-light">
+                <a href={site.app.signup} className="btn-light" data-track="start-free:guide">
                   Start free
                 </a>
                 <a href={url('notices/')} className="link-more-dark">
@@ -84,13 +95,13 @@ export function GuideArticle({ slug }: { slug: string }) {
             </div>
           </div>
 
-          <nav aria-label="On this page" className="hidden lg:block">
-            <div className="sticky top-[calc(var(--nav-h)+2rem)]">
-              <p className="text-[0.8125rem] font-semibold text-ink-3">On this page</p>
+          <nav aria-label="Guide contents" className="hidden lg:block">
+            <div className="sticky top-[calc(var(--nav-h)+4.5rem)]">
+              <p className="text-[0.8125rem] font-semibold text-ink-3">In this guide</p>
               <ol className="mt-3 space-y-2.5 border-l border-line pl-4 text-[0.875rem]">
                 {g.sections.map((s) => (
                   <li key={s.id}>
-                    <a href={`#${s.id}`} className="text-ink-2 hover:text-brand">
+                    <a href={`#${s.id}`} className="toc-link" data-toc-link={s.id}>
                       {s.title}
                     </a>
                   </li>

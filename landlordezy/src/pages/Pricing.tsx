@@ -1,6 +1,7 @@
-import { Check, Minus } from 'lucide-react'
+import { Check, ChevronDown, Minus, Phone } from 'lucide-react'
 import { site, url } from '../site'
 import { CheckList, CTABand, FAQList, Fine, Heading, Section } from '../components/ui'
+import { ChapterNav } from '../components/ChapterNav'
 import { pricingFaqs } from '../content/faqs'
 import { addOns, landlordPlans, monthly, pmPlans, virtualPm, type Plan } from '../content/pricing'
 
@@ -35,9 +36,10 @@ function PlanCard({ plan, doors }: { plan: Plan; doors: number }) {
           'Free forever · no card needed'
         )}
       </p>
-      <a href={site.app.signup} className={`${plan.popular ? 'btn-primary' : 'btn-secondary'} mt-7`}>
+      <a href={site.app.signup} className={`${plan.popular ? 'btn-primary' : 'btn-secondary'} mt-7`} data-track={`start-free:plan:${plan.id}`}>
         {plan.cta}
       </a>
+      {paid && <p className="mt-3 text-center text-[0.8125rem] text-ink-4">No card to start · Cancel anytime</p>}
       <p className="mt-8 text-[0.9375rem] font-semibold text-ink">{plan.intro}</p>
       <CheckList className="mt-4 text-[0.9375rem]" items={plan.features} />
     </div>
@@ -96,7 +98,16 @@ export function Pricing() {
   const doors = 5
   return (
     <>
-      <section data-hero className="bg-canvas-alt pb-10 pt-14 text-center sm:pt-20">
+      <ChapterNav
+        title="Pricing"
+        chapters={[
+          { id: 'plans', label: 'Plans' },
+          { id: 'compare', label: 'Compare' },
+          { id: 'addons', label: 'Add-ons' },
+          { id: 'faq', label: 'Questions' },
+        ]}
+      />
+      <section data-hero className="bg-canvas-alt pb-10 pt-10 text-center sm:pt-20">
         <div className="wrap">
           <p className="eyebrow">Pricing</p>
           <h1 className="mx-auto mt-3 max-w-[18ch] text-display-xl">Start free. Grow by the door.</h1>
@@ -116,14 +127,14 @@ export function Pricing() {
         </div>
       </section>
 
-      <section className="bg-canvas-alt pb-20" data-pricing>
+      <section id="plans" className="bg-canvas-alt pb-20" data-pricing>
         <div className="wrap">
           <div className="mx-auto mb-12 max-w-[36rem] rounded-3xl bg-white p-6 shadow-card">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-4">
               <label htmlFor="doors" className="font-semibold">
                 How many doors do you manage?
               </label>
-              <span className="text-[0.9375rem] font-semibold text-brand-text" data-doors-out>
+              <span className="whitespace-nowrap text-[0.9375rem] font-semibold text-brand-text" data-doors-out>
                 {doors} doors
               </span>
             </div>
@@ -141,6 +152,10 @@ export function Pricing() {
                 <PlanCard key={p.id} plan={p} doors={doors} />
               ))}
             </div>
+            <p className="mx-auto mt-6 max-w-[46rem] text-center text-[0.9375rem] text-ink-3">
+              For comparison, in U.S. dollars: <a href="https://www.buildium.com/pricing/" rel="noopener">Buildium</a> starts at $62 a
+              month and <a href="https://www.doorloop.com/pricing" rel="noopener">DoorLoop</a>’s minimum is $199.
+            </p>
             <div className="mx-auto mt-5 max-w-[62rem] rounded-4xl bg-brand-ink p-8 text-white sm:p-10" data-reveal>
               <div className="grid gap-8 lg:grid-cols-[1fr_1.2fr] lg:items-center">
                 <div>
@@ -172,13 +187,28 @@ export function Pricing() {
               <a href={url('contact/')}>talk to us about custom pricing</a>.
             </p>
           </div>
+
+          <p className="mx-auto mt-8 max-w-[46rem] text-center text-[0.9375rem] text-ink-2">
+            <Phone className="mr-1.5 inline h-4 w-4 align-[-2px] text-brand" aria-hidden />
+            Rather ask a person? Call{' '}
+            <a href={`tel:${site.phone.tel}`} data-track="call:pricing">
+              {site.phone.display}
+            </a>{' '}
+            ({site.hours}) or <a href={site.app.book}>book a 15-minute call</a>.
+          </p>
         </div>
       </section>
 
-      <Section labelledBy="compare-title">
+      <Section id="compare" labelledBy="compare-title">
         <div className="wrap-content">
           <Heading id="compare-title" title="Compare landlord plans" size="md" />
-          <div className="mt-12 overflow-x-auto">
+          {/* Folded behind one tap on phones (the script closes it there); always open on laptops. */}
+          <details className="fold mt-8 md:mt-12" open data-fold-mobile>
+            <summary className="fold-head">
+              Compare every feature
+              <ChevronDown className="fold-icon h-4 w-4" aria-hidden />
+            </summary>
+          <div className="mt-4 overflow-x-auto md:mt-0" tabIndex={0} role="region" aria-label="Plan comparison table">
             <table className="w-full min-w-[34rem] text-left">
               <caption className="sr-only">Features included in the Free and Self Management plans</caption>
               <thead>
@@ -218,10 +248,11 @@ export function Pricing() {
               ))}
             </table>
           </div>
+          </details>
         </div>
       </Section>
 
-      <Section tone="alt" labelledBy="addons-title">
+      <Section id="addons" tone="alt" labelledBy="addons-title">
         <div className="wrap-content">
           <Heading id="addons-title" eyebrow="Pay only when you need them" title="Add-ons and services" size="md" />
           <div className="mt-12 overflow-hidden rounded-4xl bg-white shadow-card">
@@ -245,7 +276,7 @@ export function Pricing() {
         </div>
       </Section>
 
-      <Section labelledBy="pfaq-title">
+      <Section id="faq" labelledBy="pfaq-title">
         <div className="wrap-content">
           <h2 id="pfaq-title" className="text-display-md">
             Pricing questions

@@ -193,7 +193,7 @@ export function LedgerScreen({ className = '' }: { className?: string }) {
                 <Sparkles className="m-ico" />
                 <span className="m-sm font-semibold">Matched to Maya Thompson</span>
               </div>
-              <p className="m-xs mt-[0.35em] text-[#0659d6]/80">Payer learned · applied to October (oldest owing)</p>
+              <p className="m-xs mt-[0.35em] text-[#0659d6]">Payer learned · applied to October (oldest owing)</p>
             </div>
             <div className="m-card" data-step style={i(2)}>
               <div className="flex items-center gap-[0.5em]">
@@ -617,7 +617,7 @@ export function MaintenanceScreen({ className = '' }: { className?: string }) {
           <div className="m-card !rounded-[1.3em] !p-[1.4em]">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-[0.6em]">
-                <span className="inline-flex h-[2.4em] w-[2.4em] items-center justify-center rounded-[0.7em] bg-[#fff3e0] text-[#c46a00]">
+                <span className="inline-flex h-[2.4em] w-[2.4em] items-center justify-center rounded-[0.7em] bg-[#fff3e0] text-[#9a4f00]">
                   <Wrench className="m-ico" />
                 </span>
                 <span>
@@ -812,7 +812,7 @@ export function InspectionPhone({ className = '' }: { className?: string }) {
   return (
     <PhoneFrame className={className} label="Fire safety inspection checklist on a phone with photos of each smoke alarm and a signed PDF report">
       <div className="play px-[1.2em] pt-[0.4em]" data-play>
-        <p className="m-xs font-semibold text-[#c46a00]">FIRE SAFETY INSPECTION</p>
+        <p className="m-xs font-semibold text-[#9a4f00]">FIRE SAFETY INSPECTION</p>
         <p className="mt-[0.2em] text-[1.3em] font-bold tracking-[-0.02em]">48 Maple Ave</p>
         <div className="mt-[0.7em] flex items-center gap-[0.6em]">
           <div className="m-bar flex-1">

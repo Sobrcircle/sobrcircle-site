@@ -1,4 +1,6 @@
-import { GUIDELINES, addDays, addMonths, fmtDate, money, parseDate, roundCents, set, show, today, toInputValue } from './shared'
+import { GUIDELINES, addDays, addMonths, fmtDate, money, parseDate, remember, restore, roundCents, set, setupCopy, show, today, toInputValue } from './shared'
+
+const FIELDS = ['rent', 'last', 'serve', 'mail', 'exempt']
 
 export type RentInput = {
   rent: number
@@ -30,6 +32,7 @@ export function mount() {
   const form = document.querySelector<HTMLFormElement>('[data-tool="rent"]')
   if (!form) return
   const f = (n: string) => form.querySelector<HTMLInputElement>(`[name="${n}"]`)!
+  restore(form, 'le-tool-rent', FIELDS)
   if (!f('serve').value) f('serve').value = toInputValue(today())
 
   const run = () => {
@@ -57,8 +60,13 @@ export function mount() {
       set(form, 'yearly', money(roundCents((r.newRent - rent) * 12)))
     }
   }
-  form.addEventListener('input', run)
-  form.addEventListener('change', run)
+  const changed = () => {
+    run()
+    remember(form, 'le-tool-rent', FIELDS)
+  }
+  form.addEventListener('input', changed)
+  form.addEventListener('change', changed)
   form.addEventListener('submit', (e) => e.preventDefault())
+  setupCopy(form, FIELDS)
   run()
 }

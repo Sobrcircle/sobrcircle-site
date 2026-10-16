@@ -2,7 +2,10 @@ import type { ReactElement } from 'react'
 import { ArrowRight, BellRing, CheckCircle2, FileCheck2, ShieldCheck, Sparkles } from 'lucide-react'
 import { site, url } from '../site'
 import { featureBySlug, features, type Feature, type Visual } from '../content/features'
-import { Actions, CheckList, CTABand, FAQList, Fine, FeatureTile, Heading, LocalNav, Section, Steps } from '../components/ui'
+import { Actions, CheckList, CTABand, FAQList, Fine, FeatureTile, Heading, Section, Steps, Voices } from '../components/ui'
+import { ChapterNav, type Chapter } from '../components/ChapterNav'
+import { LiveRentals } from '../components/LiveRentals'
+import { voicesFor } from '../content/voices'
 import {
   CaseBuilderScreen,
   EzyChatPhone,
@@ -46,7 +49,7 @@ function Extra({ slug }: { slug: string }) {
   switch (slug) {
     case 'rent-collection':
       return (
-        <Section tone="dark" labelledBy="late-title">
+        <Section id="alerts" tone="dark" labelledBy="late-title">
           <div className="wrap grid items-center gap-14 lg:grid-cols-2">
             <div data-reveal>
               <p className="eyebrow-dark">Late-rent alerts</p>
@@ -90,7 +93,7 @@ function Extra({ slug }: { slug: string }) {
       )
     case 'tenant-screening':
       return (
-        <Section tone="alt" labelledBy="prices-title">
+        <Section id="prices" tone="alt" labelledBy="prices-title">
           <div className="wrap-content grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:items-start">
             <div data-reveal>
               <p className="eyebrow">Simple, honest pricing</p>
@@ -140,7 +143,7 @@ function Extra({ slug }: { slug: string }) {
       )
     case 'rent-reporting':
       return (
-        <Section tone="alt" labelledBy="tenant-view">
+        <Section id="tenant-portal" tone="alt" labelledBy="tenant-view">
           <div className="wrap grid items-center gap-14 lg:grid-cols-[1fr_auto]">
             <div className="max-w-[34rem]" data-reveal>
               <p className="eyebrow">What your tenant sees</p>
@@ -167,7 +170,7 @@ function Extra({ slug }: { slug: string }) {
     case 'notices':
       return (
         <>
-          <Section tone="dark" labelledBy="bill60-title">
+          <Section id="bill-60" tone="dark" labelledBy="bill60-title">
             <div className="wrap-content text-center" data-reveal>
               <p className="eyebrow-dark">Bill 60, built in</p>
               <h2 id="bill60-title" className="mt-3 text-display-md !text-white">
@@ -202,7 +205,7 @@ function Extra({ slug }: { slug: string }) {
               </p>
             </div>
           </Section>
-          <Section labelledBy="n1-title">
+          <Section id="n1" labelledBy="n1-title">
             <div className="wrap grid items-center gap-14 lg:grid-cols-2">
               <div data-reveal>
                 <p className="eyebrow">Automated N1</p>
@@ -224,7 +227,7 @@ function Extra({ slug }: { slug: string }) {
       )
     case 'leases':
       return (
-        <Section tone="alt" labelledBy="inspect-title">
+        <Section id="inspections" tone="alt" labelledBy="inspect-title">
           <div className="wrap grid items-center gap-14 lg:grid-cols-[1fr_auto]">
             <div className="max-w-[34rem]" data-reveal>
               <p className="eyebrow">Inspections</p>
@@ -246,7 +249,7 @@ function Extra({ slug }: { slug: string }) {
       )
     case 'listings':
       return (
-        <Section tone="alt" labelledBy="options-title">
+        <Section id="options" tone="alt" labelledBy="options-title">
           <div className="wrap">
             <Heading
               id="options-title"
@@ -303,7 +306,7 @@ function Extra({ slug }: { slug: string }) {
       )
     case 'maintenance':
       return (
-        <Section tone="alt" labelledBy="fire-title">
+        <Section id="fire-safety" tone="alt" labelledBy="fire-title">
           <div className="wrap grid items-center gap-14 lg:grid-cols-[1fr_auto]">
             <div className="max-w-[34rem]" data-reveal>
               <p className="eyebrow">Fire safety</p>
@@ -321,7 +324,7 @@ function Extra({ slug }: { slug: string }) {
       )
     case 'ezy-ai':
       return (
-        <Section tone="dark" labelledBy="askezy-title">
+        <Section id="ask-ezy" tone="dark" labelledBy="askezy-title">
           <div className="wrap-content text-center" data-reveal>
             <span className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-brand-glow">
               <Sparkles className="h-7 w-7" aria-hidden />
@@ -346,7 +349,7 @@ function Extra({ slug }: { slug: string }) {
       )
     case 'legal-help':
       return (
-        <Section tone="alt" labelledBy="paths-title">
+        <Section id="levels" tone="alt" labelledBy="paths-title">
           <div className="wrap">
             <Heading id="paths-title" eyebrow="Choose your level of help" title="From a question to full representation." size="md" />
             <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
@@ -390,35 +393,59 @@ function Extra({ slug }: { slug: string }) {
   }
 }
 
+/** Chapters for the sections only one product page has (see Extra). */
+const extraChapters: Record<string, Chapter[]> = {
+  'rent-collection': [{ id: 'alerts', label: 'Late-rent alerts' }],
+  'tenant-screening': [{ id: 'prices', label: 'Prices' }],
+  'rent-reporting': [{ id: 'tenant-portal', label: 'What tenants see' }],
+  notices: [
+    { id: 'bill-60', label: 'Bill 60' },
+    { id: 'n1', label: 'Automated N1' },
+  ],
+  leases: [{ id: 'inspections', label: 'Inspections' }],
+  listings: [{ id: 'options', label: 'Ways to list' }],
+  maintenance: [{ id: 'fire-safety', label: 'Fire safety' }],
+  'ezy-ai': [{ id: 'ask-ezy', label: 'Ask Ezy' }],
+  'legal-help': [{ id: 'levels', label: 'Levels of help' }],
+}
+
 export function FeaturePage({ slug }: { slug: string }) {
   const f: Feature = featureBySlug(slug)
   const isPhone = f.visual === 'ezy'
   return (
     <>
-      <LocalNav
+      <ChapterNav
         title={f.nav}
-        links={[
-          { label: 'Overview', href: '#overview' },
-          { label: 'How it works', href: '#how' },
-          { label: 'Features', href: '#features' },
-          { label: 'FAQ', href: '#faq' },
-          { label: 'Pricing', href: url('pricing/') },
+        chapters={[
+          { id: 'overview', label: 'Overview' },
+          { id: 'how', label: 'How it works' },
+          { id: 'features', label: 'What’s included' },
+          ...(extraChapters[f.slug] ?? []),
+          { id: 'faq', label: 'Questions' },
         ]}
       />
-      <section id="overview" data-hero className="overflow-hidden bg-white pb-16 pt-14 sm:pt-20">
+      <section id="overview" data-hero className="overflow-hidden bg-white pb-14 pt-10 sm:pb-16 sm:pt-20">
         <div className={`wrap ${isPhone ? 'grid items-center gap-12 lg:grid-cols-[1.1fr_1fr]' : ''}`}>
           <div className={isPhone ? '' : 'mx-auto max-w-[50rem] text-center'}>
-            <p className="eyebrow">{f.eyebrow}</p>
+            <p className="eyebrow">{f.job}</p>
             <h1 className="mt-3 text-display-xl">{f.h1}</h1>
             <p className={`mt-6 text-lead text-ink-3 ${isPhone ? 'max-w-[34rem]' : 'mx-auto max-w-[40rem]'}`}>{f.lead}</p>
             <div className="mt-9">
               <Actions
                 align={isPhone ? 'left' : 'center'}
                 secondary={{ label: 'Try the live demo', href: url('demo/') }}
-                note="Free plan · No credit card · Cancel anytime"
+                note={
+                  <>
+                    <strong className="font-semibold text-ink-2">{f.priceLine}</strong>
+                    <span className="mt-1 block sm:mt-0 sm:inline">
+                      <span className="hidden sm:inline"> · </span>Free plan, no card
+                    </span>
+                  </>
+                }
               />
             </div>
           </div>
+          {f.slug === 'listings' && <LiveRentals className="mx-auto mt-8" />}
           <div className={`hero-rise ${isPhone ? '' : 'mt-16'}`}>
             <HeroVisual visual={f.visual} />
           </div>
@@ -448,6 +475,8 @@ export function FeaturePage({ slug }: { slug: string }) {
           </div>
         </div>
       </Section>
+
+      <Voices items={voicesFor(`${f.slug}/`)} tone="alt" />
 
       <Extra slug={f.slug} />
 

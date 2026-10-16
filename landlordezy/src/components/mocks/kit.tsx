@@ -77,7 +77,8 @@ export function AppShell({ active, children }: { active: string; children: React
         <div className="mb-[1.1em] flex items-center gap-[0.5em] px-[0.4em]">
           <Mark className="h-[1.8em] w-[1.8em]" />
           <span className="text-[1.02em] font-bold tracking-[-0.03em] text-[#050c3b]">
-            Landlord<span className="text-[#096ef9]">Ezy</span>
+            {/* The deeper brand blue keeps 4.5:1 contrast at this small, scaled-down size. */}
+            Landlord<span className="text-[#0659d6]">Ezy</span>
           </span>
         </div>
         <div className="flex flex-col gap-[0.15em]">
