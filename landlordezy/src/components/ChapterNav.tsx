@@ -19,7 +19,7 @@ export function ChapterNav({
   title,
   chapters,
   mode = 'links',
-  cta = { label: 'Start free', href: site.app.signup },
+  cta = null,
 }: {
   title?: string
   chapters: Chapter[]
@@ -65,7 +65,7 @@ export function ChapterNav({
           </ul>
         </nav>
         {cta && (
-          <a href={cta.href} className="btn-primary btn-sm chapnav-cta" data-track="start-free:chapters">
+          <a href={cta.href} className="btn-primary btn-sm chapnav-cta" data-track={cta.href === site.app.signup ? 'start-free:chapters' : 'cta:chapters'}>
             {cta.label}
           </a>
         )}

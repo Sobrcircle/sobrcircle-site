@@ -18,6 +18,10 @@ JavaScript off, every page still reads and every link still works.
 The product shots are drawn in HTML/CSS (`src/components/mocks/`), sized in `em` and scaled by
 container query units, so they stay sharp at any width and weigh almost nothing.
 
+After rendering, `scripts/typeset.ts` stops lines breaking in places that read as typos. It keeps
+hyphenated words ("e-Transfer"), dates ("September 21, 2026"), a number and its unit
+("15 minutes") and prices ("$9.99 + $1 a door") together, without changing any text.
+
 ## Getting around
 
 The site is built so a visitor never hunts. Most pages answer one question first: what job
@@ -34,6 +38,10 @@ are you here to do?
 - **Job chips** (`src/content/jobs.tsx`): "Collect rent", "Serve an N4"… on the home, product
   and 404 pages and in the menu. The last job picked is offered back as "Continue" for 14 days.
 - **Alert bar** (`src/content/alert.ts`): one line for a rule change. Set it to `null` to hide it.
+- **The next step follows the page.** The closing band (`CTABand`) takes a `primary` button, so
+  legal help leads with a free call, paralegals with CaseBuilder and the demo page with the
+  demo. The phone's sticky bar picks its two buttons by page (`barFor` in `Chrome.tsx`).
+- **Deep link:** `pricing/?for=pm` opens the property-manager plans.
 
 ## What the browser remembers
 
@@ -47,6 +55,10 @@ Only on the visitor's own device, in `localStorage`; nothing is sent anywhere:
 
 On a calculator's own page the inputs are also written to the URL, so "Copy a link to this
 result" reopens the same calculation. The link carries only numbers and dates.
+
+The calculators' "Save the dates" and "Fill my N4" buttons send those same values to sign-up,
+for example `/login?from=n4&served=2026-10-20&method=hand`. **For the app team:** read `from`
+and the values after sign-up and open the N4, N1 or reminder already filled in.
 
 ## Measuring clicks
 
@@ -117,3 +129,11 @@ The production build drops all of that, adds canonicals to landlordezy.ca, and w
    site's Content Security Policy to match.
 7. Swap the "Live on EzyRent" link for a real count or feed of current listings, if EzyRent can
    provide one.
+8. Give sign-up its own address. Every "Start free" goes to `/login`, as on the current site; a
+   page that opens on "Create account" loses fewer people. Then read the calculators' `from=`
+   values (see above).
+9. Confirm the claims the concept couldn't verify on landlordezy.ca:
+   - the guarantee that a paralegal error means a full refund and the next eviction free (Legal help FAQ)
+   - the CaseBuilder plan names (the $249 plan is also called "CaseBuilder")
+   - which Ezy AI features each property-manager plan includes
+   - whether a faxed N4 counts as given that day; the N4 guide lists fax, but the calculator has no fax option

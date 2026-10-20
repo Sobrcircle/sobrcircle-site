@@ -1,6 +1,6 @@
 import {
   ArrowRightLeft,
-  CalendarCheck,
+  MonitorPlay,
   CreditCard,
   Inbox,
   KeyRound,
@@ -24,6 +24,7 @@ export function PropertyManagers() {
     <>
       <ChapterNav
         title="For property managers"
+        cta={{ label: 'Book a call', href: site.app.book }}
         chapters={[
           { id: 'overview', label: 'Overview' },
           { id: 'owners', label: 'Owners' },
@@ -37,10 +38,13 @@ export function PropertyManagers() {
       <section id="overview" data-hero className="overflow-hidden bg-white pb-14 pt-10 sm:pb-16 sm:pt-20">
         <div className="wrap text-center">
           <p className="eyebrow">For property management companies</p>
-          <h1 className="mx-auto mt-3 max-w-[16ch] text-display-xl">Win the door. Then run it beautifully.</h1>
+          {/* Each sentence holds together, so the break falls between them. */}
+          <h1 className="mx-auto mt-3 max-w-[26ch] text-display-xl">
+            Win the door. <span className="inline-block">Then run it beautifully.</span>
+          </h1>
           <p className="mx-auto mt-6 max-w-[42rem] text-lead text-ink-3">
-            Bring your whole book over in minutes: AI imports owners, units, tenants and leases from Buildium, AppFolio, Yardi or a
-            spreadsheet. Then run owner accounting, statements, a CRM that wins clients and Ontario’s legal tools from one team login.
+            Owner accounting, statements, a CRM that wins clients and Ontario’s legal tools, from one team login. Moving over is the
+            easy part: AI imports owners, units, tenants and leases from Buildium, AppFolio, Yardi or a spreadsheet.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <a href={site.app.signup} className="btn-primary" data-track="start-free:hero">
@@ -76,7 +80,7 @@ export function PropertyManagers() {
             <FeatureTile surface="white" icon={PieChart} title="Statements owners open" body="Monthly PDF statements, emailed with an audit trail of what was sent and when it was opened." />
             <FeatureTile surface="white" icon={KeyRound} title="Read-only owner portal" body="Owners see their properties and statements. You control exactly what each one sees." />
             <FeatureTile surface="white" icon={Receipt} title="Bills owners approve by text" body="AI reads a contractor quote; the owner e-signs approval by email or text; the bill posts to their statement." />
-            <FeatureTile surface="white" icon={CreditCard} title="Fees collected, matched" body="Owners pay management fees by card or e-Transfer; payments match each owner automatically." />
+            <FeatureTile surface="white" icon={CreditCard} title="Fees collected, matched" body="Owners pay management fees by e-Transfer, or by card on PM Growth, and each payment matches its owner automatically." />
             <FeatureTile surface="white" icon={ArrowRightLeft} title="Rent through to owners" body="Interac e-Transfers are matched to tenants and flow straight into owner accounting. No processing fees." />
           </div>
         </div>
@@ -90,9 +94,9 @@ export function PropertyManagers() {
               A sales CRM stops at “won.” Property management starts there.
             </h2>
             <p className="mt-5 text-lead text-ink-3">
-              Capture every landlord enquiry from your website, phone or a booked meeting. Ezy AI reads the call and writes the
-              recap. Follow-ups go out on their own and stop the moment a landlord replies. Then the management agreement is
-              e-signed and a setup checklist opens for whoever onboards them.
+              Capture every landlord enquiry from your website, phone or a booked meeting, with every call and recap on the record.
+              On PM Growth, follow-ups written by Ezy AI go out on their own and stop the moment a landlord replies. Then the
+              management agreement is e-signed and a setup checklist opens for whoever onboards them.
             </p>
             <CheckList
               className="mt-8"
@@ -137,7 +141,7 @@ export function PropertyManagers() {
 
       <Section id="operations" tone="alt" labelledBy="ops-title">
         <div className="wrap grid items-center gap-14 lg:grid-cols-[1.1fr_1fr]">
-          <MaintenanceScreen className="mx-auto w-full max-w-[32rem]" />
+          <MaintenanceScreen className="order-last mx-auto w-full max-w-[32rem] lg:order-first" />
           <div data-reveal>
             <p className="eyebrow">Operations</p>
             <h2 id="ops-title" className="mt-3 text-display-md">
@@ -167,14 +171,18 @@ export function PropertyManagers() {
               steps={[
                 { title: 'Upload what you have.', body: 'Reports, spreadsheets or exports from Buildium, AppFolio, Yardi or anything else.' },
                 { title: 'AI builds your book.', body: 'Owners, properties, units, tenants and leases are created and linked for you.' },
-                { title: 'Go live.', body: 'Or let the concierge team do the whole import with you for $159, one time.' },
+                { title: 'Go live.', body: 'Invite your team, open the owner portal and run your next month-end in LandlordEzy.' },
               ]}
             />
           </div>
-          <div className="mt-8 flex flex-wrap justify-center gap-2 text-[0.8125rem] text-ink-3">
+          <p className="mt-8 text-center text-ink-3">
+            Rather not do it yourself? The concierge team will run the whole import with you for $159, one time.
+          </p>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-[0.8125rem] text-ink-3">
+            <span className="mr-1 font-semibold text-ink-2">Switching from</span>
             {['Buildium', 'AppFolio', 'Yardi Breeze', 'DoorLoop', 'TenantCloud', 'Rentec Direct', 'Propertyware'].map((n) => (
               <span key={n} className="rounded-full bg-canvas-alt px-3 py-1.5">
-                Switching from {n}
+                {n}
               </span>
             ))}
           </div>
@@ -183,38 +191,47 @@ export function PropertyManagers() {
 
       <Section tone="alt" id="plans" labelledBy="plans-title">
         <div className="wrap">
-          <Heading id="plans-title" eyebrow="Plans" title="The door price never changes. Only the licence does." size="md" />
-          <div className="mx-auto mt-12 grid max-w-[62rem] gap-5 md:grid-cols-2">
-            {[manage, growth].map((p) => (
+          <Heading id="plans-title" eyebrow="Plans" title="Every paid plan is $1 a door. Only the base price changes." size="md" />
+          <div className="mx-auto mt-12 grid max-w-[75rem] gap-5 lg:grid-cols-3">
+            {pmPlans.map((p) => (
               <div key={p.id} className={`flex flex-col rounded-4xl bg-white p-8 sm:p-9 ${p.popular ? 'shadow-float ring-2 ring-brand' : 'shadow-card'}`} data-reveal>
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
                   <h3 className="text-title">{p.name}</h3>
                   {p.popular && <span className="chip-brand">Most popular</span>}
                 </div>
+                <p className="mt-1 text-ink-3">{p.tagline}</p>
                 <p className="mt-5 font-display text-[3rem] font-bold leading-none tracking-[-0.035em]">
-                  ${p.base}
-                  <span className="text-[1rem] font-medium tracking-normal text-ink-3"> /month + $1 per door</span>
+                  ${p.base}{' '}
+                  <span className="whitespace-nowrap text-[1rem] font-medium tracking-normal text-ink-3">
+                    {p.base > 0 ? '/month + $1 a door' : '/month, free forever'}
+                  </span>
                 </p>
                 <p className="mt-6 font-semibold">{p.intro}</p>
                 <CheckList className="mt-4 text-[0.9375rem]" items={p.features} />
-                <a href={site.app.signup} className={`${p.popular ? 'btn-primary' : 'btn-secondary'} mt-8`}>
-                  Start free, upgrade anytime
-                </a>
+                <div className="mt-auto pt-8">
+                  <a
+                    href={site.app.signup}
+                    className={`${p.popular ? 'btn-primary' : 'btn-secondary'} plan-cta w-full`}
+                    data-track={`start-free:plan:${p.id}`}
+                  >
+                    {p.cta}
+                  </a>
+                </div>
               </div>
             ))}
           </div>
           <div className="mx-auto mt-6 max-w-[62rem] overflow-hidden rounded-4xl bg-white shadow-card" data-reveal>
             <table className="w-full text-left text-[0.9375rem]">
-              <caption className="px-4 pb-1 pt-5 text-left font-semibold text-ink sm:px-8">What you’d pay a month</caption>
+              <caption className="px-3 pb-1 pt-5 text-left font-semibold text-ink sm:px-8">What you’d pay a month</caption>
               <thead>
                 <tr className="border-b border-line">
-                  <th scope="col" className="whitespace-nowrap px-4 py-3 font-semibold text-ink-3 sm:px-8">
+                  <th scope="col" className="whitespace-nowrap px-3 py-3 font-semibold text-ink-3 sm:px-8">
                     Doors
                   </th>
-                  <th scope="col" className="whitespace-nowrap px-4 py-3 text-right font-semibold sm:px-8">
+                  <th scope="col" className="px-3 py-3 text-right font-semibold sm:whitespace-nowrap sm:px-8">
                     {manage.name}
                   </th>
-                  <th scope="col" className="whitespace-nowrap px-4 py-3 text-right font-semibold sm:px-8">
+                  <th scope="col" className="px-3 py-3 text-right font-semibold sm:whitespace-nowrap sm:px-8">
                     {growth.name}
                   </th>
                 </tr>
@@ -222,19 +239,19 @@ export function PropertyManagers() {
               <tbody>
                 {[50, 100, 250].map((d) => (
                   <tr key={d} className="border-b border-line-soft last:border-0">
-                    <th scope="row" className="whitespace-nowrap px-4 py-3.5 font-normal text-ink-2 sm:px-8">
+                    <th scope="row" className="whitespace-nowrap px-3 py-3.5 font-normal text-ink-2 sm:px-8">
                       {d} doors
                     </th>
-                    <td className="whitespace-nowrap px-4 py-3.5 text-right font-semibold tabular-nums sm:px-8">{monthly(manage.base, manage.perDoor, d)}</td>
-                    <td className="whitespace-nowrap px-4 py-3.5 text-right font-semibold tabular-nums sm:px-8">{monthly(growth.base, growth.perDoor, d)}</td>
+                    <td className="whitespace-nowrap px-3 py-3.5 text-right font-semibold tabular-nums sm:px-8">{monthly(manage.base, manage.perDoor, d)}</td>
+                    <td className="whitespace-nowrap px-3 py-3.5 text-right font-semibold tabular-nums sm:px-8">{monthly(growth.base, growth.perDoor, d)}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
           <Fine className="mt-8 text-center">
-            PM Free costs nothing and includes unlimited owners, properties and units. Prices in CAD, plus HST.{' '}
-            <a href={url('pricing/')}>Compare all plans</a>
+            Prices in CAD, plus HST. Managing more than 250 doors? <a href={site.app.book}>Talk to us about custom pricing</a>, or{' '}
+            <a href={`${url('pricing/')}?for=pm`}>compare every plan</a>.
           </Fine>
         </div>
       </Section>
@@ -245,10 +262,12 @@ export function PropertyManagers() {
             Questions property managers ask
           </h2>
           <FAQList className="mt-10" items={pmFaqs} />
-          <div className="mt-10 flex flex-wrap items-center gap-4 rounded-4xl bg-canvas-alt p-7">
-            <CalendarCheck className="h-6 w-6 text-brand" aria-hidden />
-            <p className="flex-1 text-ink-2">Want to see it with your own portfolio? The demo builds a private workspace shaped like your book in about a minute.</p>
-            <a href={url('demo/')} className="btn-primary btn-sm">
+          <div className="mt-10 flex flex-col gap-4 rounded-4xl bg-canvas-alt p-7 sm:flex-row sm:items-center">
+            <MonitorPlay className="h-6 w-6 shrink-0 text-brand" aria-hidden />
+            <p className="text-ink-2 sm:flex-1">
+              Want to see it with your own portfolio? The demo builds a private workspace shaped like your book in about a minute.
+            </p>
+            <a href={url('demo/')} className="btn-primary btn-sm shrink-0">
               Build my demo
             </a>
           </div>

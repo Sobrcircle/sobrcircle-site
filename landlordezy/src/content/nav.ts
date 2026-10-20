@@ -123,7 +123,7 @@ export const footerColumns: NavGroup[] = [
       { label: 'Contact', path: 'contact/' },
       { label: 'Live demo', path: 'demo/' },
       { label: 'FAQ', path: 'faq/' },
-      { label: 'Trust & privacy', path: 'trust/' },
+      { label: 'Trust centre', path: 'trust/' },
       { label: 'Sign in', href: site.app.login },
     ],
   },

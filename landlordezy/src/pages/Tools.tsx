@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { ArrowRight, Calculator, Landmark, PiggyBank, ScanLine, BookOpen, FileText, Sparkles } from 'lucide-react'
+import { ArrowRight, Calculator, Landmark, PiggyBank, ScanLine, Scale, BookOpen, FileText, Sparkles } from 'lucide-react'
 import { site, url } from '../site'
 import { CTABand, FAQList, Fine, Heading, Section, type QA } from '../components/ui'
 import { LmrForm, N4Form, RentForm } from '../components/ToolForms'
@@ -16,6 +16,9 @@ function ToolShell({
   sources,
   faqs,
   automate,
+  guide,
+  current,
+  act = 'serve',
 }: {
   eyebrow: string
   title: string
@@ -25,6 +28,12 @@ function ToolShell({
   sources: { label: string; href: string }[]
   faqs: QA[]
   automate: { title: string; body: string; href: string; link: string }
+  /** The matching step-by-step guide, linked under the sources. */
+  guide?: { label: string; path: string }
+  /** This tool's own page, left out of "More free tools". */
+  current: string
+  /** What the reader is about to do, for the disclaimer: "before you serve" / "before you act". */
+  act?: 'serve' | 'act'
 }) {
   return (
     <>
@@ -55,9 +64,16 @@ function ToolShell({
                 </span>
               ))}
             </p>
+            {guide && (
+              <p className="mt-3 text-[0.9375rem]">
+                <a href={url(guide.path)} className="link-more">
+                  Step by step: {guide.label}
+                </a>
+              </p>
+            )}
             <Fine className="mt-3">
               General information for Ontario, reviewed {site.lastReviewedLabel}. Not legal advice; confirm with Tribunals Ontario or a
-              licensed paralegal before you serve.
+              licensed paralegal before you {act}.
             </Fine>
           </div>
           <aside className="h-fit rounded-4xl bg-brand-ink p-8 text-white" aria-labelledby="automate-title">
@@ -69,9 +85,11 @@ function ToolShell({
             <a href={site.app.signup} className="btn-light mt-6">
               Start free
             </a>
-            <a href={url(automate.href)} className="link-more-dark mt-4 block">
-              {automate.link}
-            </a>
+            <p className="mt-4">
+              <a href={url(automate.href)} className="link-more-dark">
+                {automate.link}
+              </a>
+            </p>
           </aside>
         </div>
       </Section>
@@ -85,19 +103,26 @@ function ToolShell({
         </div>
       </Section>
 
-      <MoreTools />
-      <CTABand />
+      <MoreTools current={current} />
+      <CTABand
+        title="Never work out a notice date again."
+        lead="LandlordEzy fills N4s and N1s from your rent ledger, on the current forms, with the dates calculated for how you serve."
+      />
     </>
   )
 }
 
-function MoreTools() {
+function MoreTools({ current }: { current: string }) {
   const tools = [
-    { href: url('tools/n4-date-calculator/'), icon: Calculator, t: 'N4 termination date' },
-    { href: url('tools/rent-increase-calculator/'), icon: PiggyBank, t: 'Rent increase' },
-    { href: url('tools/rent-deposit-interest-calculator/'), icon: Landmark, t: 'Deposit interest' },
-    { href: url('guides/'), icon: BookOpen, t: 'Ontario landlord guides' },
+    { path: 'tools/n4-date-calculator/', icon: Calculator, t: 'N4 termination date' },
+    { path: 'tools/rent-increase-calculator/', icon: PiggyBank, t: 'Rent increase' },
+    { path: 'tools/rent-deposit-interest-calculator/', icon: Landmark, t: 'Deposit interest' },
+    { path: 'guides/bill-60/', icon: FileText, t: 'What Bill 60 changed' },
+    { path: 'guides/', icon: BookOpen, t: 'Ontario landlord guides' },
   ]
+    .filter((x) => x.path !== current)
+    .slice(0, 4)
+    .map((x) => ({ ...x, href: url(x.path) }))
   return (
     <Section tone="alt" tight labelledBy="more-tools">
       <div className="wrap-content">
@@ -151,9 +176,11 @@ export function N4Tool() {
       }
       sources={[
         { label: 'LTB N4 instructions', href: site.official.n4Instructions },
-        { label: 'Tribunals Ontario, Sept. 21, 2026 update', href: site.official.bill60Update },
+        { label: 'Tribunals Ontario, September 21, 2026 update', href: site.official.bill60Update },
       ]}
       faqs={n4Faqs}
+      current="tools/n4-date-calculator/"
+      guide={{ label: 'how to serve an N4 in Ontario', path: 'guides/n4-notice/' }}
       automate={{
         title: 'Let the N4 fill itself.',
         body: 'LandlordEzy builds the N4 from your rent ledger, with the arrears, this date and the Certificate of Service, in about 60 seconds.',
@@ -198,9 +225,11 @@ export function RentTool() {
         { label: 'Residential Tenancies Act, ss. 116 and 119', href: site.official.rta },
       ]}
       faqs={rentFaqs}
+      current="tools/rent-increase-calculator/"
+      guide={{ label: 'rent increases in Ontario for 2027', path: 'guides/rent-increase/' }}
       automate={{
         title: 'Raise the rent once. Let it apply itself.',
-        body: 'The automated N1 fills in the guideline and the earliest date, e-signs and serves the notice, then updates the ledger on the effective date.',
+        body: 'The automated N1 fills in the guideline and the earliest date, gets the notice e-signed and served (by email where your tenant has agreed to it), then updates the ledger on the effective date.',
         href: 'notices/',
         link: 'See the automated N1',
       }}
@@ -217,7 +246,7 @@ export function LmrTool() {
     <ToolShell
       eyebrow="Free tool · Last month’s rent"
       title="Rent deposit interest calculator"
-      lead="Work out the interest you owe on a last month’s rent deposit this year, and how much of it can top the deposit up after a rent increase."
+      lead="Work out the interest you owe on a last month’s rent deposit this year, and how much of it you can keep to top up the deposit after a rent increase."
       rules={
         <>
           <p>
@@ -232,6 +261,8 @@ export function LmrTool() {
       }
       sources={[{ label: 'Residential Tenancies Act, s. 106', href: site.official.rta }]}
       faqs={lmrFaqs}
+      current="tools/rent-deposit-interest-calculator/"
+      act="act"
       automate={{
         title: 'Top-ups, scheduled for you.',
         body: 'When an N1 takes effect, LandlordEzy can schedule the last-month’s-rent top-up to come due with the new rent.',
@@ -250,13 +281,14 @@ export function ToolsHub() {
   const tools = [
     { href: 'tools/n4-date-calculator/', icon: Calculator, t: 'N4 termination date calculator', d: 'The 7-day rule since Bill 60, with courier and mail days added, and the first day to file an L1.' },
     { href: 'tools/rent-increase-calculator/', icon: PiggyBank, t: 'Rent increase calculator', d: 'Maximum new rent under the 2026 and 2027 guidelines, the earliest effective date and the serve-by date.' },
-    { href: 'tools/rent-deposit-interest-calculator/', icon: Landmark, t: 'Deposit interest calculator', d: 'Annual interest on a last month’s rent deposit, and how much can top it up after an increase.' },
+    { href: 'tools/rent-deposit-interest-calculator/', icon: Landmark, t: 'Deposit interest calculator', d: 'Annual interest on a last month’s rent deposit, and how much of it you can keep to top up the deposit after an increase.' },
   ]
   const more = [
     { href: site.app.signMaker, icon: ScanLine, t: 'For-rent sign maker', d: 'A printable yard sign with a QR code to your listing.' },
+    { href: url('guides/'), icon: BookOpen, t: 'Ontario landlord guides', d: 'Bill 60, serving an N4, rent increases and LTB forms, in plain English.' },
     { href: site.app.forms, icon: FileText, t: 'Ontario forms library', d: 'Official LTB forms and the Standard Lease, explained.' },
     { href: site.app.askEzy, icon: Sparkles, t: 'Ask Ezy', d: 'Ontario landlord-tenant questions, answered with sources.' },
-    { href: site.app.lawLibrary, icon: BookOpen, t: 'RTA in plain English', d: 'Every section of the Residential Tenancies Act, searchable.' },
+    { href: site.app.lawLibrary, icon: Scale, t: 'Ontario law library', d: 'The Residential Tenancies Act and regulations, searchable.' },
   ]
   return (
     <>
@@ -280,7 +312,7 @@ export function ToolsHub() {
                 <span className="icon-badge">
                   <x.icon className="h-[22px] w-[22px]" strokeWidth={1.7} aria-hidden />
                 </span>
-                <h3 className="mt-6 text-title">{x.t}</h3>
+                <h3 className="mt-6 text-balance text-title md:min-h-[2.5em]">{x.t}</h3>
                 <p className="mt-2 text-ink-3">{x.d}</p>
                 <span className="mt-auto inline-flex items-center gap-1 pt-6 text-brand-text">
                   Open <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
@@ -295,12 +327,13 @@ export function ToolsHub() {
           <Heading id="more-title" title="More free help" size="md" align="left" />
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             {more.map((x) => (
-              <a key={x.t} href={x.href} rel="noopener" className="flex gap-4 rounded-3xl bg-white p-6 text-ink shadow-card hover:no-underline">
+              <a key={x.t} href={x.href} rel="noopener" className="group flex gap-4 rounded-3xl bg-white p-6 text-ink shadow-card hover:no-underline">
                 <x.icon className="mt-0.5 h-5 w-5 shrink-0 text-brand" strokeWidth={1.8} aria-hidden />
-                <span>
+                <span className="flex-1">
                   <span className="block font-semibold">{x.t}</span>
-                  <span className="mt-1 block text-[0.9375rem] text-ink-3">{x.d}</span>
+                  <span className="mt-1 block text-pretty text-[0.9375rem] text-ink-3">{x.d}</span>
                 </span>
+                <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-ink-4 transition-transform group-hover:translate-x-1" aria-hidden />
               </a>
             ))}
           </div>

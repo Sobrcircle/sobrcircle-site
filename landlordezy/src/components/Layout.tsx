@@ -21,7 +21,7 @@ export function Layout({ route, children }: { route: Route; children: ReactNode 
         {children}
       </main>
       <SiteFooter />
-      <MobileCTA />
+      <MobileCTA current={route.path} />
       <MenuSheet />
     </>
   )

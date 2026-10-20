@@ -30,11 +30,21 @@ function ResultPanel({ children, empty }: { children: ReactNode; empty: string }
 function NextSteps({ tool, primary, secondary }: { tool: string; primary: string; secondary?: string }) {
   return (
     <div className="no-print mt-7 grid gap-3 border-t border-white/10 pt-6">
-      <a href={site.app.signup} className="btn-light w-full !whitespace-normal py-3 text-center leading-snug" data-track={`tool:${tool}:save`}>
+      <a
+        href={site.app.signup}
+        data-carry={site.app.signup}
+        className="btn-light w-full !whitespace-normal py-3 text-center leading-snug"
+        data-track={`tool:${tool}:save`}
+      >
         {primary}
       </a>
       {secondary && (
-        <a href={site.app.signup} className="btn-ghost-dark w-full !whitespace-normal py-3 text-center leading-snug" data-track={`tool:${tool}:act`}>
+        <a
+          href={site.app.signup}
+          data-carry={site.app.signup}
+          className="btn-ghost-dark w-full !whitespace-normal py-3 text-center leading-snug"
+          data-track={`tool:${tool}:act`}
+        >
           {secondary}
         </a>
       )}
@@ -49,9 +59,12 @@ function NextSteps({ tool, primary, secondary }: { tool: string; primary: string
   )
 }
 
-export function N4Form() {
+/** Side by side on a laptop-width page; one column inside a guide's narrower text column. */
+const grid = (stacked: boolean) => `grid grid-cols-1 gap-6 ${stacked ? '' : 'lg:grid-cols-2 lg:items-start'}`
+
+export function N4Form({ stacked = false }: { stacked?: boolean }) {
   return (
-    <form data-tool="n4" data-tool-url={url('tools/n4-date-calculator/')} className="grid gap-6 lg:grid-cols-2" noValidate>
+    <form data-tool="n4" data-tool-url={url('tools/n4-date-calculator/')} className={grid(stacked)} noValidate>
       <div className="rounded-4xl bg-canvas-alt p-7 sm:p-9">
         <label htmlFor="served" className="label">
           Date you’ll give the notice
@@ -77,7 +90,7 @@ export function N4Form() {
       </div>
       <ResultPanel empty="Choose a date to see the earliest termination date.">
         <p className="text-[0.9375rem] text-white/60">Earliest termination date</p>
-        <p className="mt-2 font-display text-[2rem] font-bold leading-tight tracking-[-0.025em] sm:text-[2.5rem]" data-out="termination">
+        <p className="mt-2 font-display text-[clamp(1.5rem,7.4vw,2rem)] font-bold leading-tight tracking-[-0.025em] sm:text-[2.5rem]" data-out="termination">
           —
         </p>
         <dl className="mt-7 space-y-4 border-t border-white/10 pt-6 text-[0.9375rem]">
@@ -104,15 +117,15 @@ export function N4Form() {
         <p className="mt-3 rounded-2xl bg-white/10 p-4 text-[0.875rem] text-white/80" data-show="old-rule" hidden>
           This date is before September 21, 2026, so the old 14-day minimum applied (7 days for daily or weekly tenancies).
         </p>
-        <NextSteps tool="n4" primary="Save these dates and get a reminder" secondary="Fill my N4 with these dates" />
+        <NextSteps tool="n4" primary="Save the dates, get a reminder" secondary="Fill my N4 with these dates" />
       </ResultPanel>
     </form>
   )
 }
 
-export function RentForm() {
+export function RentForm({ stacked = false }: { stacked?: boolean }) {
   return (
-    <form data-tool="rent" data-tool-url={url('tools/rent-increase-calculator/')} className="grid gap-6 lg:grid-cols-2" noValidate>
+    <form data-tool="rent" data-tool-url={url('tools/rent-increase-calculator/')} className={grid(stacked)} noValidate>
       <div className="rounded-4xl bg-canvas-alt p-7 sm:p-9">
         <div className="grid gap-5">
           <div>
@@ -121,7 +134,7 @@ export function RentForm() {
             </label>
             <div className="relative">
               <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-ink-3">$</span>
-              <input id="rent" name="rent" type="number" min="0" step="0.01" inputMode="decimal" placeholder="1,950.00" className="field pl-8" />
+              <input id="rent" name="rent" type="number" min="0" step="0.01" inputMode="decimal" placeholder="e.g. 1,950" className="field pl-8" />
             </div>
           </div>
           <div>
@@ -146,7 +159,7 @@ export function RentForm() {
       </div>
       <ResultPanel empty="Enter the rent and dates to see the result.">
         <p className="text-[0.9375rem] text-white/60">Earliest effective date</p>
-        <p className="mt-2 font-display text-[2rem] font-bold leading-tight tracking-[-0.025em] sm:text-[2.5rem]" data-out="effective">
+        <p className="mt-2 font-display text-[clamp(1.5rem,7.4vw,2rem)] font-bold leading-tight tracking-[-0.025em] sm:text-[2.5rem]" data-out="effective">
           —
         </p>
         <div data-show="capped" hidden>
@@ -186,15 +199,15 @@ export function RentForm() {
         <p className="mt-2 text-[0.875rem] text-[#ffb35c]" data-show="late" hidden>
           Served on this date, the 90-day notice pushes the increase past the anniversary.
         </p>
-        <NextSteps tool="rent" primary="Save the dates and get a reminder" secondary="Prepare the N1" />
+        <NextSteps tool="rent" primary="Save the dates, get a reminder" secondary="Prepare the N1" />
       </ResultPanel>
     </form>
   )
 }
 
-export function LmrForm() {
+export function LmrForm({ stacked = false }: { stacked?: boolean }) {
   return (
-    <form data-tool="lmr" data-tool-url={url('tools/rent-deposit-interest-calculator/')} className="grid gap-6 lg:grid-cols-2" noValidate>
+    <form data-tool="lmr" data-tool-url={url('tools/rent-deposit-interest-calculator/')} className={grid(stacked)} noValidate>
       <div className="rounded-4xl bg-canvas-alt p-7 sm:p-9">
         <div className="grid gap-5">
           <div>
@@ -203,7 +216,7 @@ export function LmrForm() {
             </label>
             <div className="relative">
               <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-ink-3">$</span>
-              <input id="deposit" name="deposit" type="number" min="0" step="0.01" inputMode="decimal" placeholder="1,950.00" className="field pl-8" />
+              <input id="deposit" name="deposit" type="number" min="0" step="0.01" inputMode="decimal" placeholder="e.g. 1,950" className="field pl-8" />
             </div>
           </div>
           <div>
@@ -222,7 +235,7 @@ export function LmrForm() {
             </label>
             <div className="relative">
               <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-ink-3">$</span>
-              <input id="newrent" name="newrent" type="number" min="0" step="0.01" inputMode="decimal" placeholder="1,987.05" className="field pl-8" />
+              <input id="newrent" name="newrent" type="number" min="0" step="0.01" inputMode="decimal" placeholder="e.g. 1,987" className="field pl-8" />
             </div>
           </div>
         </div>

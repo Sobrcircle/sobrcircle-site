@@ -18,13 +18,15 @@ import {
   FileSearch,
   FileText,
   Fingerprint,
-  Flame,
+  FolderDown,
   History,
+  Images,
   Landmark,
   ListChecks,
   Mail,
   MapPinned,
-  MessageSquareText,
+  Megaphone,
+  NotebookPen,
   PhoneCall,
   Receipt,
   Repeat,
@@ -78,6 +80,14 @@ export type Feature = {
   planNote: ReactNode
   faqs: QA[]
   related: string[]
+  /** The hero's main button, when this page's next step isn't Start free. */
+  cta?: { label: string; href: string }
+  /** The hero's second link (default: the live demo). */
+  secondary?: { label: string; href: string }
+  /** Shown after the price line (default "Start free, no card"); null hides it. */
+  noteTail?: string | null
+  /** Overrides for the closing band. */
+  band?: { title?: string; lead?: string; primary?: { label: string; href: string }; secondary?: { label: string; href: string } | null; fine?: string | null }
 }
 
 const ext = (href: string, label: string) => (
@@ -95,9 +105,10 @@ export const features: Feature[] = [
       'Tenants keep paying by Interac e-Transfer. LandlordEzy matches each payment, updates the ledger, sends the receipt and flags arrears. No processing fees.',
     eyebrow: 'Rent collection',
     job: 'Tired of matching e-Transfers?',
-    priceLine: 'Included in Self Management: $9.99/month + $1 a door · Free for 2 tenants',
+    priceLine: 'Automatic matching in Self Management: $9.99/month + $1 a door',
+    noteTail: 'Free plan tracks rent for 2 tenants, no card',
     h1: 'Rent that reconciles itself.',
-    lead: 'Tenants keep paying by Interac e-Transfer, exactly as they do today. LandlordEzy reads each deposit notice, matches it to the right tenant and month, and sends the receipt. Your money never leaves your bank.',
+    lead: 'Tenants keep paying by Interac e-Transfer, exactly as they do today. LandlordEzy reads each deposit notice, matches it to the right tenant and month, and sends the receipt. No processing fees, and your money never leaves your bank.',
     visual: 'ledger',
     stepsTitle: 'Set it up once. Then stop chasing.',
     steps: [
@@ -117,9 +128,9 @@ export const features: Feature[] = [
     highlightsTitle: 'Everything a bookkeeper would do. Automatically.',
     highlights: [
       { icon: Wallet, title: 'Keep 100% of the rent', body: 'No payment processor and no per-payment fee. The deposit goes from Interac straight into your bank account.' },
-      { icon: ShieldCheck, title: 'Never recorded twice', body: 'Every transfer is checked against the ledger, so the same month can’t be paid twice by mistake.' },
-      { icon: Receipt, title: 'Receipts send themselves', body: 'Tenants get a receipt for every fresh payment, plus a passwordless portal with their full history.' },
-      { icon: BellRing, title: 'Reminders before it’s late', body: 'Automatic reminders go out before rent is due, with a friendly nudge if it isn’t.' },
+      { icon: ShieldCheck, title: 'Never recorded twice', body: 'Every transfer is checked against the ledger, so the same payment is never recorded twice.' },
+      { icon: Receipt, title: 'Receipts send themselves', body: 'Tenants get a receipt for every payment, plus a passwordless portal with their full history.' },
+      { icon: BellRing, title: 'Reminders before it’s late', body: 'Automatic reminders go out before rent is due, and a friendly nudge follows if it’s late.' },
       { icon: ListChecks, title: 'Who hasn’t paid? One tap.', body: 'A live arrears report shows every balance across your portfolio, month by month.' },
       { icon: FileText, title: 'A ledger that holds up', body: 'Every payment, discount and deposit is a visible line. That record powers late alerts, N4s and Equifax reporting.' },
     ],
@@ -154,12 +165,12 @@ export const features: Feature[] = [
     nav: 'Tenant screening',
     title: 'Tenant Screening & Equifax Credit Checks | LandlordEzy',
     description:
-      'Free pre-screening, then a real Equifax credit report read by AI from $29.99. Identity checks, bank-statement analysis and a clear verdict. Tenant can pay.',
+      'Free pre-screening, then a real Equifax report with an AI recommendation from $29.99. ID and bank-statement checks $10 each. The applicant can pay.',
     eyebrow: 'Tenant screening',
     job: 'Choosing between applicants?',
     priceLine: 'Pre-screening free · Equifax credit check $29.99 · The applicant can pay',
     h1: 'Know who you’re renting to.',
-    lead: 'Start with a free pre-screening link. When you’re ready, run a real Equifax credit report with AI that reads the documents, checks identity and gives you a clear recommendation, from $29.99.',
+    lead: 'Start with a free pre-screening link. When you’re ready, run a real Equifax credit report with an AI recommendation, from $29.99. Add identity and bank-statement checks for $10 each.',
     visual: 'screening',
     stepsTitle: 'Three steps to a confident yes.',
     steps: [
@@ -178,17 +189,19 @@ export const features: Feature[] = [
     ],
     highlightsTitle: 'More than a score.',
     highlights: [
-      { icon: BadgeCheck, title: 'Identity, verified', body: 'Identity verification confirms the applicant is who they say they are, before anyone gets keys.' },
+      { icon: BadgeCheck, title: 'Identity, verified', body: 'Confirm the applicant is who they say they are, before anyone gets keys.' },
       { icon: Landmark, title: 'Affordability, not guesswork', body: 'AI reads up to four months of bank statements for stable income and real affordability.' },
       { icon: FileSearch, title: 'Missing documents, flagged', body: 'If a pay stub or ID is missing, you see it before you decide, and can request it in one tap.' },
       { icon: Users, title: 'The applicant can pay', body: 'Turn on Tenant Pays and the applicant covers the check. Credit it toward their first month if you approve them.' },
       { icon: Share2, title: 'Share it securely', body: 'Send the finished report to a co-signer, partner or property manager with a secure link.' },
-      { icon: Fingerprint, title: 'Reports that can’t be faked', body: 'Each report carries a unique ID and stays valid for three months, so edited PDFs and screenshots don’t fool anyone.' },
+      { icon: Fingerprint, title: 'Reports you can verify', body: 'Each report carries a unique ID and stays valid for three months, so an edited PDF or a screenshot is easy to spot.' },
     ],
     planNote: (
       <>
-        Pre-screening is free on every plan. Credit checks are pay-as-you-go: you pay only for the checks each application
-        needs. <a href={url('pricing/')}>See all prices</a>
+        Pre-screening is free on every plan, and every check is priced below. Want to see what you get?{' '}
+        <a href={site.app.sampleReport} rel="noopener">
+          See a sample report
+        </a>
       </>
     ),
     faqs: [
@@ -221,7 +234,7 @@ export const features: Feature[] = [
     job: 'Want rent paid on the first?',
     priceLine: 'Included in Self Management: $9.99/month + $1 a door',
     h1: 'Reward the tenants who pay on time.',
-    lead: 'Rent is most tenants’ biggest monthly bill, yet it rarely shows up on a credit file. LandlordEzy reports it to Equifax every month, so on-time tenants build credit and every tenant has a reason to pay on the first.',
+    lead: 'Rent is most tenants’ biggest bill, yet it rarely builds their credit. LandlordEzy reports it to Equifax every month, so on-time tenants build credit and everyone has a reason to pay on the first.',
     visual: 'reporting',
     stepsTitle: 'Reporting that runs itself.',
     steps: [
@@ -241,9 +254,9 @@ export const features: Feature[] = [
     highlightsTitle: 'Good for tenants. Good for you.',
     highlights: [
       { icon: TrendingUp, title: 'Good tenants build credit', body: 'For Canadians with thin credit files, a record of on-time rent can be the strongest proof they’re reliable.' },
-      { icon: CalendarCheck, title: 'A reason to pay on the first', body: 'When rent counts toward credit, tenants make it a priority.' },
-      { icon: FileCheck2, title: 'Consent, handled and versioned', body: 'On-time reporting needs the tenant’s consent. LandlordEzy records it, and asks again if the wording ever changes.' },
-      { icon: Scale, title: 'Arrears, on the record', body: 'Unpaid rent is a debt. Positive reporting needs consent; reporting an unpaid debt does not. Keep the ledger accurate and the record stays clean.' },
+      { icon: CalendarCheck, title: 'A reason to pay on the first', body: 'When rent counts toward credit, tenants make it a priority, and the first of the month stops being a guessing game.' },
+      { icon: FileCheck2, title: 'Consent, on file and up to date', body: 'On-time reporting needs the tenant’s consent. LandlordEzy records it, and asks again if the wording ever changes.' },
+      { icon: Scale, title: 'Arrears, on the record', body: 'Reporting on-time rent needs the tenant’s consent. Reporting unpaid rent as a debt doesn’t. An accurate ledger keeps the record fair to both of you.' },
       { icon: Award, title: 'Rental Report Card', body: 'Every on-time month builds a tenant’s verifiable rental record that they own and can share with their next landlord.' },
       { icon: Repeat, title: 'Monthly, automatically', body: 'Submissions go to Equifax every month from your ledger. You keep the ledger current; LandlordEzy handles the file.' },
     ],
@@ -275,7 +288,7 @@ export const features: Feature[] = [
     nav: 'N4 & N1 notices',
     title: 'N4 & N1 Notices in 60 Seconds, Bill 60-Ready | LandlordEzy',
     description:
-      'Serve a correct Ontario N4 in under a minute: filled from your ledger, with the 7-day termination date and a certificate of service. Automate N1 rent increases too.',
+      'Prepare a correct Ontario N4 in under a minute: filled from your ledger, with the 7-day termination date and a Certificate of Service. Automate N1 rent increases too.',
     eyebrow: 'Notices & LTB forms',
     job: 'Tenant hasn’t paid?',
     priceLine: 'N4 and N1 included in Self Management: $9.99/month + $1 a door',
@@ -300,7 +313,7 @@ export const features: Feature[] = [
         body: 'Termination dates account for how you serve: in person, by courier (+1 business day) or by mail (+5 days).',
       },
       { icon: ClipboardCheck, title: 'Certificate of Service', body: 'Generated with every notice, so your proof of service is ready on day one.' },
-      { icon: TrendingUp, title: 'Automated N1 rent increases', body: 'Guideline, 90-day notice and 12-month rule built in. The new rent applies to the ledger on the effective date.' },
+      { icon: Scale, title: 'A paralegal if it’s contested', body: 'If the tenant disputes it, book a free 15-minute call with the licensed paralegal team, or hand them the file.' },
       { icon: Mail, title: 'Serve by email, with consent', body: 'Tenants e-sign consent to email service once. Then N1s and entry notices go out by email, with proof on file.' },
       { icon: History, title: 'Always the current rules', body: 'Notices follow the forms and rules in force on the day you serve, including Bill 60.' },
     ],
@@ -313,7 +326,14 @@ export const features: Feature[] = [
     faqs: [
       {
         q: 'Can I serve an N4 myself, without a paralegal?',
-        a: 'Yes. Landlords can prepare and serve their own N4. LandlordEzy removes the arithmetic and date mistakes that most often get notices thrown out. For contested hearings, licensed paralegals can represent you.',
+        a: (
+          <>
+            Yes. Landlords can prepare and serve their own N4. LandlordEzy removes the arithmetic and date mistakes that most often
+            get notices thrown out. For contested hearings, <a href={url('legal-help/')}>licensed paralegals can represent you</a>.
+          </>
+        ),
+        aText:
+          'Yes. Landlords can prepare and serve their own N4. LandlordEzy removes the arithmetic and date mistakes that most often get notices thrown out. For contested hearings, licensed paralegals can represent you.',
       },
       {
         q: 'How many days does an N4 give the tenant now?',
@@ -335,7 +355,7 @@ export const features: Feature[] = [
       'Create the Ontario Standard Lease, check it with AI and e-sign with your tenant from any device. Add photo move-in inspections your tenant approves.',
     eyebrow: 'Leases & inspections',
     job: 'New tenant moving in?',
-    priceLine: 'E-lease included in Self Management: $9.99/month + $1 a door · Inspections on every plan',
+    priceLine: 'E-lease included in Self Management: $9.99/month + $1 a door · Move-in inspections on every plan',
     h1: 'Sign the Ontario lease from anywhere.',
     lead: 'Build the Ontario Standard Lease in minutes, let AI check it for missing details, and collect signatures on any device. Then document the unit with a move-in inspection your tenant approves.',
     visual: 'lease',
@@ -349,14 +369,15 @@ export const features: Feature[] = [
     highlights: [
       { icon: Signature, title: 'Built-in e-signature', body: 'No PDFs, printers or third-party signing tools. Recall a lease to edit it before everyone has signed.' },
       { icon: Camera, title: 'Move-in inspections', body: 'Photograph each room, send the report for your tenant to approve, and keep dated proof of the unit’s condition.' },
-      { icon: Zap, title: 'Reuse your listing photos', body: 'Turn the photos and video from your listing into a move-in inspection in a couple of clicks.' },
-      { icon: Landmark, title: 'Utilities, settled', body: 'Record who pays gas, hydro and water. It flows onto the lease, so responsibility is never in question.' },
-      { icon: UserCheck, title: 'Deposits, verified', body: 'Request first month, last month and key deposits by e-Transfer and mark them verified on the file.' },
+      { icon: Images, title: 'Reuse your listing photos', body: 'Turn the photos and video from your listing into a move-in inspection in a couple of clicks.' },
+      { icon: Zap, title: 'Utilities, settled', body: 'Record who pays gas, hydro and water. It flows onto the lease, so responsibility is never in question.' },
+      { icon: UserCheck, title: 'Deposits, verified', body: 'Request the first month’s rent, the last month’s rent deposit and a key deposit by e-Transfer, and mark each one verified.' },
       { icon: ShieldCheck, title: 'Stored securely', body: 'Leases, inspections and documents live with the tenant, available whenever you need them.' },
     ],
     planNote: (
       <>
-        E-leases and inspections are included in Self Management. Move-in inspections are available on every plan.{' '}
+        E-leases are included in Self Management, from $9.99 a month plus $1 per door. Move-in and move-out inspections are on
+        every plan.{' '}
         <a href={url('pricing/')}>See pricing</a>
       </>
     ),
@@ -392,6 +413,9 @@ export const features: Feature[] = [
     eyebrow: 'Listings & tenant placement',
     job: 'Unit sitting empty?',
     priceLine: 'EzyRent listings free on every plan · Flat-fee MLS® from $549 + HST',
+    cta: { label: 'List a rental free', href: site.app.ezyrentList },
+    secondary: { label: 'Compare the three ways to list', href: '#options' },
+    band: { primary: { label: 'List a rental free', href: site.app.ezyrentList } },
     h1: 'Fill your vacancy faster.',
     lead: 'With more vacancies on the market, speed matters. List free on EzyRent and meet only pre-screened renters, or put your unit on REALTOR.ca and the MLS® system for one flat fee.',
     visual: 'listing',
@@ -399,7 +423,7 @@ export const features: Feature[] = [
     steps: [
       { title: 'List in minutes.', body: 'Post free on EzyRent. AI can import a listing from a PDF or screenshot and polish the description.' },
       { title: 'Meet serious renters.', body: 'Every applicant passes through pre-screening, and showings book themselves with “on my way” confirmations.' },
-      { title: 'Move them into a lease.', body: 'Screen, sign the Ontario Standard Lease and collect deposits without re-typing a thing.' },
+      { title: 'Move them into a lease.', body: 'Screen, sign the Ontario Standard Lease and collect deposits without retyping a thing.' },
     ],
     highlightsTitle: 'Less time on no-shows. More on good tenants.',
     highlights: [
@@ -407,13 +431,13 @@ export const features: Feature[] = [
       { icon: CalendarCheck, title: 'Showings that book themselves', body: 'Renters pick a time, get reminders and confirm they’re on the way.' },
       { icon: AlertTriangle, title: 'No-show protection', body: 'Report a no-show and a three-strike rule keeps repeat time-wasters off your calendar.' },
       { icon: ScanLine, title: 'For-rent sign with a QR code', body: 'Print a yard sign that sends passers-by straight to your listing.' },
-      { icon: Sparkles, title: 'AI listing tools', body: 'Polish your description and copy it to Kijiji and Marketplace in a tap.' },
+      { icon: Sparkles, title: 'AI listing tools', body: 'Polish your description and copy it to Kijiji and Facebook Marketplace in a tap.' },
       { icon: Star, title: 'Flat-fee MLS® listing', body: 'REALTOR.ca exposure for one flat fee from $549 + HST, no commission, with a Legal Guarantee.' },
     ],
     planNote: (
       <>
         EzyRent listings are free on every plan. MLS® listings and full-service placement are provided by List It Realty Brokerage
-        Inc.; paying LandlordEzy members save $100. <a href={url('pricing/')}>See pricing</a>
+        Inc. <a href={url('pricing/')}>See pricing</a>
       </>
     ),
     faqs: [
@@ -427,7 +451,7 @@ export const features: Feature[] = [
         a: 'Non-payment of rent: the team prepares and files the N4 and L1, represents you at the Landlord and Tenant Board and coordinates re-listing. Coverage is 3 months with the $549 listing or 12 months with the $749 listing. Report missed rent within 5 days and use LandlordEzy for rent tracking to stay eligible. Damage, maintenance disputes and government fees are not covered.',
       },
       {
-        q: 'Can a Realtor handle everything?',
+        q: 'Can a REALTOR® handle everything?',
         a: 'Yes. Full-service tenant placement is one month’s rent plus HST, paid when the tenant is placed, and includes a 12-month placement guarantee and a 12-month Legal Guarantee.',
       },
     ],
@@ -443,9 +467,9 @@ export const features: Feature[] = [
     job: 'Something needs fixing?',
     priceLine: 'Included in Self Management: $9.99/month + $1 a door',
     h1: 'Repairs, dispatched in one tap.',
-    lead: 'A tenant reports a leak. You tick three boxes: ask for their availability, get the owner’s approval, assign a vendor. LandlordEzy notifies everyone with one shared link, tracks photos and costs, and posts the bill.',
+    lead: 'A tenant reports a leak. Tick what you need (their availability, a vendor and, if you manage for an owner, the owner’s approval) and one tap sends it. LandlordEzy notifies everyone with one shared link, tracks photos and costs, and posts the bill.',
     visual: 'maintenance',
-    stepsTitle: 'Fifteen phone calls, down to five taps.',
+    stepsTitle: 'All those phone calls, down to one tap.',
     steps: [
       { title: 'The tenant reports it.', body: 'Requests arrive with photos, straight from the tenant portal.' },
       { title: 'One tap dispatches it.', body: 'Tenant, owner and vendor are notified together and share one live link. Vendors don’t need an account.' },
@@ -454,11 +478,11 @@ export const features: Feature[] = [
     highlightsTitle: 'The busywork of owning rentals, handled.',
     highlights: [
       { icon: Wrench, title: 'Vendors you can rank', body: 'Rate vendors after each job. Bad ones go on a do-not-call list and quietly disappear from your picks.' },
-      { icon: Flame, title: 'Fire safety inspections', body: 'Walk the Ontario Fire Code checklist on your phone, photograph each alarm and exit, and generate a signed PDF.' },
-      { icon: BellRing, title: 'Never miss an inspection', body: 'Email and text reminders go to you and your team before each inspection is due.' },
+      { icon: FolderDown, title: 'Year-end, ready for your accountant', body: 'Export a clean PDF or CSV of expenses by property, ready for tax time.' },
+      { icon: NotebookPen, title: 'Team notes', body: 'Notes on every property, tenant and job, so everyone on your team knows the history.' },
       { icon: ScanLine, title: 'Receipts read by AI', body: 'Snap a receipt; AI reads the vendor, amount and date and files it to the right property for tax time.' },
       { icon: CalendarClock, title: 'One shared calendar', body: 'Inspections, renewals and tasks in one place, subscribable in Outlook, Google or Apple Calendar.' },
-      { icon: MessageSquareText, title: 'Broadcasts', body: 'Email and text a building, a portfolio or everyone at once, with a delivery log.' },
+      { icon: Megaphone, title: 'Message everyone at once', body: 'Email and text a building, a portfolio or every tenant at once, with a delivery log.' },
     ],
     planNote: (
       <>
@@ -481,37 +505,41 @@ export const features: Feature[] = [
     nav: 'Ezy AI',
     title: 'Ezy AI: Tenant Notices in Plain English | LandlordEzy',
     description:
-      'Tell Ezy what you need. It drafts the notice or letter from the tenancy’s real details, sends it by email and text, and shows you when the tenant opens it.',
+      'Ezy drafts the notice or letter from the tenancy’s real details, sends it for you, and shows you when the tenant opens it.',
     eyebrow: 'Ezy AI',
     job: 'Need a notice or a letter?',
-    priceLine: 'Ezy AI: $29.99/month + $1 a door · 3 free drafts a month with Self Management',
-    h1: 'Tell it what you need.',
-    lead: 'Ezy lives on every tenant profile and already knows the tenancy. Ask in plain English and it drafts the notice or letter, sends it by email and text, and shows you the moment it’s opened.',
+    priceLine: 'Ezy AI: $9.99/month + $1 a door with code AI20 (reg. $29.99) · 3 free drafts a month with Self Management',
+    h1: 'Tell Ezy what you need.',
+    lead: 'Ezy lives on every tenant profile and already knows the tenancy. Ask in plain English and it drafts the notice or letter, sends it to your tenant, and shows you the moment it’s opened.',
     visual: 'ezy',
-    stepsTitle: 'A notice in thirty seconds.',
+    stepsTitle: 'A notice in 30 seconds.',
     steps: [
       { title: 'Ask in plain English.', body: '“Draft a 24-hour notice. The plumber is coming Thursday afternoon.”' },
-      { title: 'Review the draft.', body: 'Names, address, dates and the right section of the Act come from the tenancy record. Ezy never makes them up.' },
-      { title: 'Send and see it opened.', body: 'One tap sends it by email and text, no tenant login needed, with a clean delivery record.' },
+      { title: 'Review the draft.', body: 'Names, address and dates come from the tenancy record, and the draft cites the section of the Act it relies on. You check it before it goes.' },
+      { title: 'Send and see it opened.', body: 'One tap sends it by text, and by email once your tenant has agreed to email service. No tenant login, and a clean delivery record.' },
     ],
     highlightsTitle: 'Your assistant on every tenant profile.',
     highlights: [
       { icon: CalendarClock, title: '24-hour entry notices', body: 'Repairs, inspections and showings, with the right date window and reason.' },
       { icon: FileText, title: 'Letters that sound professional', body: 'Garbage, pets, parking or noise: a firm, polite letter in seconds.' },
       { icon: Wallet, title: 'Rent reminders that know the numbers', body: 'Ezy knows what’s owed and for which period, so reminders are always accurate.' },
-      { icon: Send, title: 'Delivery you can prove', body: 'Sent, opened and acknowledged, timestamped on the tenant’s file.' },
-      { icon: Sparkles, title: 'Ask Ezy, free', body: 'Ontario landlord-tenant questions answered with sources, three a day on the Free plan.' },
+      { icon: Send, title: 'A delivery record on file', body: 'Sent, opened and acknowledged, timestamped on the tenant’s file. Email service needs the tenant’s consent first.' },
+      { icon: Sparkles, title: 'It already knows the tenancy', body: 'Rent, dates, the unit and its history come from the tenant profile, so you never retype them.' },
       { icon: ShieldCheck, title: 'You stay in control', body: 'Ezy drafts. You review and send. Nothing goes out without you.' },
     ],
     planNote: (
       <>
-        Ezy AI is $29.99 a month plus $1 per door; code AI20 locks in $9.99 a month. Self Management includes three free
-        drafts a month. <a href={url('pricing/')}>See pricing</a>
+        Ezy AI is $29.99 a month plus $1 per door, or $9.99 with code AI20 for as long as you stay subscribed. Self Management
+        includes three free drafts a month. <a href={url('pricing/')}>See pricing</a>
       </>
     ),
     faqs: [
       { q: 'Is Ezy giving me legal advice?', a: 'No. Ezy drafts documents and answers general questions. For advice on your specific situation, talk to a licensed paralegal.' },
       { q: 'Will it send anything without me?', a: 'No. Ezy drafts for your review. You decide what goes out and when.' },
+      {
+        q: 'What does Ezy AI cost?',
+        a: '$29.99 a month plus $1 per door, or $9.99 a month plus $1 per door with code AI20, locked in for as long as you stay subscribed. Self Management includes three free drafts a month, and Ask Ezy answers three questions a day free.',
+      },
       {
         q: 'How is Ask Ezy different from Ezy AI?',
         a: 'Ask Ezy answers Ontario landlord-tenant questions and is free to try. Ezy AI works inside your account, on each tenant profile, and drafts and sends notices and letters.',
@@ -524,25 +552,35 @@ export const features: Feature[] = [
     nav: 'Legal help',
     title: 'Paralegal Help & Legal Guarantee for Landlords | LandlordEzy',
     description:
-      'A free 15-minute call with a licensed Ontario paralegal team, hands-off VirtualPM Legal Shield, a Legal Guarantee on placements, and CaseBuilder for LTB hearings.',
+      'Talk to a licensed Ontario paralegal free for 15 minutes. Then hand off rent and notices with VirtualPM Legal Shield, or prepare for a hearing with CaseBuilder.',
     eyebrow: 'Legal help',
     job: 'Heading to the Board?',
     priceLine: 'Free 15-minute call · Paralegal time $75 an hour · Legal Shield from $49 a month',
+    cta: { label: 'Book a free call', href: site.app.book },
+    secondary: { label: 'Ask Ezy a question free', href: site.app.askEzy },
+    noteTail: null,
+    band: {
+      title: 'Talk it through with a paralegal.',
+      lead: 'The first 15 minutes are free: your tenant, your notice or your case, with the licensed paralegal team.',
+      primary: { label: 'Book a free call', href: site.app.book },
+      secondary: { label: 'Ask Ezy a question free', href: site.app.askEzy },
+      fine: 'No obligation · Licensed Ontario paralegals · LandlordEzy is not a law firm',
+    },
     h1: 'A paralegal team, one tap away.',
     lead: 'Software handles the routine. When a tenancy turns into a Landlord and Tenant Board matter, LandlordEzy connects you with licensed Ontario paralegals who handle these files every day.',
     visual: 'casebuilder',
     stepsTitle: 'Help at every level.',
     steps: [
-      { title: 'Ask.', body: 'Ask Ezy answers general Ontario questions free. Every answer is reviewed by the paralegal team.' },
+      { title: 'Ask.', body: 'Ask Ezy answers general Ontario landlord-tenant questions in plain English, three a day free.' },
       { title: 'Talk to a person.', body: 'Book a free 15-minute strategy call with the licensed paralegal team about your tenant, notice or case.' },
       { title: 'Hand it off.', body: 'Buy blocks of paralegal time, or let VirtualPM Legal Shield run rent collection and notices for you.' },
     ],
-    highlightsTitle: 'Real credentials behind the software.',
+    highlightsTitle: 'Everything between a question and a hearing.',
     highlights: [
-      { icon: PhoneCall, title: 'Free strategy call', body: '15 minutes with the licensed paralegal team. No obligation.' },
-      { icon: ShieldCheck, title: 'VirtualPM Legal Shield', body: 'From $49 a month plus $6 a unit: rent collected by EFT, an N4 on the 5th if rent is unpaid, and a monthly paralegal consult.' },
+      { icon: PhoneCall, title: 'Free strategy call', body: '15 minutes with the licensed paralegal team about your tenant, your notice or your case. No obligation.' },
+      { icon: ShieldCheck, title: 'VirtualPM Legal Shield', body: 'From $49 a month plus $6 a door: rent collected by electronic funds transfer, an N4 on the 5th if rent is unpaid, a 30-minute monthly paralegal consult and $100 off a flat-fee MLS® listing.' },
       { icon: Scale, title: 'Legal Guarantee', body: 'N4, L1 and LTB representation for non-payment of rent, included with flat-fee MLS® listings.' },
-      { icon: Landmark, title: 'Paralegal time blocks', body: 'Three- and twelve-hour blocks at $75 an hour, usable across tenant files. Unused hours never expire.' },
+      { icon: Landmark, title: 'Paralegal time blocks', body: 'Three- and twelve-hour blocks at $75 an hour for paid members, usable across tenant files. Unused hours never expire.' },
       { icon: FileSearch, title: 'CaseBuilder', body: 'Describe your matter and see how the Board decided similar cases, wins and losses, with the reasons.' },
       { icon: ClipboardCheck, title: 'Hearing prep & disclosure', body: 'A page-numbered hearing pack and a one-click, tabbed disclosure bundle.' },
     ],

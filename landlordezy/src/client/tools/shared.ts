@@ -50,13 +50,16 @@ export function nextBusinessDay(d: Date): Date {
   return r
 }
 
+/** "Tuesday, October 27, 2026", which may break after the weekday but never inside the date. */
 export function fmtDate(d: Date, weekday = true): string {
-  return d.toLocaleDateString('en-CA', {
-    weekday: weekday ? 'long' : undefined,
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
+  return d
+    .toLocaleDateString('en-CA', {
+      weekday: weekday ? 'long' : undefined,
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+    .replace(/ (?=\d)/g, '\u00a0')
 }
 
 export function money(n: number): string {
@@ -149,10 +152,24 @@ export function remember(form: HTMLFormElement, key: string, names: string[]) {
   }
   const page = new URL(form.dataset.toolUrl ?? window.location.pathname, window.location.href)
   if (page.pathname === window.location.pathname) history.replaceState(history.state, '', linkFor(form, names))
+  carry(form, names)
+}
+
+/**
+ * The "Save these dates" and "Fill my N4" buttons take the result with them
+ * (?from=n4&served=…), so the app can pick up where the calculator left off.
+ */
+function carry(form: HTMLFormElement, names: string[]) {
+  form.querySelectorAll<HTMLAnchorElement>('a[data-carry]').forEach((a) => {
+    const url = new URL(a.dataset.carry!, window.location.href)
+    url.search = new URLSearchParams({ from: form.dataset.tool ?? '', ...values(form, names) }).toString()
+    a.href = url.href
+  })
 }
 
 /** "Copy a link to this result": the clipboard where allowed, a share sheet or prompt otherwise. */
 export function setupCopy(form: HTMLFormElement, names: string[]) {
+  carry(form, names)
   const button = form.querySelector<HTMLButtonElement>('[data-tool-copy]')
   const label = button?.querySelector<HTMLElement>('[data-tool-copy-label]')
   if (!button || !label) return

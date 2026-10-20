@@ -123,7 +123,7 @@ export function GlobalNav({ current }: { current: string }) {
               Sign in
             </a>
             <a href="#menu" className="menu-pill lg:hidden" aria-controls="menu" aria-expanded="false" data-menu-open data-track="menu:open">
-              Menu <ChevronDown className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden />
+              Menu <ChevronDown className="menu-pill-icon h-3.5 w-3.5" strokeWidth={2.2} aria-hidden />
             </a>
             <a href={site.app.signup} className="btn-primary btn-sm" data-track="start-free:nav">
               Start free
@@ -254,15 +254,45 @@ export function MenuSheet() {
   )
 }
 
-export function MobileCTA() {
+type BarLink = { label: string; href: string; track: string }
+/** The sticky phone bar's two buttons, by page. Everything else gets See pricing and Start free. */
+function barFor(current: string): [BarLink, BarLink] {
+  const startFree: BarLink = { label: 'Start free · no card', href: site.app.signup, track: 'start-free:sticky' }
+  switch (current) {
+    case 'paralegals/':
+      return [
+        { label: 'See plans', href: '#plans', track: 'plans:sticky' },
+        { label: 'Try CaseBuilder free', href: site.app.caseBuilder, track: 'casebuilder:sticky' },
+      ]
+    case 'property-managers/':
+      return [{ label: 'Book a call', href: site.app.book, track: 'book-call:sticky' }, startFree]
+    case 'legal-help/':
+      return [
+        { label: 'Ask Ezy free', href: site.app.askEzy, track: 'ask-ezy:sticky' },
+        { label: 'Book a free call', href: site.app.book, track: 'book-call:sticky' },
+      ]
+    case 'pricing/':
+      return [{ label: 'Book a call', href: site.app.book, track: 'book-call:sticky' }, startFree]
+    case 'demo/':
+      return [
+        { label: 'See pricing', href: url('pricing/'), track: 'pricing:sticky' },
+        { label: 'Build my free demo', href: site.app.demo, track: 'demo:sticky' },
+      ]
+    default:
+      return [{ label: 'See pricing', href: url('pricing/'), track: 'pricing:sticky' }, startFree]
+  }
+}
+
+export function MobileCTA({ current }: { current: string }) {
+  const [left, right] = barFor(current)
   return (
     <aside className="mcta" data-mcta aria-label="Get started" aria-hidden="true">
       <div className="flex items-center gap-2 rounded-full bg-white/85 p-1.5 shadow-float ring-1 ring-black/5 backdrop-blur-xl">
-        <a href={url('pricing/')} className="btn btn-sm flex-1 text-ink" tabIndex={-1} data-track="pricing:sticky">
-          See pricing
+        <a href={left.href} className="btn btn-sm flex-1 text-ink" tabIndex={-1} data-track={left.track}>
+          {left.label}
         </a>
-        <a href={site.app.signup} className="btn-primary btn-sm flex-[1.4]" tabIndex={-1} data-track="start-free:sticky">
-          Start free · no card
+        <a href={right.href} className="btn-primary btn-sm flex-[1.4]" tabIndex={-1} data-track={right.track}>
+          {right.label}
         </a>
       </div>
     </aside>
@@ -275,7 +305,7 @@ export function Breadcrumbs({ trail }: { trail: { name: string; path: string }[]
     <nav aria-label="Breadcrumb" className="wrap pt-6">
       <ol className="flex flex-wrap items-center gap-1.5 text-[0.8125rem] text-ink-3">
         {all.map((c, idx) => (
-          <li key={c.path} className="flex items-center gap-1.5">
+          <li key={c.path} className={`items-center gap-1.5 ${idx === all.length - 1 && idx > 1 ? 'hidden sm:flex' : 'flex'}`}>
             {idx > 0 && <span aria-hidden>›</span>}
             {idx === all.length - 1 ? (
               <span aria-current="page" className="text-ink-2">
@@ -352,12 +382,12 @@ export function SiteFooter() {
             </li>
             <li>
               <a href={site.app.privacy} className="text-ink-3 hover:text-ink">
-                Privacy
+                Privacy policy
               </a>
             </li>
             <li>
               <a href={url('trust/')} className="text-ink-3 hover:text-ink">
-                Trust &amp; privacy
+                Trust centre
               </a>
             </li>
             <li>

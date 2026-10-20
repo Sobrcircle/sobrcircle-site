@@ -1,8 +1,8 @@
 import {
+  ArrowRight,
   Building2,
   CalendarDays,
   CheckCircle2,
-  Clock,
   FileLock2,
   Fingerprint,
   Handshake,
@@ -10,12 +10,12 @@ import {
   LifeBuoy,
   Lock,
   MessagesSquare,
+  PenLine,
   Phone,
   Scale,
   Search,
   ShieldCheck,
   Sparkles,
-  Timer,
   Trash2,
   Users,
   Leaf,
@@ -23,7 +23,7 @@ import {
 import { site, url } from '../site'
 import { JobChips } from '../components/JobChips'
 import { CheckList, CTABand, FAQList, FeatureTile, Fine, Heading, Section, Steps } from '../components/ui'
-import { demoFaqs, faqGroups } from '../content/faqs'
+import { demoFaqs, faqGroups, pmFaqs } from '../content/faqs'
 import { DashboardScreen } from '../components/mocks/screens'
 
 /* ---------------------------------------------------------------------------- */
@@ -36,7 +36,10 @@ export function About() {
       <section data-hero className="bg-white pb-16 pt-14 sm:pt-20">
         <div className="wrap text-center">
           <p className="eyebrow">About LandlordEzy</p>
-          <h1 className="mx-auto mt-3 max-w-[18ch] text-display-xl">Built in Ontario, by a landlord, for landlords.</h1>
+          {/* Phrases hold together, so lines break between them. */}
+          <h1 className="mx-auto mt-3 max-w-[18ch] text-display-xl">
+            Built in Ontario, <span className="inline-block">by a landlord,</span> <span className="inline-block">for landlords.</span>
+          </h1>
           <p className="mx-auto mt-6 max-w-[40rem] text-lead text-ink-3">
             LandlordEzy brings everything an Ontario landlord juggles into one login: rent, screening, leases, Equifax reporting and
             LTB notices, with licensed people behind the software.
@@ -46,10 +49,12 @@ export function About() {
 
       <Section tone="alt" labelledBy="story-title">
         <div className="wrap grid gap-14 lg:grid-cols-[1fr_1.15fr] lg:items-center">
-          <div className="relative mx-auto aspect-[4/5] w-full max-w-[24rem] overflow-hidden rounded-5xl bg-[linear-gradient(160deg,#0b1a5c_0%,#050c3b_60%,#02061f_100%)] text-white shadow-float">
+          <div className="relative mx-auto w-full max-w-[24rem] overflow-hidden rounded-5xl bg-[linear-gradient(160deg,#0b1a5c_0%,#050c3b_60%,#02061f_100%)] text-white shadow-float sm:aspect-[4/5]">
             <div className="glow-blue absolute inset-x-0 top-0 h-2/3 opacity-70" aria-hidden />
-            <div className="relative flex h-full flex-col justify-between p-9">
-              <p className="font-display text-[1.75rem] font-semibold leading-snug tracking-[-0.02em]">“We need each other.”</p>
+            <div className="relative flex h-full flex-col justify-between gap-10 p-7 sm:p-9">
+              <p className="font-display text-[1.5rem] font-semibold leading-snug tracking-[-0.02em] sm:text-[1.75rem]">
+                Landlords need good tenants. Tenants need good landlords.
+              </p>
               <div>
                 <span className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-white/10 font-display text-[1.375rem] font-bold">
                   PR
@@ -80,6 +85,9 @@ export function About() {
                 sides the tools, the records and the protection to do this the right way.
               </p>
             </div>
+            <a href={site.social.youtube} className="link-more mt-6" rel="noopener">
+              Watch Paul on YouTube
+            </a>
           </div>
         </div>
       </Section>
@@ -99,6 +107,11 @@ export function About() {
             <FeatureTile icon={Scale} title="Licensed paralegal team" body="Legal services are provided by Landlord Pro Legal SPC, a licensed Ontario paralegal firm." />
             <FeatureTile icon={Users} title="Ontario Landlord Help" body="A free community of 31,700+ Ontario landlords, moderated by Paul." />
           </div>
+          <p className="mt-8 text-center">
+            <a href={site.social.facebookGroup} className="link-more" rel="noopener">
+              Join the free Ontario Landlord Help community
+            </a>
+          </p>
         </div>
       </Section>
 
@@ -107,40 +120,26 @@ export function About() {
           <div>
             <p className="eyebrow">Who builds it</p>
             <h2 id="team-title" className="mt-3 text-display-md">
-              Realtors, paralegals and engineers, at one table.
+              REALTORS®, paralegals and engineers, under one roof.
             </h2>
             <p className="mt-5 text-lead text-ink-3">
-              Property managers, accountants, web developers and AI engineers work beside the people who handle tenancies every day.
-              That’s why the platform improves almost every week, usually from something a landlord asked for.
+              Licensed REALTORS®, paralegals, property managers and accountants work side by side with web developers and AI
+              engineers. That’s why the platform improves almost every week, usually from something a landlord asked for.
             </p>
             <CheckList
               className="mt-8"
-              items={['Save time: tasks that took days now take minutes', 'Reduce risk: correct forms and LTB-ready records', 'Keep more: one membership instead of per-task fees']}
+              items={['Save time: tasks that took days now take minutes', 'Reduce risk: correct forms and LTB-ready records', 'Keep more: no per-payment or per-signature fees']}
             />
           </div>
           <DashboardScreen />
         </div>
       </Section>
 
-      <Section labelledBy="contact-cta">
-        <div className="wrap-content text-center">
-          <h2 id="contact-cta" className="text-display-md">
-            Talk to Paul’s team.
-          </h2>
-          <p className="mx-auto mt-5 max-w-[34rem] text-lead text-ink-3">
-            Book a free 15-minute call with the licensed paralegal team about your tenant, your notice or your portfolio.
-          </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-3">
-            <a href={site.app.book} className="btn-primary">
-              Book a free call
-            </a>
-            <a href={site.social.youtube} className="link-more" rel="noopener">
-              Watch Paul on YouTube
-            </a>
-          </div>
-        </div>
-      </Section>
-      <CTABand />
+      <CTABand
+        title="Talk to Paul’s team, or start free."
+        lead="Book a free 15-minute call about your tenant, your notice or your portfolio, or open a free account and look around."
+        secondary={{ label: 'Book a free 15-minute call', href: site.app.book }}
+      />
     </>
   )
 }
@@ -162,27 +161,32 @@ export function Contact() {
         </div>
       </section>
       <section className="bg-white pb-20">
-        <div className="wrap-content grid gap-5 md:grid-cols-3">
-          <a href={site.app.book} className="flex flex-col rounded-4xl bg-brand-hover p-8 text-white shadow-glow hover:no-underline">
+        <div className="wrap-content grid gap-5 md:grid-cols-2">
+          <a href={site.app.book} className="group flex flex-col rounded-4xl bg-brand-hover p-8 text-white shadow-glow hover:no-underline" data-track="book-call:contact">
             <CalendarDays className="h-7 w-7" aria-hidden />
-            <span className="mt-6 font-display text-[1.375rem] font-semibold">Book a discovery call</span>
-            <span className="mt-2 text-white">Pick a time that suits you. 15 minutes, free.</span>
+            <span className="mt-6 font-display text-[1.375rem] font-semibold">Book a free 15-minute call</span>
+            <span className="mt-2 text-pretty text-white">Pick a time that suits you, with the licensed paralegal team.</span>
+            <span className="mt-6 inline-flex items-center gap-1 font-semibold">
+              Pick a time <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
+            </span>
           </a>
-          <a href={`tel:${site.phone.tel}`} className="flex flex-col rounded-4xl bg-canvas-alt p-8 text-ink hover:no-underline">
+          <a href={`tel:${site.phone.tel}`} className="group flex flex-col rounded-4xl bg-canvas-alt p-8 text-ink hover:no-underline" data-track="call:contact">
             <Phone className="h-7 w-7 text-brand" aria-hidden />
             <span className="mt-6 font-display text-[1.375rem] font-semibold">{site.phone.display}</span>
-            <span className="mt-2 text-ink-3">{site.hours}</span>
-          </a>
-          <a href={site.app.askEzy} className="flex flex-col rounded-4xl bg-canvas-alt p-8 text-ink hover:no-underline">
-            <Sparkles className="h-7 w-7 text-brand" aria-hidden />
-            <span className="mt-6 font-display text-[1.375rem] font-semibold">Ask Ezy</span>
-            <span className="mt-2 text-ink-3">Instant answers to Ontario landlord questions, any time.</span>
+            <span className="mt-2 text-pretty text-ink-3">{site.hours}</span>
+            <span className="mt-6 inline-flex items-center gap-1 font-semibold text-brand-text">
+              Call now <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
+            </span>
           </a>
         </div>
+        <p className="wrap-content mt-6 text-center text-ink-3">
+          <Sparkles className="mr-1.5 inline h-4 w-4 align-[-2px] text-brand" aria-hidden />
+          Want an instant answer instead? <a href={site.app.askEzy}>Ask Ezy, our AI assistant, about Ontario landlord rules</a>.
+        </p>
       </section>
 
       <Section tone="alt" labelledBy="msg-title">
-        <div className="wrap-content grid gap-12 lg:grid-cols-[1fr_1.2fr]">
+        <div className="wrap-content grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:gap-y-8">
           <div>
             <h2 id="msg-title" className="text-display-md">
               Or send a message.
@@ -194,27 +198,14 @@ export function Contact() {
                 Serving landlords and tenants across Ontario. We work virtually, with no walk-in office.
               </li>
               <li className="flex gap-3">
-                <Clock className="mt-0.5 h-5 w-5 shrink-0 text-brand" aria-hidden />
-                {site.hours}
-              </li>
-              <li className="flex gap-3">
                 <LifeBuoy className="mt-0.5 h-5 w-5 shrink-0 text-brand" aria-hidden />
                 <span>
                   Using LandlordEzy already? The <a href={site.app.help}>Help Centre</a> has a guide for every feature.
                 </span>
               </li>
             </ul>
-            <div className="mt-8 rounded-3xl bg-white p-6 shadow-card">
-              <p className="flex items-center gap-2 font-semibold">
-                <FileLock2 className="h-5 w-5 text-brand" aria-hidden /> Named on an LTB order?
-              </p>
-              <p className="mt-2 text-[0.9375rem] text-ink-3">
-                LandlordEzy no longer publishes Landlord and Tenant Board orders. If you believe information about you is still
-                visible anywhere on LandlordEzy, tell us and we’ll deal with it.
-              </p>
-            </div>
           </div>
-          <form data-preview-form className="rounded-4xl bg-white p-7 shadow-card sm:p-9" aria-labelledby="msg-title">
+          <form data-preview-form className="rounded-4xl bg-white p-7 shadow-card sm:p-9 lg:row-span-2" aria-labelledby="msg-title">
             <div data-form-fields className="grid gap-5">
               <div className="grid gap-5 sm:grid-cols-2">
                 <div>
@@ -234,13 +225,30 @@ export function Contact() {
                 <label htmlFor="c-role" className="label">
                   I’m a…
                 </label>
-                <select id="c-role" name="role" className="field" defaultValue="Landlord">
+                <select id="c-role" name="role" className="field" defaultValue="" required>
+                  <option value="" disabled>
+                    Choose one
+                  </option>
                   <option>Landlord</option>
                   <option>Property management company</option>
                   <option>Paralegal</option>
                   <option>Tenant</option>
                   <option>Something else</option>
                 </select>
+              </div>
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label htmlFor="c-phone" className="label">
+                    Phone <span className="font-normal text-ink-4">(optional)</span>
+                  </label>
+                  <input id="c-phone" name="phone" type="tel" className="field" autoComplete="tel" />
+                </div>
+                <div>
+                  <label htmlFor="c-doors" className="label">
+                    Doors you manage <span className="font-normal text-ink-4">(optional)</span>
+                  </label>
+                  <input id="c-doors" name="doors" type="number" min="0" inputMode="numeric" className="field" />
+                </div>
               </div>
               <div>
                 <label htmlFor="c-msg" className="label">
@@ -266,6 +274,16 @@ export function Contact() {
               </a>
             </div>
           </form>
+          {/* After the form on phones; under the contact details on laptops. */}
+          <div className="rounded-3xl bg-white p-6 shadow-card lg:col-start-1">
+            <p className="flex items-center gap-2 font-semibold">
+              <FileLock2 className="h-5 w-5 text-brand" aria-hidden /> Named on an LTB order?
+            </p>
+            <p className="mt-2 text-[0.9375rem] text-ink-3">
+              LandlordEzy no longer publishes Landlord and Tenant Board orders. If you believe information about you is still visible
+              anywhere on LandlordEzy, tell us and we’ll deal with it.
+            </p>
+          </div>
         </div>
       </Section>
     </>
@@ -286,7 +304,7 @@ export function Demo() {
           <h1 className="mx-auto mt-3 max-w-[16ch] text-display-xl">See it with your own portfolio.</h1>
           <p className="mx-auto mt-6 max-w-[40rem] text-lead text-ink-3">
             Tell us how many units you manage and LandlordEzy builds a private, fully working demo shaped like your portfolio in
-            about a minute: real ledgers, an eviction mid-N4, owner statements, listings, e-sign and Ezy AI.
+            about a minute: working ledgers, an N4 in progress, owner statements, listings, e-sign and Ezy AI.
           </p>
           <div className="mt-9 flex flex-wrap justify-center gap-x-6 gap-y-3">
             <a href={site.app.demo} className="btn-primary btn-lg">
@@ -307,7 +325,8 @@ export function Demo() {
       <Section tone="alt" labelledBy="walk-title">
         <div className="wrap">
           <Heading id="walk-title" eyebrow="A guided path" title="From empty unit to signed tenant." size="md" />
-          <div className="mt-12">
+          <h3 className="mt-12 text-[0.9375rem] font-semibold text-ink-3">For landlords</h3>
+          <div className="mt-4">
             <Steps
               steps={[
                 { title: 'Publish a listing.', body: 'Turn a vacant unit into a live EzyRent listing and see what renters see.' },
@@ -316,12 +335,13 @@ export function Demo() {
               ]}
             />
           </div>
-          <div className="mt-5">
+          <h3 className="mt-10 text-[0.9375rem] font-semibold text-ink-3">For property managers</h3>
+          <div className="mt-4">
             <Steps
               steps={[
                 { title: 'Close the month.', body: 'See every owner on one page: who paid, fees, bills and the net draw.' },
                 { title: 'Approve a payment.', body: 'Approve an owner’s fee payment and watch it flip to paid, proof attached.' },
-                { title: 'Tag your team.', body: 'Post on an owner thread with an @mention, threaded replies and seen receipts.' },
+                { title: 'Tag your team.', body: 'Post on an owner thread with an @mention, threaded replies and read receipts.' },
               ]}
             />
           </div>
@@ -335,7 +355,13 @@ export function Demo() {
           <FAQList className="mt-10" items={demoFaqs} />
         </div>
       </Section>
-      <CTABand />
+      <CTABand
+        title="Your demo is about a minute away."
+        lead="A private workspace shaped like your portfolio, with fictional tenants. No sales call, no card."
+        primary={{ label: 'Build my free demo', href: site.app.demo }}
+        secondary={{ label: 'Or start free', href: site.app.signup }}
+        fine="Free · No card · Open for 48 hours"
+      />
     </>
   )
 }
@@ -346,6 +372,7 @@ export function Demo() {
 
 
 export function FAQ() {
+  const groups = [...faqGroups.slice(0, 2), { title: 'Property managers', items: pmFaqs }, ...faqGroups.slice(2)]
   return (
     <>
       <section data-hero className="bg-white pb-6 pt-14 sm:pt-20">
@@ -360,7 +387,7 @@ export function FAQ() {
             .
           </p>
           <nav aria-label="FAQ topics" className="mt-8 flex flex-wrap gap-2">
-            {faqGroups.map((g) => (
+            {groups.map((g) => (
               <a key={g.title} href={`#${g.title.toLowerCase().replace(/[^a-z]+/g, '-')}`} className="rounded-full bg-canvas-alt px-4 py-2 text-[0.875rem] text-ink-2 hover:no-underline">
                 {g.title}
               </a>
@@ -370,7 +397,7 @@ export function FAQ() {
       </section>
       <section className="bg-white pb-24">
         <div className="wrap-content space-y-16 pt-6">
-          {faqGroups.map((g) => (
+          {groups.map((g) => (
             <div key={g.title} id={g.title.toLowerCase().replace(/[^a-z]+/g, '-')}>
               <h2 className="text-headline">{g.title}</h2>
               <FAQList className="mt-6" items={g.items} />
@@ -406,11 +433,11 @@ export function Trust() {
         <div className="wrap">
           <Heading id="principles-title" title="Our principles" size="md" />
           <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            <FeatureTile icon={HeartHandshake} title="Consent first" body="Applicants authorize every credit check and choose what to share. On-time rent reporting needs the tenant’s consent, recorded and versioned." />
+            <FeatureTile icon={HeartHandshake} title="Consent first" body="Applicants authorize every credit check and choose what to share. On-time rent reporting needs the tenant’s consent, recorded and kept up to date." />
             <FeatureTile icon={Search} title="Soft inquiries only" body="Credit checks through LandlordEzy never lower an applicant’s credit score." />
             <FeatureTile icon={Lock} title="Never sold" body="LandlordEzy doesn’t sell personal information, to anyone, for any purpose." />
             <FeatureTile icon={Trash2} title="Delete what we don’t need" body="ID images used to verify Reference Network members are deleted as soon as verification is done." />
-            <FeatureTile icon={Fingerprint} title="Reports that can’t be forged" body="Every screening report has a unique ID that can be verified on the platform." />
+            <FeatureTile icon={Fingerprint} title="Reports you can verify" body="Every screening report has a unique ID that can be checked on the platform." />
             <FeatureTile icon={Leaf} title="Canadian-owned" body="LandlordEzy is owned and operated in Ontario, under Canadian privacy law (PIPEDA)." />
           </div>
         </div>
@@ -441,21 +468,13 @@ export function Trust() {
       </Section>
       <Section labelledBy="rights-title">
         <div className="wrap-content">
-          <Heading id="rights-title" title="Your choices" size="md" align="left" />
-          <div className="mt-10 grid gap-5 md:grid-cols-3">
-            {[
-              { icon: Timer, t: 'Access and correct', d: 'You can access and update your information at any time from your account.' },
-              { icon: Trash2, t: 'Delete your data', d: 'Request deletion of your account and personal information, subject to legal retention requirements.' },
-              { icon: MessagesSquare, t: 'Stop texts', d: 'Reply STOP to any LandlordEzy text message to opt out.' },
-            ].map((r) => (
-              <div key={r.t} className="rounded-4xl bg-canvas-alt p-7" data-reveal>
-                <r.icon className="h-6 w-6 text-brand" aria-hidden />
-                <h3 className="mt-5 text-title">{r.t}</h3>
-                <p className="mt-2 text-ink-3">{r.d}</p>
-              </div>
-            ))}
+          <Heading id="rights-title" title="Your choices" size="md" />
+          <div className="mt-12 grid gap-5 md:grid-cols-3">
+            <FeatureTile icon={PenLine} title="Access and correct" body="You can access and update your information at any time from your account." />
+            <FeatureTile icon={Trash2} title="Delete your data" body="Request deletion of your account and personal information, subject to legal retention requirements." />
+            <FeatureTile icon={MessagesSquare} title="Stop texts" body="Reply STOP to any LandlordEzy text message to opt out." />
           </div>
-          <p className="mt-10 text-ink-3">
+          <p className="mt-10 text-center text-ink-3">
             Read the full <a href={site.app.privacy}>Privacy Policy</a> and <a href={site.app.terms}>Terms and Conditions</a>, or{' '}
             <a href={url('contact/')}>contact us</a> with a privacy question.
           </p>
@@ -477,7 +496,7 @@ export function NotFound() {
         <p className="eyebrow">404</p>
         <h1 className="mx-auto mt-3 max-w-[16ch] text-display-lg">This page moved out.</h1>
         <p className="mx-auto mt-5 max-w-[32rem] text-lead text-ink-3">It may have a new address. These are good places to start.</p>
-        <div className="mx-auto mt-10 grid max-w-[40rem] gap-3 sm:grid-cols-2">
+        <div className="mx-auto mt-10 grid max-w-[60rem] gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {[
             { t: 'Home', h: url() },
             { t: 'Pricing', h: url('pricing/') },
@@ -489,7 +508,7 @@ export function NotFound() {
             </a>
           ))}
         </div>
-        <JobChips className="mx-auto mt-12 max-w-[60rem] text-left" heading="Or start with what you came to do" />
+        <JobChips className="mx-auto mt-12 max-w-[60rem]" heading="Or start with what you came to do" />
       </div>
     </section>
   )

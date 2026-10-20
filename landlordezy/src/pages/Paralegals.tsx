@@ -1,5 +1,5 @@
 import { BookMarked, FileStack, FolderKanban, ListOrdered, Search, Sparkles } from 'lucide-react'
-import { site } from '../site'
+import { site, url } from '../site'
 import { Actions, CheckList, CTABand, FeatureTile, Fine, Heading, Section, Steps } from '../components/ui'
 import { CaseBuilderScreen } from '../components/mocks/screens'
 import { paralegalPlans } from '../content/pricing'
@@ -35,7 +35,7 @@ export function Paralegals() {
           <div className="mt-12">
             <Steps
               steps={[
-                { title: 'Describe it or upload it.', body: 'Paste what happened, or drop in the N5, L2 or notice as a PDF or photo.' },
+                { title: 'Describe it or upload it.', body: 'Paste what happened, or drop in the notice or application, such as an N5 or L2, as a PDF or photo.' },
                 { title: 'See how the Board decided.', body: 'Comparable decisions are ranked by similarity, with outcomes and the reasons that decided them.' },
                 { title: 'Walk in prepared.', body: 'Generate a page-numbered hearing pack and a one-click disclosure bundle with tabbed exhibits.' },
               ]}
@@ -50,9 +50,9 @@ export function Paralegals() {
           <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             <FeatureTile icon={Search} title="Plain-language search" body="Search the Board’s published decisions by issue, notice type, RTA section and outcome." />
             <FeatureTile icon={ListOrdered} title="Ranked comparables" body="The closest decisions first, wins and losses, so you see what beats a case like yours." />
-            <FeatureTile icon={Sparkles} title="AI comparative analysis" body="Deciding factors, the evidence to bring, and examination and cross questions." />
-            <FeatureTile icon={FileStack} title="Disclosure bundle" body="A numbered exhibit list with every exhibit behind its own tab page, served-ready." />
-            <FeatureTile icon={FolderKanban} title="Matters" body="Organise research, analyses and documents by client matter." />
+            <FeatureTile icon={Sparkles} title="AI comparative analysis" body="Deciding factors, the evidence to bring, and questions for examination and cross-examination." />
+            <FeatureTile icon={FileStack} title="Disclosure bundle" body="A numbered exhibit list with every exhibit behind its own tab page, ready to serve." />
+            <FeatureTile icon={FolderKanban} title="Matters" body="Organize research, analyses and documents by client matter." />
             <FeatureTile icon={BookMarked} title="Law library" body="The RTA, regulations, SPPA and Human Rights Code, cross-linked to forms." />
           </div>
           <div className="mx-auto mt-10 max-w-[46rem] rounded-3xl bg-brand-soft p-6 text-[0.9375rem] text-ink-2">
@@ -62,16 +62,15 @@ export function Paralegals() {
         </div>
       </Section>
 
-      <Section tone="alt" labelledBy="plans-title">
+      <Section tone="alt" id="plans" labelledBy="plans-title">
         <div className="wrap">
           <Heading id="plans-title" eyebrow="Memberships" title="Start free. Upgrade when you’re building real cases." size="md" />
           <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
             {paralegalPlans.map((p) => (
               <div key={p.name} className={`flex flex-col rounded-4xl bg-white p-7 ${p.popular ? 'shadow-float ring-2 ring-brand' : 'shadow-card'}`} data-reveal>
-                <div className="flex items-center justify-between">
-                  <h3 className="text-title">{p.name}</h3>
-                  {p.popular && <span className="chip-brand">Popular</span>}
-                </div>
+                {/* The tag sits on its own row, so every card's name and price line up. */}
+                <div className="h-7">{p.popular && <span className="chip-brand">Most popular</span>}</div>
+                <h3 className="mt-2 text-title">{p.name}</h3>
                 <p className="mt-4 font-display text-[2.5rem] font-bold leading-none tracking-[-0.03em]">
                   {p.price}
                   <span className="text-[0.9375rem] font-medium tracking-normal text-ink-3"> {p.unit}</span>
@@ -96,11 +95,11 @@ export function Paralegals() {
         <div className="wrap-content grid gap-10 md:grid-cols-2 md:items-center">
           <div data-reveal>
             <h2 id="clients-title" className="text-display-md">
-              Be found by landlords who need you.
+              Built for solo practitioners and firms.
             </h2>
             <p className="mt-5 text-lead text-ink-3">
-              Thousands of Ontario landlords use LandlordEzy for the routine work. When a file turns contested, they need a licensed
-              paralegal.
+              Made by the team behind LandlordEzy and its licensed Ontario paralegal firm. Questions about a firm account?{' '}
+              <a href={url('contact/')}>Talk to us</a>.
             </p>
           </div>
           <CheckList
@@ -116,7 +115,9 @@ export function Paralegals() {
       <CTABand
         title="Your next hearing starts here."
         lead="Paste the situation or upload the notice, and see the decisions that matter to your file."
-        secondary={{ label: 'Open CaseBuilder', href: site.app.caseBuilder }}
+        primary={{ label: 'Try CaseBuilder free', href: site.app.caseBuilder }}
+        secondary={{ label: 'See memberships', href: '#plans' }}
+        fine="Free to start · Annual memberships from $49 · Research tool, not legal advice"
       />
     </>
   )

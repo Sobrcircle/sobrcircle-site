@@ -10,7 +10,7 @@ import {
   Landmark,
   Leaf,
   Megaphone,
-  PenLine,
+  MonitorSmartphone,
   PiggyBank,
   ScanLine,
   Scale,
@@ -19,6 +19,7 @@ import {
   Users,
   Wrench,
   X,
+  Zap,
 } from 'lucide-react'
 import { site, url } from '../site'
 import { Actions, CTABand, FAQList, Heading, Section, Stat, Voices } from '../components/ui'
@@ -31,6 +32,7 @@ import {
   CollectCard,
   DashboardScreen,
   EzyChatPhone,
+  LateRentAlert,
   LeaseScreen,
   ListingScreen,
   N4Screen,
@@ -54,7 +56,7 @@ const journey: { key: string; step: string; title: string; body: string; href: s
     key: 'screen',
     step: 'Screen',
     title: 'Choose the right tenant.',
-    body: 'A real Equifax report, read by AI alongside bank statements and ID, with a clear recommendation. A soft inquiry, from $29.99, and the applicant can pay.',
+    body: 'A real Equifax report with an AI recommendation, from $29.99 and a soft inquiry. Add ID and bank-statement checks for $10 each, and the applicant can pay.',
     href: 'tenant-screening/',
     link: 'Tenant screening',
     visual: <ScreeningScreen className="w-full max-w-[30rem]" />,
@@ -90,19 +92,19 @@ const journey: { key: string; step: string; title: string; body: string; href: s
     key: 'enforce',
     step: 'Enforce',
     title: 'Handle problems by the book.',
-    body: 'When rent is missed, a correct N4 is ready in 60 seconds. When it gets serious, licensed paralegals take it from there.',
+    body: 'If rent is missed, you know by 7 a.m., and a correct N4 is ready to serve in 60 seconds. When it gets serious, licensed paralegals take it from there.',
     href: 'notices/',
     link: 'Notices & legal help',
-    visual: <N4Screen className="w-full max-w-[30rem]" />,
+    visual: <LateRentAlert className="w-full max-w-[26rem]" />,
   },
 ]
 
 const credentials = [
-  { icon: ShieldCheck, text: 'Equifax-connected rent reporting' },
+  { icon: ShieldCheck, text: 'Equifax rent reporting' },
   { icon: Building2, text: 'Licensed Ontario brokerage' },
-  { icon: Scale, text: 'Licensed paralegal team' },
-  { icon: BookOpenCheck, text: 'Built on Ontario’s RTA and LTB rules' },
-  { icon: Leaf, text: 'Canadian-owned and operated' },
+  { icon: Scale, text: 'Licensed paralegals' },
+  { icon: BookOpenCheck, text: 'Built on Ontario’s RTA' },
+  { icon: Leaf, text: 'Canadian-owned' },
 ]
 
 const chapters = [
@@ -128,14 +130,15 @@ function Bento() {
         </span>
         <p className="eyebrow">Ezy AI</p>
         <h3 className="mt-1 text-[1.125rem] font-semibold leading-snug tracking-[-0.015em] md:mt-2 md:text-headline">
-          Tell it what you need. It does the paperwork.
+          Tell Ezy what you need. It does the paperwork.
         </h3>
         <p className="mt-3 hidden max-w-[26rem] text-ink-3 md:block">
-          Entry notices, letters and reminders drafted from the tenancy’s real details, sent by email and text, with proof they
-          were opened.
+          Entry notices, letters and reminders drafted from the tenancy’s real details and sent for you, with proof they were
+          opened.
         </p>
-        <div className="mt-8 hidden flex-1 items-end justify-center md:flex">
-          <EzyChatPhone className="w-[62%] max-w-[17rem] translate-y-10" />
+        {/* The phone runs off the tile's bottom edge, so it never stretches the row. */}
+        <div className="mt-8 hidden min-h-[12rem] grow basis-0 justify-center overflow-hidden md:flex">
+          <EzyChatPhone className="w-[62%] max-w-[17rem] self-start" />
         </div>
       </a>
       <a href={url('maintenance/')} className={`${tile} md:col-span-3`} data-reveal>
@@ -183,12 +186,12 @@ function Bento() {
         </div>
       </a>
       {[
-        { href: 'leases/', icon: PenLine, eyebrow: 'E-lease', title: 'Ontario Standard Lease, e-signed anywhere.' },
+        { href: 'rent-collection/', icon: MonitorSmartphone, eyebrow: 'Tenant portal', title: 'Receipts and rent history, no password needed.' },
         { href: 'maintenance/', icon: ScanLine, eyebrow: 'Expenses', title: 'Snap a receipt. AI files it for tax time.' },
-        { href: 'listings/', icon: Megaphone, eyebrow: 'Listings', title: 'Free listings. No-show protection.' },
+        { href: 'maintenance/', icon: Megaphone, eyebrow: 'Broadcasts', title: 'Text or email every tenant at once.' },
         { href: 'maintenance/', icon: CalendarClock, eyebrow: 'Team calendar', title: 'Every lease, task and inspection on one calendar.' },
         { href: 'property-managers/', icon: Users, eyebrow: 'Teams', title: 'Notes, @mentions and roles for your whole team.' },
-        { href: 'legal-help/', icon: Landmark, eyebrow: 'Legal help', title: 'Licensed paralegals, one tap away.' },
+        { href: 'leases/', icon: Zap, eyebrow: 'Utilities', title: 'Who pays gas, hydro and water, settled on the lease.' },
       ].map((t) => (
         <a key={t.title} href={url(t.href)} className={`${tile} md:col-span-2`} data-reveal>
           <span className="icon-badge">
@@ -209,37 +212,48 @@ export function Home() {
       <ChapterNav chapters={chapters} cta={null} />
 
       {/* ---- Hero ------------------------------------------------------- */}
-      <section id="overview" data-hero className="relative overflow-hidden bg-white pb-10 pt-8 sm:pt-16">
-        <div className="wrap text-center">
-          <p className="eyebrow">Landlord software for Ontario</p>
-          <h1 className="mx-auto mt-3 max-w-[16ch] text-display-xl">Your rentals, on autopilot.</h1>
-          <p className="mx-auto mt-5 max-w-[40rem] text-lead text-ink-3">
-            Collect rent by e-Transfer, screen tenants with Equifax and serve a correct N4 in 60 seconds. Built for Ontario’s rules,
-            with licensed paralegals behind it.
-          </p>
-          <div className="mt-7">
-            <Actions
-              secondary={{ label: 'Try the live demo', href: url('demo/') }}
-              note={
-                <>
-                  <strong className="font-semibold text-ink-2">Free for 2 tenants</strong> · then $9.99 + $1 a door · No card · About
-                  30 seconds
-                </>
-              }
-            />
+      {/* Phones: the product picture sits between the eyebrow and the headline, so the
+          first screen shows the app. Laptops: headline left, picture right, both above the fold. */}
+      <section id="overview" data-hero className="relative overflow-hidden bg-white pb-12 pt-6 sm:pt-12 lg:pb-16 lg:pt-14">
+        <div className="hero-grid">
+          <p className="eyebrow hero-eyebrow">Landlord software for Ontario</p>
+          <div className="hero-visual">
+            <div className="hero-rise relative">
+              <DashboardScreen />
+              <NotificationsPhone className="hero-rise-2 absolute -bottom-6 right-[-1%] w-[27%] min-w-[6rem] max-w-[15rem] min-[375px]:min-w-[7rem] sm:-bottom-10 md:right-[-3%]" />
+            </div>
           </div>
-          <JobChips className="mx-auto mt-9 max-w-[60rem]" />
+          <div className="hero-copy">
+            <h1 className="hero-title">Your rentals, on autopilot.</h1>
+            <p className="hero-lead mt-5 text-lead text-ink-3">
+              Collect rent by e-Transfer, screen tenants with Equifax and prepare a correct N4 in 60 seconds. Built for
+              Ontario’s rules, with licensed paralegals behind it.
+            </p>
+            <div className="hero-actions mt-7">
+              <Actions
+                align="split"
+                secondary={{ label: 'Try the live demo', href: url('demo/') }}
+                note={
+                  <>
+                    <strong className="whitespace-nowrap font-semibold text-ink-2">Free for 2 tenants</strong> ·{' '}
+                    <span className="whitespace-nowrap">then $9.99 + $1 a door</span>
+                    {/* Two tidy lines on a phone, one line on anything wider. */}
+                    <span className="hidden sm:inline"> · </span>
+                    <br className="sm:hidden" />
+                    <span className="whitespace-nowrap">No card</span> · <span className="whitespace-nowrap">About 30 seconds</span>
+                  </>
+                }
+              />
+            </div>
+          </div>
         </div>
-        <div className="wrap relative mt-12 sm:mt-16">
-          <div className="hero-rise relative mx-auto max-w-[66rem]">
-            <DashboardScreen />
-            <NotificationsPhone className="hero-rise-2 absolute -bottom-10 right-[-1%] w-[27%] min-w-[7.5rem] max-w-[17rem] sm:-bottom-14 md:right-[-3%]" />
-          </div>
+        <div className="wrap">
+          <JobChips className="mx-auto mt-10 max-w-[60rem] text-center sm:mt-14 lg:mt-16" />
         </div>
       </section>
 
       {/* ---- Credentials + proof ---------------------------------------- */}
-      <section aria-label="Why landlords trust LandlordEzy" className="bg-white pb-14 pt-20 sm:pb-20 sm:pt-28">
+      <section aria-label="Why landlords trust LandlordEzy" className="bg-white pb-14 pt-6 sm:pb-20 sm:pt-8">
         <div className="wrap">
           <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-[0.9375rem] text-ink-3">
             {credentials.map((c) => (
@@ -252,7 +266,7 @@ export function Home() {
           <div className="mx-auto mt-12 grid max-w-[60rem] grid-cols-2 gap-x-6 gap-y-9 text-center md:grid-cols-4">
             <Stat value="31,700+" count={31700} label="landlords in the Ontario Landlord Help community" />
             <Stat value="23 years" label="in Ontario property management" />
-            <Stat value="60 sec" label="to serve a correct N4" />
+            <Stat value="60 sec" label="to a correct N4, ready to serve" />
             <Stat value="$0" label="to start, no credit card" />
           </div>
         </div>
@@ -264,7 +278,11 @@ export function Home() {
           <Heading
             id="journey-title"
             eyebrow="One app, start to finish"
-            title="The whole tenancy. One login."
+            title={
+              <>
+                The whole tenancy. <span className="inline-block">One login.</span>
+              </>
+            }
             lead="Every step shares one record, so nothing falls through the cracks."
           />
           {/* Phones: six labelled chips over a swipeable row of steps. Laptops: the pinned scroll story. */}
@@ -324,7 +342,7 @@ export function Home() {
               <Sparkles className="h-3.5 w-3.5 text-brand-glow" aria-hidden /> Bill 60-ready since September 21, 2026
             </p>
             <h2 id="n4-title" className="mt-6 text-display-lg !text-white">
-              The N4, in 60 seconds.
+              The N4, in&nbsp;60 seconds.
             </h2>
             <p className="mt-6 max-w-[34rem] text-lead text-white/70">
               It used to mean a paralegal bill, hand-done math and a form that could be thrown out over one mistake. Now the N4
@@ -378,7 +396,7 @@ export function Home() {
             id="price-title"
             eyebrow="Pricing"
             title="A dollar a door."
-            lead="Six logins and six bills, or one record for the whole tenancy. Start free, and pay by the door when you want the automation."
+            lead="Six logins and six bills, or one record for the whole tenancy. Start free, then $9.99 a month plus a dollar a door when you want the automation."
             size="md"
           />
           <div className="mx-auto mt-10 grid max-w-[62rem] gap-4 md:mt-12 lg:grid-cols-[1fr_1.2fr] lg:gap-5">
@@ -398,14 +416,11 @@ export function Home() {
               </ul>
               <p className="mt-6 border-t border-line-soft pt-5 text-[0.875rem] leading-relaxed text-ink-3 lg:mt-auto">
                 Or one big suite: <a href="https://www.buildium.com/pricing/" rel="noopener">Buildium</a> starts at US$62 a month, and{' '}
-                <a href="https://www.doorloop.com/pricing" rel="noopener">DoorLoop</a>’s minimum is US$199.
+                <a href="https://www.doorloop.com/pricing" rel="noopener">DoorLoop</a>’s minimum is US$199 (as of October 2026).
               </p>
             </div>
             <div className="flex flex-col rounded-4xl bg-white p-7 shadow-float ring-2 ring-brand sm:p-8" data-reveal data-pricing>
-              <div className="flex items-center justify-between">
-                <p className="font-semibold">{self.name}</p>
-                <span className="chip-brand">Most popular</span>
-              </div>
+              <p className="font-semibold">{self.name}</p>
               <p className="mt-4 font-display text-[3rem] font-bold leading-none tracking-[-0.035em]">
                 <span data-price-base={self.base} data-price-per-door={self.perDoor}>
                   $14.99
@@ -420,19 +435,28 @@ export function Home() {
                 <input type="range" min={1} max={60} defaultValue={5} className="range" aria-label="Number of doors" />
               </label>
               <p className="mt-6 text-[0.9375rem] text-ink-3">Equifax reporting, automated N4/N1, e-lease, screening and e-Transfer rent collection.</p>
-              <a href={site.app.signup} className="btn-primary mt-7" data-track="start-free:pricing">
+              <a href={site.app.signup} className="btn-primary plan-cta mt-7" data-track="start-free:pricing">
                 Start free, upgrade anytime
               </a>
               <p className="mt-3 text-center text-[0.8125rem] text-ink-4">No card · Cancel anytime</p>
             </div>
           </div>
-          <div className="mx-auto mt-5 flex max-w-[62rem] flex-col gap-2 px-1 text-[0.9375rem] text-ink-3 sm:flex-row sm:justify-between">
+          <div className="mx-auto mt-6 flex max-w-[62rem] flex-col items-center gap-2 text-center text-[0.9375rem] text-ink-3">
             <p>
-              <strong className="font-semibold text-ink-2">Free:</strong> $0 for up to 2 tenants, no card.
+              <strong className="font-semibold text-ink-2">Just starting?</strong> The Free plan is $0 for up to 2 tenants, with no
+              card. <strong className="font-semibold text-ink-2">Managing for owners?</strong> $29.99/month + $1 per door.{' '}
+              <a href={url('property-managers/')}>See the plans</a>
             </p>
             <p>
-              <strong className="font-semibold text-ink-2">Property managers:</strong> $29.99/month + $1 per door.{' '}
-              <a href={url('property-managers/')}>See the plans</a>
+              Rather ask a person? Call{' '}
+              <a href={`tel:${site.phone.tel}`} data-track="call:home-pricing">
+                {site.phone.display}
+              </a>{' '}
+              or{' '}
+              <a href={site.app.book} data-track="book-call:home-pricing">
+                book a free 15-minute call
+              </a>
+              .
             </p>
           </div>
           <div className="mt-8 text-center">
@@ -449,7 +473,9 @@ export function Home() {
           <div className="relative mx-auto hidden aspect-[4/5] w-full max-w-[24rem] overflow-hidden rounded-5xl bg-[linear-gradient(160deg,#0b1a5c_0%,#050c3b_60%,#02061f_100%)] text-white shadow-float lg:block" data-reveal="scale">
             <div className="glow-blue absolute inset-x-0 top-0 h-2/3 opacity-70" aria-hidden />
             <div className="relative flex h-full flex-col justify-between p-9">
-              <p className="font-display text-[1.75rem] font-semibold leading-snug tracking-[-0.02em]">“We need each other.”</p>
+              <p className="font-display text-[1.75rem] font-semibold leading-snug tracking-[-0.02em]">
+                Twenty-three years of Ontario rentals, built into one app.
+              </p>
               <div>
                 <span className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-white/10 font-display text-[1.375rem] font-bold">
                   PR
@@ -479,7 +505,8 @@ export function Home() {
               31,700-member Ontario Landlord Help community.
             </p>
             <p className="mt-4 text-ink-3">
-              LandlordEzy is the platform he wished he’d had, built in-house by realtors, paralegals, property managers and engineers.
+              LandlordEzy is the platform he wished he’d had, built under one roof by licensed REALTORS®, paralegals, property
+              managers, accountants and engineers.
               The next goal is bigger: a rental credit system for Canada, where every on-time rent payment counts.
             </p>
             <div className="mt-7 flex flex-wrap gap-x-6 gap-y-3">
@@ -541,7 +568,17 @@ export function Home() {
         </div>
       </Section>
 
-      <CTABand />
+      <CTABand
+        title="Start free in about 30 seconds."
+        fine={
+          <>
+            Free plan · No credit card · Rather talk?{' '}
+            <a href={`tel:${site.phone.tel}`} className="text-white/80 underline" data-track="call:cta-band">
+              {site.phone.display}
+            </a>
+          </>
+        }
+      />
     </>
   )
 }

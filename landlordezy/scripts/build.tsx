@@ -10,6 +10,8 @@
  *   2. Hand those HTML files to Vite, which compiles Tailwind, bundles the small
  *      progressive-enhancement script in src/client, and fingerprints both.
  *   3. Write search-index.json for the Menu sheet's search (both modes).
+ *      (Step 1 also runs scripts/typeset.ts, which keeps dates, prices and
+ *      hyphenated words from breaking across lines.)
  *   4. Production only: write sitemap.xml, robots.txt, _redirects and _headers.
  */
 import { mkdir, rm, writeFile, readdir, stat } from 'node:fs/promises'
@@ -33,12 +35,15 @@ const { renderDocument } = await import('../src/document')
 const { Layout } = await import('../src/components/Layout')
 const { productionExtras } = await import('./production-extras')
 const { searchIndex } = await import('../src/content/search')
+const { typeset } = await import('./typeset')
 
 async function writeRoute(route: (typeof routes)[number], file: string) {
-  const body = renderToStaticMarkup(
-    <Layout route={route}>
-      <route.Page />
-    </Layout>,
+  const body = typeset(
+    renderToStaticMarkup(
+      <Layout route={route}>
+        <route.Page />
+      </Layout>,
+    ),
   )
   const dir = path.dirname(file)
   const rel = (p: string) => path.relative(dir, path.join(ROOT, p)).split(path.sep).join('/')

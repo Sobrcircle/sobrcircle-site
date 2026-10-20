@@ -55,7 +55,7 @@ export const tenantNotices = [
 ]
 
 export const landlordApplications = [
-  formRow('L1', 'Application to evict a tenant for non-payment of rent and to collect rent the tenant owes', 'After an N4 expires unpaid.', 'Tribunals Ontario Portal'),
+  formRow('L1', 'Application to Evict a Tenant for Non-payment of Rent and to Collect Rent the Tenant Owes', 'After an N4 expires unpaid.', 'Tribunals Ontario Portal'),
   formRow('L2', 'Application to End a Tenancy and Evict a Tenant or Collect Money', 'After most other notices (N5, N6, N7, N8, N12, N13) or to collect other money.', 'Tribunals Ontario Portal'),
   formRow('L3', 'Application to End a Tenancy – Tenant Gave Notice or Agreed to Terminate the Tenancy', 'The tenant gave an N9 or signed an N11 but didn’t leave.', 'Tribunals Ontario Portal'),
   formRow('L4', 'Application to End a Tenancy and Evict a Tenant – Tenant Failed to Meet Conditions of a Settlement or Order', 'The tenant broke the terms of a settlement or order.', 'Tribunals Ontario Portal'),
@@ -236,7 +236,7 @@ export const guides: Guide[] = [
               <a href={official.ltbForms} rel="noopener">
                 Tribunals Ontario
               </a>{' '}
-              each time rather than reusing saved copies.
+              each time rather than reusing saved copies. <a href={url('guides/ltb-forms/')}>See every LTB form, explained</a>.
             </p>
           </>
         ),
@@ -251,7 +251,7 @@ export const guides: Guide[] = [
             <li>Keep a ledger with the actual date each payment arrived.</li>
             <li>Plan own-use N12s with at least 120 days’ notice, ending on the last day of a rental period.</li>
             <li>Make sure whoever moves in after an N12 does so within 60 days.</li>
-            <li>Receipt any half-arrears payment a tenant makes before an L1 hearing.</li>
+            <li>Give a receipt for any half-arrears payment a tenant makes before an L1 hearing.</li>
           </ol>
         ),
       },
@@ -318,7 +318,7 @@ export const guides: Guide[] = [
               the most recent period. The total on page three must match the amount on page one.
             </p>
             <table>
-              <caption className="sr-only">Example rent owing table</caption>
+              <caption className="caption-top pb-1 text-left text-[0.875rem] text-ink-3">Example: part of September and all of October unpaid</caption>
               <thead>
                 <tr>
                   <th scope="col">Period</th>
@@ -329,16 +329,16 @@ export const guides: Guide[] = [
               </thead>
               <tbody>
                 <tr>
-                  <td>Sep 1 – Sep 30, 2026</td>
+                  <td>Sep 1–30, 2026</td>
                   <td>$1,610.00</td>
-                  <td>$800.00</td>
-                  <td>$810.00</td>
+                  <td>$1,210.00</td>
+                  <td>$400.00</td>
                 </tr>
                 <tr>
-                  <td>Oct 1 – Oct 31, 2026</td>
+                  <td>Oct 1–31, 2026</td>
                   <td>$1,610.00</td>
-                  <td>$810.00</td>
-                  <td>$800.00</td>
+                  <td>$0.00</td>
+                  <td>$1,610.00</td>
                 </tr>
                 <tr>
                   <td>
@@ -347,7 +347,7 @@ export const guides: Guide[] = [
                   <td />
                   <td />
                   <td>
-                    <strong>$1,610.00</strong>
+                    <strong>$2,010.00</strong>
                   </td>
                 </tr>
               </tbody>
@@ -420,7 +420,7 @@ export const guides: Guide[] = [
       },
       {
         id: 'mistakes',
-        title: 'Mistakes that get N4s thrown out',
+        title: 'Mistakes that can get an N4 thrown out',
         body: (
           <ul>
             <li>The total on page one doesn’t match the table on page three.</li>
@@ -462,7 +462,7 @@ export const guides: Guide[] = [
           <>
             <p>
               The guideline applies to rent increases that take effect between January 1 and December 31, 2027. It’s based on
-              Ontario’s Consumer Price Index and is the most a landlord can raise most tenants’ rent in a year without approval from
+              Ontario’s Consumer Price Index and is the most a landlord can raise the rent for most tenancies in a year without approval from
               the Landlord and Tenant Board.
             </p>
             <table>
@@ -520,9 +520,9 @@ export const guides: Guide[] = [
         tool: 'rent',
         body: (
           <p>
-            The rent is $1,950 and the last increase took effect January 1, 2026. The next increase can take effect January 1, 2027,
-            at up to 1.9%: a new rent of $1,987.05, or $37.05 more a month. Served by hand, the N1 must reach the tenant by October 3,
-            2026, or by September 28 if you mail it. Work out any tenancy below.
+            The rent is $1,950 and the last increase took effect March 1, 2026. The next increase can take effect March 1, 2027, at
+            up to 1.9%: a new rent of $1,987.05, or $37.05 more a month. Served by hand, the N1 must reach the tenant by December 1,
+            2026, or be mailed by November 26. Work out any tenancy below.
           </p>
         ),
       },

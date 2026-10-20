@@ -86,15 +86,17 @@ export function Actions({
 }: {
   primary?: { label: string; href: string } | null
   secondary?: { label: string; href: string }
-  align?: 'center' | 'left'
+  /** 'split' centres on phones and aligns left on laptops, for two-column heroes. */
+  align?: 'center' | 'left' | 'split'
   dark?: boolean
   note?: ReactNode
 }) {
+  const [text, row] = { center: ['text-center', 'justify-center'], left: ['', ''], split: ['text-center lg:text-left', 'justify-center lg:justify-start'] }[align]
   return (
-    <div className={align === 'center' ? 'text-center' : ''}>
-      <div className={`flex flex-wrap items-center gap-x-6 gap-y-3 ${align === 'center' ? 'justify-center' : ''}`}>
+    <div className={text}>
+      <div className={`flex flex-wrap items-center gap-x-6 gap-y-3 ${row}`}>
         {primary && (
-          <a href={primary.href} className="btn-primary" data-track="start-free:hero">
+          <a href={primary.href} className="btn-primary" data-track={primary.href === site.app.signup ? 'start-free:hero' : 'primary:hero'}>
             {primary.label}
           </a>
         )}
@@ -210,13 +212,18 @@ export function FAQList({ items, className = '' }: { items: QA[]; className?: st
 
 
 export function CTABand({
-  title = 'Start free in about thirty seconds.',
-  lead = 'No credit card. Add your first property, invite a tenant, and let the software do the chasing.',
+  title = 'Start free in about 30 seconds.',
+  lead = 'Add your first property, invite a tenant, and let the software do the chasing.',
+  primary = { label: 'Start free', href: site.app.signup },
   secondary = { label: 'Try the live demo', href: url('demo/') },
+  fine = 'Free plan · No credit card · Cancel anytime · CAD pricing',
 }: {
   title?: ReactNode
   lead?: ReactNode
-  secondary?: { label: string; href: string }
+  /** The page's own next step; Start free unless the page is about something else (a call, CaseBuilder, the demo). */
+  primary?: { label: string; href: string }
+  secondary?: { label: string; href: string } | null
+  fine?: ReactNode | null
 }) {
   return (
     <section className="relative overflow-hidden bg-brand-ink py-24 text-white sm:py-28">
@@ -225,14 +232,20 @@ export function CTABand({
         <h2 className="text-display-lg !text-white">{title}</h2>
         <p className="mx-auto mt-5 max-w-[36rem] text-lead text-white/70">{lead}</p>
         <div className="mt-9 flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
-          <a href={site.app.signup} className="btn-primary btn-lg" data-track="start-free:cta-band">
-            Start free
+          <a
+            href={primary.href}
+            className="btn-primary btn-lg"
+            data-track={primary.href === site.app.signup ? 'start-free:cta-band' : 'primary:cta-band'}
+          >
+            {primary.label}
           </a>
-          <a href={secondary.href} className="link-more-dark" data-track="secondary:cta-band">
-            {secondary.label}
-          </a>
+          {secondary && (
+            <a href={secondary.href} className="link-more-dark" data-track="secondary:cta-band">
+              {secondary.label}
+            </a>
+          )}
         </div>
-        <p className="mt-6 text-[0.8125rem] text-white/60">Free plan · No credit card · Cancel anytime · CAD pricing</p>
+        {fine && <p className="mt-6 text-[0.8125rem] text-white/60">{fine}</p>}
       </div>
     </section>
   )

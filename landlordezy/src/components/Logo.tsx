@@ -39,9 +39,9 @@ export function MapleLeaf({ className = '' }: { className?: string }) {
 export function Logo({ dark = false, className = '' }: { dark?: boolean; className?: string }) {
   return (
     <span className={`inline-flex items-center gap-2 ${className}`}>
-      <Mark className="h-7 w-7 shrink-0" />
+      <Mark className="logo-mark h-7 w-7 shrink-0" />
       <span
-        className={`relative font-display text-[1.1875rem] font-bold tracking-[-0.03em] ${dark ? 'text-white' : 'text-brand-ink'}`}
+        className={`logo-word relative font-display text-[1.1875rem] font-bold tracking-[-0.03em] ${dark ? 'text-white' : 'text-brand-ink'}`}
       >
         Landlord<span className={dark ? 'text-brand-glow' : 'text-brand'}>Ezy</span>
         <MapleLeaf className="absolute -right-2.5 -top-1 h-2.5 w-2.5" />

@@ -3,6 +3,7 @@
  * and routes can build FAQPage structured data from the same source.
  */
 import type { QA } from '../components/ui'
+import { site, url } from '../site'
 
 export const homeFaqs: QA[] = [
   {
@@ -34,7 +35,7 @@ export const homeFaqs: QA[] = [
 export const pricingFaqs: QA[] = [
   {
     q: 'What counts as a door?',
-    a: 'A door is a rentable unit: a house, an apartment, a basement suite. A duplex is two doors. Self Management is $9.99 a month plus $1 for each door, so it scales with your portfolio.',
+    a: 'A door is a rentable unit: a house, an apartment, a basement suite. A duplex is two doors. Self Management is $9.99 a month plus $1 for each door, so it scales with your portfolio. The Free plan counts tenants instead, and covers up to two.',
   },
   { q: 'Do I need a credit card to start?', a: 'No. The Free plan needs no card. You only enter payment details when you upgrade.' },
   { q: 'Is HST included?', a: 'No. Prices are in Canadian dollars and 13% HST is added at checkout.' },
@@ -64,7 +65,7 @@ export const pmFaqs: QA[] = [
   },
   {
     q: 'How does pricing compare with U.S. platforms?',
-    a: 'PM Manage is $29.99 a month plus $1 per door in Canadian dollars, with no per-payment or per-signature fees. Buildium, for comparison, starts at US$62 a month and charges per incoming EFT and per e-signature on its entry plan.',
+    a: 'PM Manage is $29.99 a month plus $1 per door in Canadian dollars, with no per-payment or per-signature fees. Buildium, for comparison, starts at US$62 a month and charges per incoming EFT and per e-signature on its entry plan (as of October 2026).',
   },
   {
     q: 'Does it handle Ontario LTB notices?',
@@ -75,11 +76,11 @@ export const pmFaqs: QA[] = [
 export const n4Faqs: QA[] = [
   {
     q: 'Do I count the day I give the notice?',
-    a: 'No. Count 7 days starting the day after you give the notice. Handed to the tenant on March 3, the earliest termination date is March 10.',
+    a: 'No. Count 7 days starting the day after you give the notice. If you hand it over on March 3, the earliest termination date is March 10.',
   },
   {
     q: 'What if I mail it?',
-    a: 'Add five days for mail or Xpresspost before counting the 7 days. Mailed March 3, the earliest termination date is March 15. For courier, add one business day.',
+    a: 'Add five days for mail or Xpresspost before counting the 7 days. If you mail it on March 3, the earliest termination date is March 15. For courier, add one business day.',
   },
   {
     q: 'Can I tape the N4 to the door?',
@@ -139,7 +140,16 @@ export const faqGroups: { title: string; items: QA[] }[] = [
       { q: 'Is LandlordEzy free?', a: 'Yes. The Free plan covers up to two tenants with rent tracking, reminders, receipts, a tenant portal, pre-screening and free listings, with no credit card.' },
       { q: 'Is it only for Ontario?', a: 'The legal tools are built for Ontario’s Residential Tenancies Act and the LTB. Screening, Equifax credit checks and free listings work across Canada.' },
       { q: 'Do I need to install an app?', a: 'No. LandlordEzy works in any browser and can be added to your phone’s home screen like an app, without an app store.' },
-      { q: 'Can I try it before signing up?', a: 'Yes. The live demo builds a private workspace shaped like your portfolio in about a minute, with no sales call.' },
+      {
+        q: 'Can I try it before signing up?',
+        a: (
+          <>
+            Yes. The <a href={url('demo/')}>live demo</a> builds a private workspace shaped like your portfolio in about a minute, with no
+            sales call.
+          </>
+        ),
+        aText: 'Yes. The live demo builds a private workspace shaped like your portfolio in about a minute, with no sales call.',
+      },
     ],
   },
   {
@@ -147,7 +157,16 @@ export const faqGroups: { title: string; items: QA[] }[] = [
     items: [
       { q: 'How much does Self Management cost?', a: '$9.99 a month plus $1 per door, plus HST. It scales up or down automatically with your door count.' },
       { q: 'Can I cancel anytime?', a: 'Yes. There are no contracts.' },
-      { q: 'What about property management companies?', a: 'PM Free costs nothing. PM Manage is $29.99 a month plus $1 per door, and PM Growth is $129 a month plus $1 per door.' },
+      {
+        q: 'What about property management companies?',
+        a: (
+          <>
+            PM Free costs nothing. PM Manage is $29.99 a month plus $1 per door, and PM Growth is $129 a month plus $1 per door.{' '}
+            <a href={url('property-managers/')}>See the plans for property managers</a>.
+          </>
+        ),
+        aText: 'PM Free costs nothing. PM Manage is $29.99 a month plus $1 per door, and PM Growth is $129 a month plus $1 per door.',
+      },
     ],
   },
   {
@@ -169,7 +188,15 @@ export const faqGroups: { title: string; items: QA[] }[] = [
     items: [
       { q: 'Are notices up to date with Bill 60?', a: 'Yes. Notices follow the rules in force on the day you serve, including the 7-day N4 and the updated forms.' },
       { q: 'Is LandlordEzy a law firm?', a: 'No. LandlordEzy is a technology platform. Legal services are provided by Landlord Pro Legal SPC, a licensed Ontario paralegal firm.' },
-      { q: 'Can I talk to a paralegal?', a: 'Yes. Book a free 15-minute strategy call with the licensed paralegal team.' },
+      {
+        q: 'Can I talk to a paralegal?',
+        a: (
+          <>
+            Yes. <a href={site.app.book}>Book a free 15-minute strategy call</a> with the licensed paralegal team.
+          </>
+        ),
+        aText: 'Yes. Book a free 15-minute strategy call with the licensed paralegal team.',
+      },
     ],
   },
   {

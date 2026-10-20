@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react'
-import { ArrowRight, BellRing, CheckCircle2, FileCheck2, ShieldCheck, Sparkles } from 'lucide-react'
+import { ArrowRight, CheckCircle2, FileCheck2, ShieldCheck, Sparkles } from 'lucide-react'
 import { site, url } from '../site'
 import { featureBySlug, features, type Feature, type Visual } from '../content/features'
 import { Actions, CheckList, CTABand, FAQList, Fine, FeatureTile, Heading, Section, Steps, Voices } from '../components/ui'
@@ -10,6 +10,7 @@ import {
   CaseBuilderScreen,
   EzyChatPhone,
   InspectionPhone,
+  LateRentAlert,
   LeaseScreen,
   LedgerScreen,
   ListingScreen,
@@ -57,61 +58,29 @@ function Extra({ slug }: { slug: string }) {
                 Late? You’ll know first.
               </h2>
               <p className="mt-5 text-lead text-white/70">
-                The morning rent is missed, you get an email listing exactly who owes what, with a one-tap path to a correct
-                N4. No spreadsheet, no awkward texts.
+                If rent is missed, a 7 a.m. email lists exactly who owes what, with a one-tap path to a correct N4. No
+                spreadsheet, no awkward texts.
               </p>
               <a href={url('notices/')} className="link-more-dark mt-7">
                 See how notices work
               </a>
             </div>
-            <div className="mock-fit" style={{ ['--em' as string]: '30' }} data-reveal="scale">
-              <div className="mock mock-dark" aria-hidden="true">
-                <div className="m-card !rounded-[1.2em] !p-[1.3em]">
-                  <p className="m-label flex items-center gap-[0.4em]">
-                    <BellRing className="m-ico-s text-[#ff9f0a]" /> Rent-unpaid alert · 7:00 a.m.
-                  </p>
-                  {[
-                    ['Ravi Singh', '7 Wyandotte St · Unit 3', '$1,610'],
-                    ['Chloe Martin', '233 Victoria Ave', '$950'],
-                  ].map(([n, a, v]) => (
-                    <div key={n} className="m-row">
-                      <span>
-                        <span className="m-sm block font-semibold">{n}</span>
-                        <span className="m-xs m-faint">{a}</span>
-                      </span>
-                      <span className="flex items-center gap-[0.6em]">
-                        <span className="m-sm tabnum font-semibold">{v}</span>
-                        <span className="m-btn !py-[0.4em] !text-[0.72em]">Serve N4</span>
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <LateRentAlert className="mx-auto w-full max-w-[30rem]" dark />
           </div>
         </Section>
       )
     case 'tenant-screening':
       return (
         <Section id="prices" tone="alt" labelledBy="prices-title">
-          <div className="wrap-content grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:items-start">
+          <div className="wrap-content grid gap-8 lg:grid-cols-[1fr_1.1fr] lg:items-start lg:gap-x-12">
             <div data-reveal>
               <p className="eyebrow">Simple, honest pricing</p>
               <h2 id="prices-title" className="mt-3 text-display-md">
                 Pay for the checks each application needs.
               </h2>
               <p className="mt-5 text-lead text-ink-3">No subscription required. You or the applicant can pay.</p>
-              <div className="mt-8 rounded-3xl bg-white p-6 shadow-card">
-                <p className="flex items-center gap-2 font-semibold">
-                  <ShieldCheck className="h-5 w-5 text-brand" aria-hidden /> Screening built on consent
-                </p>
-                <p className="mt-2 text-ink-3">
-                  Applicants authorize every credit check and choose what they share. That keeps you on the right side of
-                  privacy law, and good applicants appreciate it.
-                </p>
-              </div>
             </div>
-            <div className="tile-white p-2" data-reveal>
+            <div className="tile-white p-2 lg:row-span-2" data-reveal>
               <table className="w-full text-left">
                 <caption className="sr-only">Tenant screening prices</caption>
                 <tbody>
@@ -135,8 +104,25 @@ function Extra({ slug }: { slug: string }) {
                 </tbody>
               </table>
             </div>
+            <div className="rounded-3xl bg-white p-6 shadow-card">
+              <p className="flex items-center gap-2 font-semibold">
+                <ShieldCheck className="h-5 w-5 text-brand" aria-hidden /> Screening built on consent
+              </p>
+              <p className="mt-2 text-ink-3">
+                Applicants authorize every credit check and choose what they share. That’s what privacy law expects, and good
+                applicants appreciate it.
+              </p>
+            </div>
           </div>
-          <div className="wrap-content mt-8">
+          <div className="wrap-content mt-8 flex flex-col items-start gap-x-6 gap-y-4 sm:flex-row sm:items-center">
+            <a href={site.app.signup} className="btn-primary" data-track="start-free:screening-prices">
+              Send a free pre-screening link
+            </a>
+            <a href={site.app.sampleReport} className="link-more" rel="noopener">
+              See a sample report
+            </a>
+          </div>
+          <div className="wrap-content mt-6">
             <Fine>Prices per check, plus HST. Soft inquiry: the applicant’s credit score is not affected.</Fine>
           </div>
         </Section>
@@ -157,9 +143,10 @@ function Extra({ slug }: { slug: string }) {
               <CheckList
                 className="mt-8"
                 items={[
-                  'Consent captured once, by a no-login link or at lease signing',
-                  'Positive reporting held as “consent pending” until they agree',
-                  'Re-consent requested automatically if the wording changes',
+                  'Every receipt and their full payment history',
+                  'How and where to pay, with no password',
+                  'Their on-time streak, month by month',
+                  'A Rental Report Card to share with their next landlord',
                 ]}
               />
             </div>
@@ -205,7 +192,7 @@ function Extra({ slug }: { slug: string }) {
               </p>
             </div>
           </Section>
-          <Section id="n1" labelledBy="n1-title">
+          <Section id="n1" tone="alt" labelledBy="n1-title">
             <div className="wrap grid items-center gap-14 lg:grid-cols-2">
               <div data-reveal>
                 <p className="eyebrow">Automated N1</p>
@@ -240,10 +227,10 @@ function Extra({ slug }: { slug: string }) {
               </p>
               <CheckList
                 className="mt-8"
-                items={['Move-in and move-out inspections', 'Ontario Fire Code safety checklist', 'Signed PDF reports for your records']}
+                items={['Move-in and move-out inspections on every plan', 'Room-by-room photos your tenant approves', 'Signed PDF reports for your records']}
               />
             </div>
-            <InspectionPhone className="mx-auto w-[16rem] sm:w-[18rem]" />
+            <InspectionPhone variant="movein" className="mx-auto w-[16rem] sm:w-[18rem]" />
           </div>
         </Section>
       )
@@ -253,8 +240,8 @@ function Extra({ slug }: { slug: string }) {
           <div className="wrap">
             <Heading
               id="options-title"
-              eyebrow="Two ways to fill a unit"
-              title="Free on EzyRent. Or everywhere on MLS®."
+              eyebrow="Three ways to fill a unit"
+              title="List it free, go MLS®, or hand it off."
               size="md"
             />
             <div className="mt-12 grid gap-5 lg:grid-cols-3">
@@ -269,8 +256,8 @@ function Extra({ slug }: { slug: string }) {
                 {
                   name: 'Flat-fee MLS® listing',
                   price: '$549',
-                  sub: '+ HST, one time',
-                  items: ['12 months on REALTOR.ca and MLS®', 'Up to 40 photos and open houses', 'Lease preparation and deposit coordination', '3-month Legal Guarantee ($749 for 12 months)'],
+                  sub: '+ HST, one time · members save $100',
+                  items: ['12 months on REALTOR.ca and MLS®', 'Up to 40 photos, plus open houses', 'Lease preparation and deposit coordination', '3-month Legal Guarantee ($749 for 12 months)'],
                   cta: { label: 'Get listed on MLS®', href: site.app.listit },
                   featured: true,
                 },
@@ -278,7 +265,7 @@ function Extra({ slug }: { slug: string }) {
                   name: 'Full-service placement',
                   price: '1 month’s rent',
                   sub: '+ HST, when the tenant is placed',
-                  items: ['A licensed Realtor does everything', 'Marketing, showings and screening', 'Lease and move-in coordination', '12-month placement and Legal Guarantee'],
+                  items: ['A licensed REALTOR® does everything', 'Marketing, showings and screening', 'Lease and move-in coordination', '12-month placement and Legal Guarantee'],
                   cta: { label: 'Request placement', href: site.app.book },
                 },
               ].map((p) => (
@@ -290,7 +277,7 @@ function Extra({ slug }: { slug: string }) {
                   <p className="font-semibold">{p.name}</p>
                   <p className="mt-4 font-display text-[2.5rem] font-bold leading-none tracking-[-0.03em]">{p.price}</p>
                   <p className="mt-2 text-[0.9375rem] text-ink-3">{p.sub}</p>
-                  <CheckList className="mt-6" items={p.items} />
+                  <CheckList className="mt-6 flex-1" items={p.items} />
                   <a href={p.cta.href} className={`${p.featured ? 'btn-primary' : 'btn-secondary'} mt-8`}>
                     {p.cta.label}
                   </a>
@@ -299,7 +286,7 @@ function Extra({ slug }: { slug: string }) {
             </div>
             <Fine className="mt-8 text-center">
               MLS® listings and placement by List It Realty Brokerage Inc., a licensed Ontario brokerage; Broker of Record Paul J.
-              Rouillard. Paying LandlordEzy members save $100 on MLS® packages.
+              Rouillard. The $100 saving applies to paying LandlordEzy members.
             </Fine>
           </div>
         </Section>
@@ -333,8 +320,8 @@ function Extra({ slug }: { slug: string }) {
               Got a landlord question? Ask Ezy.
             </h2>
             <p className="mx-auto mt-5 max-w-[38rem] text-lead text-white/70">
-              N4 timing, rent increases, entry rules, the LTB process: plain-English answers grounded in Ontario sources, reviewed
-              daily by a licensed paralegal team. Three free questions a day.
+              N4 timing, rent increases, entry rules, the LTB process: plain-English answers grounded in Ontario sources. Three free
+              questions a day.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-3">
               <a href={site.app.askEzy} className="btn-primary">
@@ -355,17 +342,23 @@ function Extra({ slug }: { slug: string }) {
             <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
               {[
                 { t: 'Ask Ezy', p: 'Free', d: 'Ontario answers in plain English, 3 a day free.', href: site.app.askEzy, cta: 'Ask now' },
-                { t: 'Strategy call', p: 'Free', d: '15 minutes with the licensed paralegal team.', href: site.app.book, cta: 'Book a call' },
-                { t: 'Paralegal blocks', p: '$75/hr', d: '3- or 12-hour blocks for any tenant file. Hours never expire.', href: url('contact/'), cta: 'Get started' },
-                { t: 'VirtualPM Legal Shield', p: 'from $49/mo', d: '+ $6 per unit. Rent collection, N4s on schedule and a monthly consult.', href: url('contact/'), cta: 'Talk to us' },
+                { t: 'Strategy call', p: 'Free', d: '15 minutes with the licensed paralegal team about your tenant, notice or case.', href: site.app.book, cta: 'Book a free call', featured: true },
+                { t: 'Paralegal blocks', p: '$75 an hour', d: '3- or 12-hour blocks for any tenant file, for paid members. Hours never expire.', href: url('contact/'), cta: 'Get started' },
+                { t: 'VirtualPM Legal Shield', p: 'from $49', d: 'A month, plus $6 a door: rent collected for you, N4s on schedule and a 30-minute monthly consult.', href: site.app.book, cta: 'Talk to us' },
               ].map((o) => (
-                <div key={o.t} className="flex flex-col rounded-4xl bg-white p-7 shadow-card" data-reveal>
+                <div key={o.t} className={`flex flex-col rounded-4xl bg-white p-7 ${o.featured ? 'shadow-float ring-2 ring-brand' : 'shadow-card'}`} data-reveal>
                   <p className="font-semibold">{o.t}</p>
                   <p className="mt-3 font-display text-[1.75rem] font-bold tracking-[-0.02em]">{o.p}</p>
                   <p className="mt-2 text-ink-3">{o.d}</p>
-                  <a href={o.href} className="link-more mt-auto pt-6">
-                    {o.cta}
-                  </a>
+                  {o.featured ? (
+                    <a href={o.href} className="btn-primary mt-auto" data-track="book-call:legal-levels">
+                      {o.cta}
+                    </a>
+                  ) : (
+                    <a href={o.href} className="link-more mt-auto pt-6">
+                      {o.cta}
+                    </a>
+                  )}
                 </div>
               ))}
             </div>
@@ -412,6 +405,7 @@ const extraChapters: Record<string, Chapter[]> = {
 export function FeaturePage({ slug }: { slug: string }) {
   const f: Feature = featureBySlug(slug)
   const isPhone = f.visual === 'ezy'
+  const tail = f.noteTail === undefined ? 'Start free, no card' : f.noteTail
   return (
     <>
       <ChapterNav
@@ -426,20 +420,24 @@ export function FeaturePage({ slug }: { slug: string }) {
       />
       <section id="overview" data-hero className="overflow-hidden bg-white pb-14 pt-10 sm:pb-16 sm:pt-20">
         <div className={`wrap ${isPhone ? 'grid items-center gap-12 lg:grid-cols-[1.1fr_1fr]' : ''}`}>
-          <div className={isPhone ? '' : 'mx-auto max-w-[50rem] text-center'}>
+          <div className={isPhone ? 'text-center lg:text-left' : 'mx-auto max-w-[50rem] text-center'}>
             <p className="eyebrow">{f.job}</p>
             <h1 className="mt-3 text-display-xl">{f.h1}</h1>
-            <p className={`mt-6 text-lead text-ink-3 ${isPhone ? 'max-w-[34rem]' : 'mx-auto max-w-[40rem]'}`}>{f.lead}</p>
+            <p className={`mt-6 text-lead text-ink-3 ${isPhone ? 'mx-auto max-w-[34rem] lg:mx-0' : 'mx-auto max-w-[40rem]'}`}>{f.lead}</p>
             <div className="mt-9">
               <Actions
-                align={isPhone ? 'left' : 'center'}
-                secondary={{ label: 'Try the live demo', href: url('demo/') }}
+                align={isPhone ? 'split' : 'center'}
+                primary={f.cta}
+                secondary={f.secondary ?? { label: 'Try the live demo', href: url('demo/') }}
                 note={
                   <>
                     <strong className="font-semibold text-ink-2">{f.priceLine}</strong>
-                    <span className="mt-1 block sm:mt-0 sm:inline">
-                      <span className="hidden sm:inline"> · </span>Free plan, no card
-                    </span>
+                    {tail && (
+                      <span className="mt-1 block sm:mt-0 sm:inline">
+                        <span className="hidden sm:inline"> · </span>
+                        {tail}
+                      </span>
+                    )}
                   </>
                 }
               />
@@ -463,7 +461,7 @@ export function FeaturePage({ slug }: { slug: string }) {
 
       <Section id="features" labelledBy="features-title">
         <div className="wrap">
-          <Heading id="features-title" title={f.highlightsTitle} size="md" />
+          <Heading id="features-title" eyebrow="What’s included" title={f.highlightsTitle} size="md" />
           <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {f.highlights.map((h) => (
               <FeatureTile key={h.title} icon={h.icon} title={h.title} body={h.body} />
@@ -480,7 +478,8 @@ export function FeaturePage({ slug }: { slug: string }) {
 
       <Extra slug={f.slug} />
 
-      <Section id="faq" tone={f.slug === 'tenant-screening' || f.slug === 'listings' || f.slug === 'legal-help' || f.slug === 'rent-reporting' || f.slug === 'leases' || f.slug === 'maintenance' ? 'white' : 'alt'} labelledBy="faq-title">
+      {/* White, always: the grey "Works even better with" follows, and the section before it is never white. */}
+      <Section id="faq" labelledBy="faq-title">
         <div className="wrap-content">
           <h2 id="faq-title" className="text-display-md">
             Questions, answered.
@@ -504,8 +503,8 @@ export function FeaturePage({ slug }: { slug: string }) {
                   className="group flex items-center justify-between rounded-3xl bg-white p-6 text-ink shadow-card transition-transform duration-300 ease-out hover:-translate-y-0.5 hover:no-underline"
                 >
                   <span>
-                    <span className="block text-[0.8125rem] text-ink-3">{r.eyebrow}</span>
-                    <span className="mt-1 block font-display text-[1.25rem] font-semibold tracking-[-0.015em]">{r.h1}</span>
+                    <span className="block text-[0.8125rem] text-ink-3">{r.nav}</span>
+                    <span className="mt-1 block text-balance font-display text-[1.25rem] font-semibold tracking-[-0.015em]">{r.job}</span>
                   </span>
                   <ArrowRight className="h-5 w-5 text-brand transition-transform group-hover:translate-x-1" aria-hidden />
                 </a>
@@ -515,7 +514,7 @@ export function FeaturePage({ slug }: { slug: string }) {
         </div>
       </Section>
 
-      <CTABand />
+      <CTABand secondary={{ label: 'Book a free 15-minute call', href: site.app.book }} {...f.band} />
     </>
   )
 }

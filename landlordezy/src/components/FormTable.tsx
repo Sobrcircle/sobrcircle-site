@@ -5,12 +5,19 @@ export function FormTable({ rows, label, filing = false }: { rows: FormRow[]; la
   return (
     // Focusable and labelled, so keyboard users can scroll it sideways on small screens.
     <div className="mt-6 overflow-x-auto" tabIndex={0} role="region" aria-label={`${label}, table`}>
-      <table className="w-full min-w-[36rem]">
+      {/* On phones the filing method moves under the description instead of a third column. */}
+      <table className="!mt-0 w-full">
         <thead>
           <tr>
-            <th scope="col" className="w-16">Form</th>
+            <th scope="col" className="w-14 sm:w-16">
+              Form
+            </th>
             <th scope="col">Official name and when it’s used</th>
-            {filing && <th scope="col" className="w-48">How it’s filed</th>}
+            {filing && (
+              <th scope="col" className="hidden w-48 sm:table-cell">
+                How it’s filed
+              </th>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -20,8 +27,9 @@ export function FormTable({ rows, label, filing = false }: { rows: FormRow[]; la
               <td>
                 <span className="block text-ink">{r.name}</span>
                 <span className="mt-0.5 block text-ink-3">{r.use}</span>
+                {filing && r.filing && <span className="mt-1 block text-[0.8125rem] text-ink-4 sm:hidden">Filed: {r.filing}</span>}
               </td>
-              {filing && <td className="text-ink-3">{r.filing}</td>}
+              {filing && <td className="hidden text-ink-3 sm:table-cell">{r.filing}</td>}
             </tr>
           ))}
         </tbody>

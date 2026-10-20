@@ -4,14 +4,21 @@
  */
 import type { CSSProperties } from 'react'
 import {
+  AlarmSmoke,
   ArrowRight,
+  ArrowUp,
+  Award,
   Bell,
+  BellRing,
   Calendar,
   Check,
   CheckCircle2,
   ChevronRight,
   Clock,
+  CookingPot,
+  DoorOpen,
   FileSignature,
+  FireExtinguisher,
   Flame,
   Home,
   Mail,
@@ -19,6 +26,7 @@ import {
   Search,
   Send,
   ShieldCheck,
+  Sofa,
   Sparkles,
   Wallet,
   Wrench,
@@ -90,7 +98,7 @@ export function DashboardScreen({ className = '' }: { className?: string }) {
           <div className="m-card">
             <p className="m-label">Arrears</p>
             <p className="m-num mt-[0.55em]">$1,610</p>
-            <p className="m-sm m-muted mt-[0.35em]">2 tenants behind</p>
+            <p className="m-sm m-muted mt-[0.35em]">1 tenant behind</p>
             <span className="m-pill warn mt-[0.7em]">N4 ready in 1 tap</span>
           </div>
           <div className="m-card">
@@ -202,6 +210,13 @@ export function LedgerScreen({ className = '' }: { className?: string }) {
               </div>
               <p className="m-xs m-faint mt-[0.35em]">Duplicate-checked against Interac reference</p>
             </div>
+            <div className="m-card" data-step style={i(3)}>
+              <div className="flex items-center gap-[0.5em]">
+                <BellRing className="m-ico text-[#096ef9]" />
+                <span className="m-sm font-semibold">November reminder scheduled</span>
+              </div>
+              <p className="m-xs m-faint mt-[0.35em]">Goes to Maya on October 28 · 14 on-time months</p>
+            </div>
           </div>
 
           <div className="m-card">
@@ -216,6 +231,7 @@ export function LedgerScreen({ className = '' }: { className?: string }) {
                 { m: 'August 2026', d: 'Jul 31 · e-Transfer' },
                 { m: 'July 2026', d: 'Jul 1 · e-Transfer' },
                 { m: 'June 2026', d: 'Jun 1 · e-Transfer' },
+                { m: 'May 2026', d: 'May 1 · e-Transfer' },
               ].map((r) => (
                 <div key={r.m} className="m-row">
                   <span>
@@ -254,7 +270,7 @@ export function LedgerScreen({ className = '' }: { className?: string }) {
 /* ------------------------------------------------------------------------ */
 export function N4Screen({ className = '', dark = false }: { className?: string; dark?: boolean }) {
   return (
-    <figure className={`m-0 ${className}`} role="img" aria-label="Sample N4 notice auto-filled from the rent ledger, with a 7-day termination date and a certificate of service">
+    <figure className={`m-0 ${className}`} role="img" aria-label="Sample N4 notice auto-filled from the rent ledger, with a 7-day termination date and a Certificate of Service">
       <div className="mock-fit" style={{ ['--em' as string]: '40' }}>
         <div className="mock play" data-play aria-hidden="true">
           <div className="m-doc overflow-hidden">
@@ -292,10 +308,7 @@ export function N4Screen({ className = '', dark = false }: { className?: string;
                   <span className="text-right">Paid</span>
                   <span className="text-right">Owing</span>
                 </div>
-                {[
-                  ['Sep 1 – Sep 30, 2026', '$1,610.00', '$800.00', '$810.00'],
-                  ['Oct 1 – Oct 31, 2026', '$1,610.00', '$810.00', '$800.00'],
-                ].map((r, idx) => (
+                {[['Oct 1 – Oct 31, 2026', '$1,610.00', '$0.00', '$1,610.00']].map((r, idx) => (
                   <div key={r[0]} className="grid grid-cols-[1.6fr_1fr_1fr_1fr] gap-[0.5em] border-b border-black/5 py-[0.5em] text-[0.82em] tabnum" data-step style={i(2 + idx)}>
                     <span>{r[0]}</span>
                     <span className="text-right">{r[1]}</span>
@@ -366,9 +379,9 @@ export function N1Screen({ className = '' }: { className?: string }) {
             </div>
             <div className="mt-[0.8em]">
               {[
-                ['Earliest effective date', 'January 1, 2027'],
-                ['Serve by (90 days + mail)', 'September 28, 2026'],
-                ['Last increase', 'January 1, 2026 · 12 months ✓'],
+                ['Earliest effective date', 'March 1, 2027'],
+                ['Serve by (90 days + mail)', 'November 26, 2026'],
+                ['Last increase', 'March 1, 2026 · 12 months ✓'],
               ].map(([k, v], idx) => (
                 <div key={k} className="m-row" data-step style={i(1 + idx)}>
                   <span className="m-sm m-muted">{k}</span>
@@ -378,7 +391,7 @@ export function N1Screen({ className = '' }: { className?: string }) {
             </div>
             <div className="mt-[0.9em] flex items-center gap-[0.6em] rounded-[0.7em] bg-[#ecf8e1] px-[0.9em] py-[0.7em]" data-step style={i(4)}>
               <CheckCircle2 className="m-ico text-[#1f7a16]" />
-              <span className="m-sm font-semibold text-[#1f7a16]">Auto-applies to the ledger on Jan 1</span>
+              <span className="m-sm font-semibold text-[#1f7a16]">Auto-applies to the ledger on Mar 1</span>
             </div>
           </div>
         </div>
@@ -519,7 +532,7 @@ export function ReportingScreen({ className = '', dark = false }: { className?: 
 export function EzyChatPhone({ className = '' }: { className?: string }) {
   return (
     <PhoneFrame className={className} label="Ezy AI drafting a 24-hour notice of entry and showing when the tenant opened it">
-      <div className="play px-[1.2em] pt-[0.6em]" data-play>
+      <div className="play relative h-full px-[1.2em] pt-[0.6em]" data-play>
         <div className="flex items-center gap-[0.5em] pb-[0.8em]">
           <span className="inline-flex h-[2.1em] w-[2.1em] items-center justify-center rounded-full bg-[#050c3b] text-[#4c9bff]">
             <Sparkles className="m-ico-s" />
@@ -547,9 +560,9 @@ export function EzyChatPhone({ className = '' }: { className?: string }) {
         </div>
         <div className="mt-[1em] rounded-[1em] border border-black/5 bg-white p-[0.9em]" data-step style={i(2)}>
           {[
-            { Icon: Send, t: 'Sent', s: '9:41 a.m.' },
-            { Icon: Eye, t: 'Opened', s: '9:58 a.m.' },
-            { Icon: CheckCircle2, t: 'Acknowledged', s: '10:03 a.m.' },
+            { Icon: Send, t: 'Sent', s: '9:12 a.m.' },
+            { Icon: Eye, t: 'Opened', s: '9:30 a.m.' },
+            { Icon: CheckCircle2, t: 'Acknowledged', s: '9:36 a.m.' },
           ].map(({ Icon, t, s }, idx) => (
             <div key={t} className="flex items-center gap-[0.6em] py-[0.35em]" data-step style={i(2.6 + idx * 0.5)}>
               <Icon className={`m-ico ${idx === 2 ? 'text-[#1f7a16]' : 'text-[#096ef9]'}`} />
@@ -559,6 +572,12 @@ export function EzyChatPhone({ className = '' }: { className?: string }) {
           ))}
         </div>
         <p className="m-xs m-faint mt-[0.8em] text-center wrap-ok">Ezy drafts. You review and send. Not legal advice.</p>
+        <div className="absolute inset-x-[1.2em] bottom-[2.2em] flex items-center gap-[0.5em] rounded-full border border-black/10 bg-white py-[0.45em] pl-[1em] pr-[0.45em]">
+          <span className="m-sm m-faint flex-1">Ask Ezy for a notice or letter…</span>
+          <span className="inline-flex h-[2em] w-[2em] items-center justify-center rounded-full bg-[#096ef9] text-white">
+            <ArrowUp className="m-ico-s" strokeWidth={2.6} />
+          </span>
+        </div>
       </div>
     </PhoneFrame>
   )
@@ -729,6 +748,13 @@ export function OwnerStatementScreen({ className = '' }: { className?: string })
             </div>
           </div>
         </div>
+        <div className="m-card mt-[0.9em] flex items-center justify-between gap-[1em]">
+          <span>
+            <span className="m-sm block font-semibold">Payout sign-off sheet · October</span>
+            <span className="m-xs m-faint">4 owners · 3 ready · 1 bill waiting on M. &amp; S. Kowalski</span>
+          </span>
+          <span className="m-btn">Approve payouts</span>
+        </div>
       </AppShell>
     </BrowserFrame>
   )
@@ -808,22 +834,61 @@ export function ListingScreen({ className = '' }: { className?: string }) {
 /* ------------------------------------------------------------------------ */
 /* Fire safety inspection on a phone                                         */
 /* ------------------------------------------------------------------------ */
-export function InspectionPhone({ className = '' }: { className?: string }) {
+export function InspectionPhone({ className = '', variant = 'fire' }: { className?: string; variant?: 'fire' | 'movein' }) {
+  const fire = variant === 'fire'
+  const tiles = fire
+    ? [
+        { Icon: AlarmSmoke, bg: '#e9e4db' },
+        { Icon: FireExtinguisher, bg: '#f3dcd6' },
+        { Icon: DoorOpen, bg: '#dde5ef' },
+      ]
+    : [
+        { Icon: CookingPot, bg: '#e9e4db' },
+        { Icon: Sofa, bg: '#dde5ef' },
+        { Icon: BedDouble, bg: '#e6e0ef' },
+      ]
+  const items: [string, boolean][] = fire
+    ? [
+        ['Smoke alarm · hallway', true],
+        ['Smoke alarm · bedroom', true],
+        ['CO alarm · near bedrooms', true],
+        ['Extinguisher · kitchen', true],
+        ['Exits clear', true],
+        ['Furnace room door', false],
+        ['Emergency lighting', false],
+      ]
+    : [
+        ['Kitchen · 6 photos', true],
+        ['Living room · 4 photos', true],
+        ['Bedroom · 5 photos', true],
+        ['Bathroom · 4 photos', true],
+        ['Entry and hallway', false],
+      ]
+  const done = items.filter(([, d]) => d).length
   return (
-    <PhoneFrame className={className} label="Fire safety inspection checklist on a phone with photos of each smoke alarm and a signed PDF report">
+    <PhoneFrame
+      className={className}
+      label={
+        fire
+          ? 'Fire safety inspection checklist on a phone, with a photo of each alarm, extinguisher and exit and a signed PDF report'
+          : 'Move-in inspection on a phone, room by room with photos, sent to the tenant to approve'
+      }
+    >
       <div className="play px-[1.2em] pt-[0.4em]" data-play>
-        <p className="m-xs font-semibold text-[#9a4f00]">FIRE SAFETY INSPECTION</p>
-        <p className="mt-[0.2em] text-[1.3em] font-bold tracking-[-0.02em]">48 Maple Ave</p>
+        <p className={`m-xs font-semibold ${fire ? 'text-[#9a4f00]' : 'text-[#0659d6]'}`}>{fire ? 'FIRE SAFETY INSPECTION' : 'MOVE-IN INSPECTION'}</p>
+        <p className="mt-[0.2em] text-[1.3em] font-bold tracking-[-0.02em]">{fire ? '48 Maple Ave' : '112 Elm St · Unit B'}</p>
         <div className="mt-[0.7em] flex items-center gap-[0.6em]">
           <div className="m-bar flex-1">
-            <span data-fill style={{ width: '71%', ...i(0) }} />
+            <span data-fill style={{ width: `${Math.round((done / items.length) * 100)}%`, ...i(0) }} />
           </div>
-          <span className="m-xs font-semibold">5 of 7</span>
+          <span className="m-xs font-semibold">
+            {done} of {items.length}
+          </span>
         </div>
         <div className="mt-[1em] grid grid-cols-3 gap-[0.4em]">
-          {['#d9d4cb', '#cfd8e3', '#e3d9cf'].map((c, idx) => (
-            <div key={c} className="relative aspect-square overflow-hidden rounded-[0.7em]" data-step style={{ background: c, ...i(0.5 + idx * 0.3) }}>
-              <span className="absolute left-1/2 top-1/2 h-[2.2em] w-[2.2em] -translate-x-1/2 -translate-y-1/2 rounded-full border-[0.3em] border-white/90 bg-white/60" />
+          {tiles.map(({ Icon, bg }, idx) => (
+            <div key={bg} className="relative flex aspect-square items-center justify-center overflow-hidden rounded-[0.7em]" data-step style={{ background: bg, ...i(0.5 + idx * 0.3) }}>
+              <Icon className="h-[2.2em] w-[2.2em] text-[#1d1d1f]/55" strokeWidth={1.6} />
               <span className="absolute bottom-[0.3em] right-[0.3em] m-check !h-[1.1em] !w-[1.1em]">
                 <Check strokeWidth={3.5} />
               </span>
@@ -831,27 +896,23 @@ export function InspectionPhone({ className = '' }: { className?: string }) {
           ))}
         </div>
         <div className="mt-[0.9em] space-y-[0.4em]">
-          {[
-            ['Smoke alarm · hallway', true],
-            ['Smoke alarm · bedroom', true],
-            ['CO alarm · near bedrooms', true],
-            ['Extinguisher · kitchen', true],
-            ['Exits clear', true],
-            ['Furnace room door', false],
-          ].map(([t, done], idx) => (
-            <div key={t as string} className="flex items-center gap-[0.6em] rounded-[0.8em] bg-[#f5f5f7] px-[0.8em] py-[0.55em]" data-step style={i(1.4 + idx * 0.3)}>
-              {done ? (
-                <Tick />
-              ) : (
-                <span className="inline-flex h-[1.35em] w-[1.35em] rounded-full border-[0.12em] border-[#c7c7cc]" />
-              )}
+          {items.map(([t, ok], idx) => (
+            <div key={t} className="flex items-center gap-[0.6em] rounded-[0.8em] bg-[#f5f5f7] px-[0.8em] py-[0.55em]" data-step style={i(1.4 + idx * 0.3)}>
+              {ok ? <Tick /> : <span className="inline-flex h-[1.35em] w-[1.35em] rounded-full border-[0.12em] border-[#c7c7cc]" />}
               <span className="m-sm flex-1 font-medium">{t}</span>
-              {done && <Camera className="m-ico-s text-[#6e6e73]" />}
+              {ok && <Camera className="m-ico-s text-[#6e6e73]" />}
             </div>
           ))}
         </div>
-        <div className="mt-[0.9em] flex justify-center">
-          <span className="m-btn w-full">Generate signed PDF</span>
+        <div className="mt-[0.9em] flex items-center justify-between rounded-[0.8em] border border-black/5 px-[0.8em] py-[0.55em]">
+          <span>
+            <span className="m-xs m-faint block">{fire ? 'Inspector' : 'Tenant approval'}</span>
+            <span className="m-sm font-semibold">{fire ? 'Dana Morrison' : 'Jordan Ellis · pending'}</span>
+          </span>
+          {fire ? <span className="font-[cursive] text-[1.1em] text-[#050c3b]">D. Morrison</span> : <Clock className="m-ico-s text-[#6e6e73]" />}
+        </div>
+        <div className="mt-[0.8em] flex justify-center">
+          <span className="m-btn w-full">{fire ? 'Generate signed PDF' : 'Send to tenant for approval'}</span>
         </div>
       </div>
     </PhoneFrame>
@@ -890,6 +951,14 @@ export function TenantPortalPhone({ className = '' }: { className?: string }) {
               <span className="m-sm tabnum font-semibold">$1,950.00</span>
             </div>
           ))}
+        </div>
+        <div className="mt-[0.8em] flex items-center gap-[0.7em] rounded-[1em] border border-black/5 bg-white px-[0.9em] py-[0.7em]">
+          <Award className="m-ico text-[#0659d6]" />
+          <span className="flex-1">
+            <span className="m-sm block font-semibold">Rental Report Card</span>
+            <span className="m-xs m-faint">Yours to share with your next landlord</span>
+          </span>
+          <ChevronRight className="m-ico-s text-[#6e6e73]" />
         </div>
         <div className="mt-[0.8em] grid grid-cols-2 gap-[0.5em]">
           <span className="m-btn ghost">
@@ -1049,6 +1118,38 @@ export function CollectCard({ className = '' }: { className?: string }) {
                 </span>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </figure>
+  )
+}
+
+/** The 7 a.m. rent-unpaid alert: who owes what, with the N4 one tap away. */
+export function LateRentAlert({ className = '', dark = false }: { className?: string; dark?: boolean }) {
+  return (
+    <figure className={`m-0 ${className}`} role="img" aria-label="A 7 a.m. alert shows Ravi Singh owing $1,610 for October with a Serve N4 button, and everyone else paid on time">
+      <div className="mock-fit" style={{ ['--em' as string]: '30' }}>
+        <div className={`mock play ${dark ? 'mock-dark' : ''}`} data-play aria-hidden="true">
+          <div className="m-card !rounded-[1.2em] !p-[1.3em]">
+            <p className="m-label flex items-center gap-[0.4em]">
+              <BellRing className="m-ico-s text-[#ff9f0a]" /> Rent-unpaid alert · 7:00 a.m.
+            </p>
+            {[['Ravi Singh', '7 Wyandotte St · Unit 3 · October rent', '$1,610']].map(([n, a, v], idx) => (
+              <div key={n} className="m-row" data-step style={i(idx)}>
+                <span>
+                  <span className="m-sm block font-semibold">{n}</span>
+                  <span className="m-xs m-faint">{a}</span>
+                </span>
+                <span className="flex items-center gap-[0.6em]">
+                  <span className="m-sm tabnum font-semibold">{v}</span>
+                  <span className="m-btn !py-[0.4em] !text-[0.72em]">Serve N4</span>
+                </span>
+              </div>
+            ))}
+            <p className="m-xs m-faint mt-[0.9em] flex items-center gap-[0.4em]" data-step style={i(1)}>
+              <Check className="m-ico-s text-[#1f9d3a]" strokeWidth={3} /> Everyone else paid on time, receipts sent
+            </p>
           </div>
         </div>
       </div>

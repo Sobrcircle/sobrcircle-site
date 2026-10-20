@@ -12,7 +12,7 @@ function PlanCard({ plan, doors }: { plan: Plan; doors: number }) {
       className={`flex flex-col rounded-4xl p-8 sm:p-9 ${plan.popular ? 'bg-white shadow-float ring-2 ring-brand' : 'bg-white shadow-card'}`}
       data-reveal
     >
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
         <h3 className="text-title">{plan.name}</h3>
         {plan.popular && <span className="chip-brand">Most popular</span>}
       </div>
@@ -33,13 +33,13 @@ function PlanCard({ plan, doors }: { plan: Plan; doors: number }) {
             ${plan.base.toFixed(2)} + ${plan.perDoor} per door · <span data-doors-out>{doors} doors</span> · plus HST
           </>
         ) : (
-          'Free forever · no card needed'
+          'Free forever'
         )}
       </p>
-      <a href={site.app.signup} className={`${plan.popular ? 'btn-primary' : 'btn-secondary'} mt-7`} data-track={`start-free:plan:${plan.id}`}>
+      <a href={site.app.signup} className={`${plan.popular ? 'btn-primary' : 'btn-secondary'} plan-cta mt-7`} data-track={`start-free:plan:${plan.id}`}>
         {plan.cta}
       </a>
-      {paid && <p className="mt-3 text-center text-[0.8125rem] text-ink-4">No card to start · Cancel anytime</p>}
+      <p className="mt-3 text-center text-[0.8125rem] text-ink-4">{paid ? 'No card to start · Cancel anytime' : 'No card needed · Upgrade anytime'}</p>
       <p className="mt-8 text-[0.9375rem] font-semibold text-ink">{plan.intro}</p>
       <CheckList className="mt-4 text-[0.9375rem]" items={plan.features} />
     </div>
@@ -69,9 +69,9 @@ const compare: { group: string; rows: [string, boolean | string, boolean | strin
   {
     group: 'Ontario legal tools',
     rows: [
-      ['Automated N4 with certificate of service', false, true],
+      ['Automated N4 with Certificate of Service', false, true],
       ['Automated N1 rent increases', false, true],
-      ['Ask Ezy AI questions', '3 a day', 'Unlimited'],
+      ['Ask Ezy questions', '3 a day', 'Unlimited'],
       ['Ezy AI notice drafts', false, '3 a month'],
     ],
   },
@@ -143,6 +143,16 @@ export function Pricing() {
               <span>1</span>
               <span>100</span>
             </div>
+            <p className="mt-4 border-t border-line-soft pt-4 text-[0.9375rem] text-ink-3">
+              Self Management for <span data-doors-out>{doors} doors</span>:{' '}
+              <strong className="font-semibold text-ink">
+                <span data-price-base={landlordPlans[1].base} data-price-per-door={landlordPlans[1].perDoor}>
+                  {monthly(landlordPlans[1].base, landlordPlans[1].perDoor, doors)}
+                </span>
+                /month
+              </strong>{' '}
+              plus HST. The Free plan stays $0.
+            </p>
           </div>
 
           <div data-segment-panel="audience:landlords">
@@ -153,8 +163,8 @@ export function Pricing() {
               ))}
             </div>
             <p className="mx-auto mt-6 max-w-[46rem] text-center text-[0.9375rem] text-ink-3">
-              For comparison, in U.S. dollars: <a href="https://www.buildium.com/pricing/" rel="noopener">Buildium</a> starts at $62 a
-              month and <a href="https://www.doorloop.com/pricing" rel="noopener">DoorLoop</a>’s minimum is $199.
+              For comparison: <a href="https://www.buildium.com/pricing/" rel="noopener">Buildium</a> starts at US$62 a month and{' '}
+              <a href="https://www.doorloop.com/pricing" rel="noopener">DoorLoop</a>’s minimum is US$199 (as of October 2026).
             </p>
             <div className="mx-auto mt-5 max-w-[62rem] rounded-4xl bg-brand-ink p-8 text-white sm:p-10" data-reveal>
               <div className="grid gap-8 lg:grid-cols-[1fr_1.2fr] lg:items-center">
@@ -162,11 +172,14 @@ export function Pricing() {
                   <p className="eyebrow-dark">Done for you</p>
                   <h3 className="mt-2 text-headline !text-white">{virtualPm.name}</h3>
                   <p className="mt-3 font-display text-[2.25rem] font-bold leading-none tracking-[-0.03em]">
-                    from ${virtualPm.base}
-                    <span className="text-[1rem] font-medium tracking-normal text-white/60"> /month + ${virtualPm.perUnit} per unit</span>
+                    from ${virtualPm.base}{' '}
+                    <span className="whitespace-nowrap text-[1rem] font-medium tracking-normal text-white/60">
+                      /month + ${virtualPm.perUnit} a door
+                    </span>
                   </p>
-                  <a href={url('contact/')} className="btn-light mt-7">
-                    Talk to the team
+                  <p className="mt-3 text-[0.9375rem] text-white/60">Done for you: rent, notices and a paralegal on call.</p>
+                  <a href={site.app.book} className="btn-light mt-7" data-track="book-call:virtualpm">
+                    Book a free call
                   </a>
                 </div>
                 <CheckList dark items={virtualPm.features} />
@@ -224,6 +237,21 @@ export function Pricing() {
                   </th>
                 </tr>
               </thead>
+              <tfoot>
+                <tr>
+                  <td className="pb-2 pt-8" />
+                  <td className="pb-2 pt-8 text-center">
+                    <a href={site.app.signup} className="btn-secondary btn-sm" data-track="start-free:compare:free">
+                      Start free
+                    </a>
+                  </td>
+                  <td className="pb-2 pt-8 text-center">
+                    <a href={site.app.signup} className="btn-primary btn-sm" data-track="start-free:compare:self">
+                      Start free
+                    </a>
+                  </td>
+                </tr>
+              </tfoot>
               {compare.map((g) => (
                 <tbody key={g.group}>
                   <tr>

@@ -1,10 +1,24 @@
-import { Smartphone, Laptop, Tablet, Download } from 'lucide-react'
+import { Download, FileClock, House, Laptop, PenLine, Scale, Smartphone, Sparkles, Tablet, TrendingUp, UserSearch, Wallet, Wrench } from 'lucide-react'
+import type { IconType } from '../components/ui'
 import { site, url } from '../site'
 import { features } from '../content/features'
 import { Actions, CTABand, Heading, Section } from '../components/ui'
 import { ChapterNav } from '../components/ChapterNav'
 import { JobChips } from '../components/JobChips'
-import { DashboardScreen, TenantPortalPhone } from '../components/mocks/screens'
+import { DashboardScreen, EzyChatPhone, TenantPortalPhone } from '../components/mocks/screens'
+
+/** One icon per product page, matching the job buttons. */
+const icons: Record<string, IconType> = {
+  listings: House,
+  'tenant-screening': UserSearch,
+  leases: PenLine,
+  'rent-collection': Wallet,
+  'rent-reporting': TrendingUp,
+  notices: FileClock,
+  maintenance: Wrench,
+  'legal-help': Scale,
+  'ezy-ai': Sparkles,
+}
 
 const groups: { id: string; title: string; lead: string; slugs: string[] }[] = [
   { id: 'fill', title: 'Fill and screen', lead: 'Find the right tenant, faster.', slugs: ['listings', 'tenant-screening'] },
@@ -25,30 +39,40 @@ export function Product() {
           { id: 'ontario', label: 'Built for Ontario' },
         ]}
       />
-      <section id="overview" data-hero className="overflow-hidden bg-white pb-14 pt-10 sm:pb-16 sm:pt-20">
-        <div className="wrap text-center">
-          <p className="eyebrow">The LandlordEzy platform</p>
-          <h1 className="mx-auto mt-3 max-w-[18ch] text-display-xl">Everything you do as a landlord. In one place.</h1>
-          <p className="mx-auto mt-6 max-w-[40rem] text-lead text-ink-3">
-            From the day a unit is vacant to the day a problem is resolved, every step shares one record: listing, screening,
-            lease, rent, reporting and notices.
-          </p>
-          <div className="mt-9">
-            <Actions
-              secondary={{ label: 'See pricing', href: url('pricing/') }}
-              note={
-                <>
-                  <strong className="font-semibold text-ink-2">Free for 2 tenants</strong> · then $9.99 + $1 a door · No card
-                </>
-              }
-            />
+      {/* Same two-column hero as the homepage: your dashboard, and your tenant's view of the same record. */}
+      <section id="overview" data-hero className="relative overflow-hidden bg-white pb-12 pt-6 sm:pt-12 lg:pb-16 lg:pt-14">
+        <div className="hero-grid">
+          <p className="eyebrow hero-eyebrow">The LandlordEzy platform</p>
+          <div className="hero-visual">
+            <div className="hero-rise relative">
+              <DashboardScreen />
+              <TenantPortalPhone className="hero-rise-2 absolute -bottom-6 right-[-1%] w-[27%] min-w-[6rem] max-w-[15rem] min-[375px]:min-w-[7rem] sm:-bottom-10 md:right-[-3%]" />
+            </div>
           </div>
-          <JobChips className="mx-auto mt-9 max-w-[60rem]" heading="Start with the job in front of you" />
+          <div className="hero-copy">
+            <h1 className="hero-title">
+              Everything you do as a&nbsp;landlord. <span className="whitespace-nowrap">In one place.</span>
+            </h1>
+            <p className="hero-lead mt-5 text-lead text-ink-3">
+              From the day a unit is vacant to the day a problem is resolved, every step shares one record: listing, screening,
+              lease, rent, reporting and notices.
+            </p>
+            <div className="hero-actions mt-7">
+              <Actions
+                align="split"
+                secondary={{ label: 'Try the live demo', href: url('demo/') }}
+                note={
+                  <>
+                    <strong className="whitespace-nowrap font-semibold text-ink-2">Free for 2 tenants</strong> ·{' '}
+                    <span className="whitespace-nowrap">then $9.99 + $1 a door</span> · <span className="whitespace-nowrap">No card</span>
+                  </>
+                }
+              />
+            </div>
+          </div>
         </div>
-        <div className="wrap mt-16">
-          <div className="hero-rise mx-auto max-w-[64rem]">
-            <DashboardScreen />
-          </div>
+        <div className="wrap">
+          <JobChips className="mx-auto mt-10 max-w-[60rem] text-center sm:mt-14 lg:mt-16" heading="Start with the job in front of you" />
         </div>
       </section>
 
@@ -59,15 +83,22 @@ export function Product() {
             <div className={`mt-10 grid gap-5 ${g.slugs.length === 1 ? 'md:grid-cols-1' : g.slugs.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'}`}>
               {g.slugs.map((slug) => {
                 const f = features.find((x) => x.slug === slug)!
+                const Icon = icons[slug]
+                const wide = g.slugs.length === 1
                 return (
                   <a
                     key={slug}
                     href={url(`${slug}/`)}
-                    className={`${gi % 2 === 0 ? 'bg-white shadow-card' : 'bg-canvas-alt'} group flex flex-col rounded-4xl p-8 text-ink transition-transform duration-300 hover:-translate-y-0.5 hover:no-underline sm:p-9`}
+                    className={`${gi % 2 === 0 ? 'bg-white shadow-card' : 'bg-canvas-alt'} group relative flex flex-col overflow-hidden rounded-4xl p-8 text-ink transition-transform duration-300 hover:-translate-y-0.5 hover:no-underline sm:p-9 ${wide ? 'md:min-h-[26rem] md:pr-[46%]' : ''}`}
                     data-reveal
                   >
-                    <p className="eyebrow">{f.eyebrow}</p>
-                    <h3 className="mt-2 text-headline">{f.h1}</h3>
+                    <span className="flex items-center gap-3">
+                      <span className="icon-badge shrink-0">
+                        <Icon className="h-[22px] w-[22px]" strokeWidth={1.7} aria-hidden />
+                      </span>
+                      <span className="eyebrow">{f.job}</span>
+                    </span>
+                    <h3 className="mt-5 text-headline">{f.h1}</h3>
                     <p className="mt-3 text-ink-3">{f.description.replace(/ \| LandlordEzy$/, '')}</p>
                     <ul className="mt-6 space-y-2 text-[0.9375rem] text-ink-2">
                       {f.highlights.slice(0, 3).map((h) => (
@@ -78,6 +109,11 @@ export function Product() {
                       ))}
                     </ul>
                     <span className="link-more mt-auto pt-7">Learn more</span>
+                    {wide && (
+                      <span className="absolute right-[6%] top-10 hidden w-[15rem] md:block lg:right-[10%]" aria-hidden="true">
+                        <EzyChatPhone className="w-full" />
+                      </span>
+                    )}
                   </a>
                 )
               })}
@@ -136,7 +172,16 @@ export function Product() {
         </div>
       </Section>
 
-      <CTABand />
+      <CTABand
+        fine={
+          <>
+            Free plan · No credit card · Rather talk?{' '}
+            <a href={`tel:${site.phone.tel}`} className="text-white/80 underline" data-track="call:cta-band">
+              {site.phone.display}
+            </a>
+          </>
+        }
+      />
     </>
   )
 }

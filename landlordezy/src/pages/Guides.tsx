@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpen, Calculator, LifeBuoy, PlayCircle, Scale, MessagesSquare } from 'lucide-react'
+import { ArrowRight, Calculator, FileText, LifeBuoy, PlayCircle, Scale, MessagesSquare } from 'lucide-react'
 import { site, url } from '../site'
 import { guideBySlug, guides } from '../content/guides'
 import { CTABand, Fine, Section } from '../components/ui'
@@ -25,14 +25,19 @@ export function GuideArticle({ slug }: { slug: string }) {
             {g.h1}
           </h1>
           <p className="mt-5 max-w-[42rem] text-lead text-ink-3">{g.dek}</p>
-          <p className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.875rem] text-ink-3">
-            <span>
+          {/* Each "· item" stays together, so a line never ends on a dangling dot. */}
+          <p className="mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.875rem] text-ink-3">
+            <span className="whitespace-nowrap">
               Reviewed <time dateTime={site.lastReviewed}>{site.lastReviewedLabel}</time>
             </span>
-            <span aria-hidden>·</span>
-            <span>{g.minutes} min read</span>
-            <span aria-hidden>·</span>
-            <span>LandlordEzy team</span>
+            <span className="whitespace-nowrap">
+              <span aria-hidden>· </span>
+              {g.minutes} min read
+            </span>
+            <span className="whitespace-nowrap">
+              <span aria-hidden>· </span>
+              LandlordEzy team
+            </span>
           </p>
           {g.answer && (
             <div className="mt-8 max-w-[42rem] rounded-3xl bg-brand-soft p-6 sm:p-7">
@@ -51,8 +56,8 @@ export function GuideArticle({ slug }: { slug: string }) {
                   {s.body}
                 </div>
                 {s.tool && (
-                  <div className="mt-8">
-                    {s.tool === 'n4' ? <N4Form /> : s.tool === 'rent' ? <RentForm /> : <LmrForm />}
+                  <div className="mt-8 max-w-[42rem]">
+                    {s.tool === 'n4' ? <N4Form stacked /> : s.tool === 'rent' ? <RentForm stacked /> : <LmrForm stacked />}
                   </div>
                 )}
               </section>
@@ -138,7 +143,7 @@ export function GuideArticle({ slug }: { slug: string }) {
 export function GuidesHub() {
   const resources = [
     { href: site.app.lawLibrary, icon: Scale, t: 'Ontario law library', d: 'The Residential Tenancies Act and regulations, searchable, in plain English.' },
-    { href: site.app.forms, icon: BookOpen, t: 'Forms and templates', d: 'Every LTB form and the Ontario Standard Lease, with LandlordEzy templates.' },
+    { href: site.app.forms, icon: FileText, t: 'Ontario forms library', d: 'Every LTB form and the Ontario Standard Lease, with LandlordEzy templates.' },
     { href: site.app.videos, icon: PlayCircle, t: 'Video guides', d: 'Walkthroughs on N4s, Bill 60, screening and rent reporting.' },
     { href: site.app.help, icon: LifeBuoy, t: 'Help Centre', d: 'Step-by-step help for every LandlordEzy feature.' },
     { href: site.app.forum, icon: MessagesSquare, t: 'LandlordTalk forum', d: 'Ask other Ontario landlords, with verified paralegal answers.' },
@@ -149,7 +154,9 @@ export function GuidesHub() {
       <section data-hero className="bg-white pb-6 pt-10 sm:pt-14">
         <div className="wrap-content">
           <p className="eyebrow">Ontario landlord guides</p>
-          <h1 className="mt-3 max-w-[18ch] text-display-lg">Know the rules. Keep your rentals moving.</h1>
+          <h1 className="mt-3 max-w-[18ch] text-display-lg">
+            Know the rules. <span className="inline-block">Keep your rentals moving.</span>
+          </h1>
           <p className="mt-5 max-w-[40rem] text-lead text-ink-3">
             Plain-English guides to Ontario’s rental rules, checked against official sources and updated for Bill 60.
           </p>
@@ -171,15 +178,26 @@ export function GuidesHub() {
                 <span className={`text-[0.8125rem] font-semibold ${i === 0 ? 'text-brand-glow' : 'text-brand-text'}`}>
                   {i === 0 ? 'New · In force since September 21, 2026' : `${g.minutes} min read`}
                 </span>
-                <span className={`mt-3 font-display text-[1.75rem] font-semibold leading-tight tracking-[-0.02em] ${i === 0 ? 'text-white sm:text-[2.25rem]' : ''}`}>
+                <h3 className={`mt-3 text-balance font-display text-[1.75rem] font-semibold leading-tight tracking-[-0.02em] ${i === 0 ? '!text-white sm:text-[2.25rem]' : ''}`}>
                   {g.h1}
-                </span>
+                </h3>
                 <span className={`mt-3 max-w-[40rem] ${i === 0 ? 'text-white/70' : 'text-ink-3'}`}>{g.dek}</span>
                 <span className={`mt-auto inline-flex items-center gap-1 pt-6 ${i === 0 ? 'text-brand-glow' : 'text-brand-text'}`}>
                   Read the guide <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
                 </span>
               </a>
             ))}
+            {/* Fills the grid's last slot, and puts the calculators one tap from the guides. */}
+            <a href={url('tools/')} className="group flex flex-col rounded-4xl bg-brand-soft p-8 text-ink hover:no-underline sm:p-9" data-reveal>
+              <span className="text-[0.8125rem] font-semibold text-brand-text">Free calculators</span>
+              <h3 className="mt-3 text-balance font-display text-[1.75rem] font-semibold leading-tight tracking-[-0.02em]">
+                Get the dates right before you serve.
+              </h3>
+              <span className="mt-3 max-w-[40rem] text-ink-3">N4 termination dates, rent increases and deposit interest, on the current rules.</span>
+              <span className="mt-auto inline-flex items-center gap-1 pt-6 text-brand-text">
+                Open the calculators <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
+              </span>
+            </a>
           </div>
         </div>
       </Section>

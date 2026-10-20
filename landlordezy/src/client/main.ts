@@ -36,7 +36,8 @@ function setupMotion() {
   const plays = Array.from(document.querySelectorAll<HTMLElement>('[data-play]'))
 
   // Read every position first, then write: interleaving the two forces extra layouts.
-  const revealsInView = reveals.filter((el) => inView(el))
+  // Anything already on screen at load shows at once; only what's below the fold animates in.
+  const revealsInView = reveals.filter((el) => inView(el, 1))
   const playsInView = plays.filter((el) => inView(el, 1))
   revealsInView.forEach((el) => el.classList.add('is-in'))
   playsInView.forEach((el) => el.classList.add('is-static'))
@@ -524,6 +525,11 @@ function setupSegments() {
       document.dispatchEvent(new CustomEvent('segment-change', { detail: { name, key } }))
     }
     buttons.forEach((b) => b.addEventListener('click', () => select(b.dataset.segment!)))
+    // Deep link: ?for=pm shows the property-manager plans on arrival.
+    const wanted = new URLSearchParams(location.search).get('for')
+    if (wanted && wanted !== buttons.find((b) => b.getAttribute('aria-pressed') === 'true')?.dataset.segment && buttons.some((b) => b.dataset.segment === wanted)) {
+      select(wanted)
+    }
   })
 }
 

@@ -25,14 +25,14 @@ export const landlordPlans: Plan[] = [
     tagline: 'For your first rental',
     base: 0,
     perDoor: 0,
-    intro: 'Everything to get started. No card needed.',
+    intro: 'Everything to get started:',
     features: [
       'Up to 2 tenants: profiles, rent tracking and receipts',
       'Rent reminders and a one-click arrears report',
       'Passwordless tenant portal',
       'Unlimited free listings on EzyRent',
       'Tenant pre-screening',
-      'Ask Ezy AI: 3 questions a day',
+      'Ask Ezy: 3 questions a day',
       'Receipt scanning: 3 a month',
       'LandlordTalk forum and Landlord Reference Network',
     ],
@@ -49,10 +49,10 @@ export const landlordPlans: Plan[] = [
     features: [
       'Equifax rent reporting for every tenant',
       'Automatic Interac e-Transfer rent collection',
-      'Automated N4 and N1 notices with certificate of service',
+      'Automated N4 and N1 notices with Certificate of Service',
       'Ontario Standard Lease with e-signature',
-      'Full tenant screening and pre-screening',
-      'Move-in, move-out and fire safety inspections',
+      'In-app messaging with your tenants',
+      'Fire safety inspections with reminders',
       'Maintenance work orders, calendar and team notes',
       'Broadcasts, utilities tracking and year-end reports',
       'Unlimited Ask Ezy, receipt scans and document storage',
@@ -68,7 +68,7 @@ export const virtualPm = {
   perUnit: 6,
   features: [
     'Everything in Self Management',
-    'Rent collected by EFT by the OLH team',
+    'Rent collected for you by the OLH Property Management team',
     'N4 issued on the 5th if rent is unpaid',
     '30-minute paralegal consultation every month',
     'Legal Guarantee available when an eviction is needed',
@@ -132,13 +132,12 @@ export const pmPlans: Plan[] = [
 ]
 
 export const addOns = [
-  { name: 'Ezy AI assistant', price: '$29.99/mo + $1/door', note: 'Code AI20 locks in $9.99/mo. Included with VirtualPM.' },
+  { name: 'Ezy AI', price: '$9.99/mo + $1/door', note: 'With code AI20 at checkout (regularly $29.99/mo), for as long as you stay subscribed. Included with VirtualPM.' },
   { name: 'AI credit check with Equifax report', price: '$29.99', note: 'Per check. You or the applicant can pay.' },
-  { name: 'Bank-statement analysis · ID verification', price: '$10 each', note: 'Optional screening add-ons.' },
-  { name: 'Guarantor check · Expert human review', price: '$29.99 · $65', note: 'Optional screening add-ons.' },
-  { name: 'Flat-fee MLS® listing', price: 'from $549', note: '$749 with a 12-month Legal Guarantee. Members save $100.' },
+  { name: 'Screening add-ons', price: '$10 to $65', note: 'Bank statements or ID $10 each · guarantor check $29.99 · expert human review $65.' },
+  { name: 'Flat-fee MLS® listing', price: 'from $549', note: 'Includes a 3-month Legal Guarantee, or 12 months for $749. Paying members save $100.' },
   { name: 'Full-service tenant placement', price: '1 month’s rent', note: 'Paid when the tenant is placed.' },
-  { name: 'Paralegal time blocks', price: '$75/hour', note: '3- or 12-hour blocks. Unused hours never expire.' },
+  { name: 'Paralegal time blocks', price: '$75/hour', note: '3- or 12-hour blocks for paid members. Unused hours never expire.' },
   { name: 'Concierge onboarding (property managers)', price: '$159', note: 'One time. We import and build your whole book.' },
 ]
 
