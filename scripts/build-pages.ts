@@ -131,7 +131,7 @@ function page(o: PageOpts) {
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>${esc(o.title)}</title>
     <meta name="description" content="${esc(o.description)}">
-    ${o.noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" href="${url}">`}
+    ${o.noindex ? '<meta name="robots" content="noindex">' : `<meta name="robots" content="max-image-preview:large">\n    <link rel="canonical" href="${url}">`}
     <meta name="apple-itunes-app" content="app-id=${APP_ID}">
     <meta name="theme-color" content="#0a0a0a">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -147,7 +147,8 @@ function page(o: PageOpts) {
     <meta name="twitter:title" content="${esc(o.title)}">
     <meta name="twitter:description" content="${esc(o.description)}">
     <meta name="twitter:image" content="${SITE}/assets/og-share.png?v=6">
-    <link rel="icon" type="image/png" sizes="64x64" href="/favicon-dark-64.png?v=4">
+    <link rel="icon" href="/favicon.ico" sizes="48x48">
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=4">
     <link rel="stylesheet" href="/site.css?v=${CSS_VERSION}">
     <link rel="stylesheet" href="/pages.css?v=${CSS_VERSION}">
