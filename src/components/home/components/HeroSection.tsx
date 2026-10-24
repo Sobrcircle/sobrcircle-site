@@ -46,6 +46,19 @@ export default function HeroSection({ section }: Props) {
             {paragraph.map((span, j) => renderSpan(span, j))}
           </p>
         ))}
+
+        <a
+          href="#map"
+          className="home-hero-meetings"
+          data-animate
+          data-delay={`${0.5 + section.content.length * 0.18}`}
+          onClick={(e) => {
+            e.preventDefault()
+            document.getElementById('map')?.scrollIntoView({ behavior: 'smooth' })
+          }}
+        >
+          195,000+ meetings &middot; live navigation
+        </a>
       </div>
 
       {section.phoneImage && (

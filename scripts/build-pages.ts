@@ -32,7 +32,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(__dirname, '..')
 const PUBLIC = path.join(ROOT, 'public')
 const TODAY = new Date().toISOString().slice(0, 10)
-const CSS_VERSION = '20261024'
+const CSS_VERSION = '20261024b'
 
 // ── helpers ──────────────────────────────────────────────────────────────
 
@@ -84,10 +84,10 @@ function nav(current?: PageOpts['nav']) {
         <span><strong>Sobr</strong>Circle</span>
       </a>
       <div class="pg-nav-links">
-        ${link('/meetings/', 'Find Meetings', 'meetings')}
-        ${link('/follow/', 'Follow', 'follow')}
+        ${link('/meetings/', 'Meetings', 'meetings')}
         ${link('/#story', 'Our Story')}
-        ${link('/twentyfour/', 'Twenty Four')}
+        ${link('/follow/', 'Follow', 'follow')}
+        <a class="pg-nav-cta" href="#get-app">Get the App</a>
       </div>
     </nav>`
 }
@@ -101,6 +101,7 @@ function footer() {
         <a href="/">Home</a>
         <a href="/meetings/">Find Meetings</a>
         <a href="/follow/">Follow</a>
+        <a href="/twentyfour/">Twenty Four</a>
         <a href="/support/">Support</a>
         <a href="/privacy/">Privacy</a>
         <a href="/terms/">Terms</a>
@@ -208,14 +209,39 @@ const appLd = {
   installUrl: [APP_STORE_URL, PLAY_STORE_URL],
 }
 
-function appFeatures(place?: string) {
-  const where = place ? `around ${place}` : 'near you'
+function howItWorks(place?: string) {
+  const where = place ? `around ${place}` : 'around you'
+  return `      <ol class="pg-steps">
+        <li><strong>Open the map.</strong> See ${MEETING_COUNT} meetings, including AA, NA and CA, ${where} or anywhere you're headed.</li>
+        <li><strong>Pick a meeting.</strong> Tap one to see the group, the day, the time and the address.</li>
+        <li><strong>Start navigation.</strong> Choose driving, walking, cycling or transit and follow live directions right to the door.</li>
+      </ol>`
+}
+
+function appFeatures() {
   return `      <ul class="pg-features">
-        <li><strong>${MEETING_COUNT} meetings on one map.</strong> See what's ${where} and pick one that fits tonight.</li>
-        <li><strong>Directions to the door.</strong> Step by step directions, including transit routes, right inside the app.</li>
-        <li><strong>Your circle comes with you.</strong> Friends who choose to share their location show up on the same map, so you can go together.</li>
+        <li><strong>Your circle comes with you.</strong> Friends who choose to share their location show up on the same map, so nobody has to walk in alone.</li>
+        <li><strong>After the meeting.</strong> Check in, keep a private journal and stay close to the people you choose.</li>
         <li><strong>Free, private, no ads.</strong> Every core feature is free, your data is never sold, and you can sign up without a credit card.</li>
       </ul>`
+}
+
+const MAP_ALT =
+  'SobrCircle map showing a Wednesday 7:30 PM meeting in Windsor, Ontario, with a transit route, travel time and a Start Navigation button'
+
+function heroPhone() {
+  return `        <figure class="pg-phone">
+          <div class="pg-phone-shell"><img src="/assets/6.png?v=3" alt="${MAP_ALT}" width="1320" height="2868" fetchpriority="high"></div>
+          <figcaption>Live navigation to a meeting, inside SobrCircle.</figcaption>
+        </figure>`
+}
+
+function getApp(medium: string, place?: string) {
+  return `      <section class="pg-section pg-getapp" id="get-app">
+        <h2>Get SobrCircle free</h2>
+        <p>Find your next meeting${place ? ` in ${esc(place)}` : ''}, see when it starts and get live navigation to the door. Free on iPhone and Android.</p>
+        ${badges(`${medium}-bottom`)}
+      </section>`
 }
 
 function resourceCard(r: Resource, kind: string) {
@@ -261,7 +287,7 @@ function hubPage() {
   const faq: Array<[string, string]> = [
     [
       'How do I find a recovery meeting near me?',
-      `Download SobrCircle for free on iPhone or Android and open the map. It shows ${MEETING_COUNT} meetings, including AA, NA and CA meetings, with directions from where you are.`,
+      `Download SobrCircle for free on iPhone or Android and open the map. It shows ${MEETING_COUNT} meetings, including AA, NA and CA meetings, with their times and live navigation from where you are.`,
     ],
     [
       'Are recovery meetings free?',
@@ -281,12 +307,15 @@ function hubPage() {
     ],
   ]
   const body = `
-      <header class="pg-hero">
+      <header class="pg-hero pg-hero--phone">
+        <div class="pg-hero-copy">
 ${crumbs([['Home', '/'], ['Find Meetings']])}
         <p class="eyebrow">Meeting finder</p>
         <h1>Find recovery meetings near you</h1>
-        <p class="lede">SobrCircle puts ${MEETING_COUNT} meetings on one map, including AA, NA and Cocaine Anonymous meetings, with directions, for free. Built by someone who needed it.</p>
+        <p class="lede">SobrCircle puts ${MEETING_COUNT} meetings on one map, including AA, NA and Cocaine Anonymous meetings, with their times and live navigation to the door. Free, and built by someone who needed it.</p>
         ${badges('meetings')}
+        </div>
+${heroPhone()}
       </header>
 
       <section class="pg-section">
@@ -311,11 +340,14 @@ ${fellowships
       </section>
 
       <section class="pg-section">
-        <h2>What the app does</h2>
+        <h2>How it works</h2>
+${howItWorks()}
 ${appFeatures()}
       </section>
 
 ${faqHtml(faq)}
+
+${getApp('meetings')}
 
 ${crisisCallout([])}
 ${disclaimer}
@@ -324,7 +356,7 @@ ${disclaimer}
     path: '/meetings/',
     nav: 'meetings',
     title: 'Find AA, NA and 12 Step Meetings Near You: Free Meeting Finder',
-    description: `Find AA, NA and Cocaine Anonymous meetings near you tonight. SobrCircle maps ${MEETING_COUNT} meetings, including AA, NA and CA, with directions. Free on iPhone and Android.`,
+    description: `Find AA, NA and Cocaine Anonymous meetings near you tonight. SobrCircle maps ${MEETING_COUNT} meetings, including AA, NA and CA, with live navigation. Free on iPhone and Android.`,
     body,
     jsonLd: [appLd, crumbsLd([['Home', '/'], ['Find Meetings', '/meetings/']]), faqLd(faq)],
   })
@@ -332,12 +364,15 @@ ${disclaimer}
 
 function fellowshipPage(f: Fellowship) {
   const body = `
-      <header class="pg-hero">
+      <header class="pg-hero pg-hero--phone">
+        <div class="pg-hero-copy">
 ${crumbs([['Home', '/'], ['Find Meetings', '/meetings/'], [`${f.label} meetings`]])}
         <p class="eyebrow">${esc(f.name)}</p>
         <h1>${esc(f.h1)}</h1>
         <p class="lede">${esc(f.lede)}</p>
         ${badges(`meetings-${f.slug}`)}
+        </div>
+${heroPhone()}
       </header>
 
       <section class="pg-section">
@@ -353,7 +388,8 @@ ${f.formats.map(([t, d]) => `          <li><strong>${esc(t)}.</strong> ${esc(d)}
       </section>
 
       <section class="pg-section">
-        <h2>Find ${esc(f.short)} meetings with SobrCircle</h2>
+        <h2>Find ${esc(f.label)} meetings with SobrCircle</h2>
+${howItWorks()}
 ${appFeatures()}
       </section>
 
@@ -371,6 +407,8 @@ ${f.official.map((r) => resourceCard(r, f.short)).join('\n')}
       </section>
 
 ${faqHtml(f.faq)}
+
+${getApp(`meetings-${f.slug}`)}
 
 ${crisisCallout([])}
 ${disclaimer}
@@ -408,7 +446,7 @@ function cityPage(c: City) {
   const faq: Array<[string, string]> = [
     [
       `Where can I find AA meetings in ${place} tonight?`,
-      `Open SobrCircle and the map shows meetings around ${place} with directions. You can also check the local AA directory listed on this page${c.aa?.phone ? ` or call ${c.aa.phone}` : ''}.`,
+      `Open SobrCircle and the map shows meetings around ${place} with their times and live navigation. You can also check the local AA directory listed on this page${c.aa?.phone ? ` or call ${c.aa.phone}` : ''}.`,
     ],
     [
       `Are there NA and Cocaine Anonymous meetings in ${place}?`,
@@ -425,17 +463,21 @@ function cityPage(c: City) {
   ]
 
   const body = `
-      <header class="pg-hero">
+      <header class="pg-hero pg-hero--phone">
+        <div class="pg-hero-copy">
 ${crumbs([['Home', '/'], ['Find Meetings', '/meetings/'], [place]])}
         <p class="eyebrow">${esc(full)}</p>
         <h1>Recovery meetings in ${esc(place)}</h1>
-        <p class="lede">${esc(c.lede ?? `Find AA, NA and Cocaine Anonymous meetings in ${place} and nearby. SobrCircle maps the meetings around you with directions, free on iPhone and Android.`)}</p>
+        <p class="lede">${esc(c.lede ?? `Find AA, NA and Cocaine Anonymous meetings in ${place} tonight. SobrCircle maps the meetings around you with their times and live navigation to the door, free on iPhone and Android.`)}</p>
         ${badges(`city-${c.slug}`)}
+        </div>
+${heroPhone()}
       </header>
 
       <section class="pg-section">
         <h2>Find a meeting in ${esc(place)} with SobrCircle</h2>
-${appFeatures(place)}
+${howItWorks(place)}
+${appFeatures()}
       </section>
 
 ${
@@ -457,6 +499,8 @@ ${local.join('\n')}
 
 ${faqHtml(faq)}
 
+${getApp(`city-${c.slug}`, place)}
+
 ${crisisCallout(c.helplines ?? [])}
 
       <section class="pg-section" style="margin-top:34px">
@@ -471,7 +515,7 @@ ${disclaimer}
     title: `AA and NA Meetings in ${full}: Find a Meeting Tonight`.length > 64
       ? `AA and NA Meetings in ${full} Tonight`
       : `AA and NA Meetings in ${full}: Find a Meeting Tonight`,
-    description: `Find AA, NA and Cocaine Anonymous meetings in ${place} tonight. Local meeting directories, help lines, and a free app that maps meetings near you with directions.`,
+    description: `Find AA, NA and Cocaine Anonymous meetings in ${place} tonight. Local meeting directories, help lines, and a free app with live navigation to meetings near you.`,
     body,
     jsonLd: [
       crumbsLd([
@@ -505,7 +549,7 @@ ${socials
   .join('\n')}
       </section>
 
-      <section class="pg-section" style="margin-top:34px">
+      <section class="pg-section" id="get-app" style="margin-top:34px">
         <h2>Get the app</h2>
         <p>The conversation keeps going in SobrCircle: your circle, daily check ins, a private journal and ${MEETING_COUNT} meetings on one map. Free on iPhone and Android.</p>
         ${badges('follow')}
@@ -593,7 +637,7 @@ ${urls
 function llms() {
   return `# SobrCircle
 
-> SobrCircle is a free, private recovery community app for iPhone and Android, built in Windsor, Ontario by Ben Moradi, who is in recovery himself. It includes a meeting finder with ${MEETING_COUNT} recovery meetings (AA, NA and CA) on a map with directions, including transit routes, a private circle of people you invite with a code, daily check ins, a private journal, group chats and meeting rooms. Core features are free, there are no ads, and user data is not sold. SobrCircle is independent and not affiliated with any 12-step fellowship.
+> SobrCircle is a free, private recovery community app for iPhone and Android, built in Windsor, Ontario by Ben Moradi, who is in recovery himself. It includes a meeting finder with ${MEETING_COUNT} recovery meetings (AA, NA and CA) on a map with meeting times and live navigation by car, foot, bike or transit, a private circle of people you invite with a code, daily check ins, a private journal, group chats and meeting rooms. Core features are free, there are no ads, and user data is not sold. SobrCircle is independent and not affiliated with any 12-step fellowship.
 
 - App Store: ${APP_STORE_URL}
 - Google Play: ${PLAY_STORE_URL}

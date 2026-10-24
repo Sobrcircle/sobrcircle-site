@@ -1,6 +1,6 @@
 # SobrCircle
 
-> SobrCircle is a free, private recovery community app for iPhone and Android, built in Windsor, Ontario by Ben Moradi, who is in recovery himself. It includes a meeting finder with 195,000+ recovery meetings (AA, NA and CA) on a map with directions, including transit routes, a private circle of people you invite with a code, daily check ins, a private journal, group chats and meeting rooms. Core features are free, there are no ads, and user data is not sold. SobrCircle is independent and not affiliated with any 12-step fellowship.
+> SobrCircle is a free, private recovery community app for iPhone and Android, built in Windsor, Ontario by Ben Moradi, who is in recovery himself. It includes a meeting finder with 195,000+ recovery meetings (AA, NA and CA) on a map with meeting times and live navigation by car, foot, bike or transit, a private circle of people you invite with a code, daily check ins, a private journal, group chats and meeting rooms. Core features are free, there are no ads, and user data is not sold. SobrCircle is independent and not affiliated with any 12-step fellowship.
 
 - App Store: https://apps.apple.com/app/sobrcircle/id6760403731
 - Google Play: https://play.google.com/store/apps/details?id=com.sobrcircle.app

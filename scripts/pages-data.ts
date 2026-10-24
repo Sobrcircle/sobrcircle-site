@@ -69,7 +69,7 @@ export const fellowships: Fellowship[] = [
     description:
       'Find AA meetings near you tonight, in person or online. Open and closed meetings, what to expect at your first one, and a free app that maps meetings with directions.',
     h1: 'Find AA meetings near you',
-    lede: 'Alcoholics Anonymous meetings happen every day, in almost every town. SobrCircle shows the ones near you on a map, with directions, for free.',
+    lede: 'Alcoholics Anonymous meetings happen every day, in almost every town. SobrCircle shows the ones near you on a map, with their times and live navigation, for free.',
     blurb: 'For anyone who wants to stop drinking. In person, online and by phone.',
     about: [
       'AA meetings are gatherings where people who want to quit drinking support each other by talking honestly about their own experience. Anyone who wants to stop drinking can come, and there are no dues or fees.',
@@ -89,7 +89,7 @@ export const fellowships: Fellowship[] = [
     faq: [
       [
         'How do I find an AA meeting near me tonight?',
-        'Open SobrCircle and the map shows AA meetings near you with directions. You can also call the local AA office in your city, which keeps an up to date list with meeting times.',
+        'Open SobrCircle and the map shows AA meetings near you with their times and live navigation to the door. You can also call the local AA office in your city, which keeps its own up to date list.',
       ],
       [
         'What happens at a first AA meeting?',
@@ -114,7 +114,7 @@ export const fellowships: Fellowship[] = [
     description:
       'Find NA meetings near you tonight, in person or online. What Narcotics Anonymous meetings are like, and a free app that maps meetings near you with directions.',
     h1: 'Find NA meetings near you',
-    lede: 'Narcotics Anonymous meetings are free and open to anyone who wants to stop using. SobrCircle shows the meetings near you on a map, with directions.',
+    lede: 'Narcotics Anonymous meetings are free and open to anyone who wants to stop using. SobrCircle shows the meetings near you on a map, with their times and live navigation.',
     blurb: 'For anyone who wants to stop using drugs, whatever the drug.',
     about: [
       'Narcotics Anonymous is a fellowship of people who help each other stay clean. It focuses on the disease of addiction rather than any one drug, so anyone who wants to stop using is welcome, including people whose drug was alcohol.',
@@ -133,7 +133,7 @@ export const fellowships: Fellowship[] = [
     faq: [
       [
         'How do I find an NA meeting near me tonight?',
-        'Open SobrCircle and the map shows NA meetings near you with directions. Your local NA area or region website also lists meeting times and a helpline.',
+        'Open SobrCircle and the map shows NA meetings near you with their times and live navigation. Your local NA area or region website also lists meetings and a helpline.',
       ],
       [
         'Is NA only for people who used narcotics?',

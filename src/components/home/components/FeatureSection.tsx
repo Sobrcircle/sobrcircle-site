@@ -40,6 +40,18 @@ export default function FeatureSection({ section, reverse }: Props) {
             </p>
           ))}
 
+          {section.cta && (
+            <a
+              href={section.cta.href}
+              className="home-cta-book home-cta-feature"
+              data-animate
+              data-delay="0.7"
+            >
+              <span className="home-cta-book-text">{section.cta.label}</span>
+              <span className="home-cta-book-icon" aria-hidden="true">&#x276F;</span>
+            </a>
+          )}
+
           {section.id === 'story' && (
             <p className="home-signature" data-animate data-delay="0.9">— Ben, Founder</p>
           )}

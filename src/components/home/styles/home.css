@@ -326,6 +326,32 @@
   color: rgba(232, 228, 223, 0.6);
 }
 
+/* Hero pointer to the meeting finder section */
+.home-hero-meetings {
+  display: inline-block;
+  margin-top: 1.1rem;
+  padding: 0.5rem 1.1rem;
+  border: 1px solid rgba(196, 168, 130, 0.28);
+  border-radius: 999px;
+  color: var(--home-accent);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: border-color 400ms ease, background 400ms ease;
+}
+
+.home-hero-meetings:hover {
+  border-color: rgba(196, 168, 130, 0.6);
+  background: rgba(196, 168, 130, 0.06);
+}
+
+/* Feature-section button (meeting finder) reuses the book CTA look */
+.home-cta-feature {
+  margin-top: 1.4rem;
+}
+
 /* Scroll hint */
 .home-scroll-hint {
   position: relative;

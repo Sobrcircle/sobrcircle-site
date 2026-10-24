@@ -316,6 +316,88 @@ a.pg-card:hover {
   margin-left: auto;
 }
 
+/* Hero with the live navigation screenshot */
+.pg-hero--phone {
+  align-items: center;
+  display: grid;
+  gap: 40px;
+  grid-template-columns: minmax(0, 1fr) 250px;
+}
+
+.pg-phone {
+  margin: 0;
+  text-align: center;
+}
+
+.pg-phone-shell {
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 38px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), 0 0 60px rgba(196, 168, 130, 0.08);
+  padding: 8px;
+}
+
+.pg-phone-shell img {
+  border-radius: 30px;
+  display: block;
+  height: auto;
+  width: 100%;
+}
+
+.pg-phone figcaption {
+  color: #948e88;
+  font-size: 0.78rem;
+  margin-top: 12px;
+}
+
+.pg-nav-links a.pg-nav-cta {
+  color: var(--site-accent);
+}
+
+/* Numbered how-it-works steps */
+.pg-steps {
+  counter-reset: step;
+  list-style: none;
+  margin: 18px 0 22px;
+  padding: 0;
+}
+
+.pg-steps li {
+  counter-increment: step;
+  margin: 0 0 16px;
+  padding-left: 46px;
+  position: relative;
+}
+
+.pg-steps li::before {
+  align-items: center;
+  border: 1px solid rgba(196, 168, 130, 0.45);
+  border-radius: 50%;
+  color: var(--site-accent);
+  content: counter(step);
+  display: flex;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.95rem;
+  height: 30px;
+  justify-content: center;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 30px;
+}
+
+.pg-steps strong {
+  color: var(--site-text);
+}
+
+.pg-getapp {
+  scroll-margin-top: 20px;
+}
+
+.pg-getapp .pg-badges {
+  margin-top: 16px;
+}
+
 /* Muted text used for disclaimers and notes must stay readable (4.5:1+). */
 .pg-shell .meta-line {
   color: #9a948e;
@@ -381,6 +463,25 @@ a.pg-card:hover {
 @media (max-width: 720px) {
   .pg-shell {
     padding: 20px 16px 44px;
+  }
+
+  .pg-nav-links {
+    gap: 4px 15px;
+  }
+
+  .pg-nav-links a {
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+  }
+
+  .pg-hero--phone {
+    gap: 30px;
+    grid-template-columns: 1fr;
+  }
+
+  .pg-phone {
+    margin: 0 auto;
+    max-width: 230px;
   }
 
   .pg-nav {

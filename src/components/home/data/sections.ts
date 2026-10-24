@@ -11,6 +11,7 @@ export type HomeSection = {
   title: string
   content: TextSpan[][]
   phoneImage?: string
+  cta?: { href: string; label: string }
 }
 
 export const sections: HomeSection[] = [
@@ -24,6 +25,23 @@ export const sections: HomeSection[] = [
       [{ type: 'plain', text: 'A private space for the people who show up.' }],
     ],
     phoneImage: '/assets/1.jpg?v=3',
+  },
+  {
+    id: 'map',
+    type: 'feature',
+    title: 'Find a Meeting',
+    content: [
+      [{ type: 'callout', text: 'New city. Same recovery.' }],
+      [
+        { type: 'plain', text: '195,000+ meetings on one map, with the time, the place and live navigation to the door. Drive, walk, bike or take transit.' },
+      ],
+      [
+        { type: 'plain', text: 'Friends who choose to share their location show up too, so nobody has to walk in alone. ' },
+        { type: 'accent', text: 'Your next meeting is a tap away.' },
+      ],
+    ],
+    phoneImage: '/assets/6.png?v=3',
+    cta: { href: '/meetings/', label: 'find meetings near you' },
   },
   {
     id: 'circles',
@@ -55,19 +73,6 @@ export const sections: HomeSection[] = [
       ],
     ],
     phoneImage: '/assets/4.jpg?v=3',
-  },
-  {
-    id: 'map',
-    type: 'feature',
-    title: 'Recovery Map',
-    content: [
-      [{ type: 'plain', text: 'New city. Same recovery.' }],
-      [
-        { type: 'plain', text: 'Find meetings nearby and see friends who choose to share their location.' },
-      ],
-      [{ type: 'accent', text: 'Your next meeting is a tap away.' }],
-    ],
-    phoneImage: '/assets/6.png?v=3',
   },
   {
     id: 'journal',
