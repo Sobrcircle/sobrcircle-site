@@ -67,9 +67,9 @@ export const fellowships: Fellowship[] = [
     name: 'Alcoholics Anonymous',
     title: 'AA Meetings Near Me: Find Alcoholics Anonymous Meetings Tonight',
     description:
-      'Find AA meetings near you tonight, in person or online. Open and closed meetings, what to expect at your first one, and a free app that maps meetings with directions.',
+      'Find AA meetings near you tonight, in person or online. Open and closed meetings, what to expect at your first one, and an app that maps meetings with directions.',
     h1: 'Find AA meetings near you',
-    lede: 'Alcoholics Anonymous meetings happen every day, in almost every town. SobrCircle shows the ones near you on a map, with their times and live navigation, for free.',
+    lede: 'Alcoholics Anonymous meetings happen every day, in almost every town. SobrCircle shows the ones near you on a map, with their times and live navigation.',
     blurb: 'For anyone who wants to stop drinking. In person, online and by phone.',
     about: [
       'AA meetings are gatherings where people who want to quit drinking support each other by talking honestly about their own experience. Anyone who wants to stop drinking can come, and there are no dues or fees.',
@@ -112,7 +112,7 @@ export const fellowships: Fellowship[] = [
     name: 'Narcotics Anonymous',
     title: 'NA Meetings Near Me: Find Narcotics Anonymous Meetings Tonight',
     description:
-      'Find NA meetings near you tonight, in person or online. What Narcotics Anonymous meetings are like, and a free app that maps meetings near you with directions.',
+      'Find NA meetings near you tonight, in person or online. What Narcotics Anonymous meetings are like, and an app that maps meetings near you with directions.',
     h1: 'Find NA meetings near you',
     lede: 'Narcotics Anonymous meetings are free and open to anyone who wants to stop using. SobrCircle shows the meetings near you on a map, with their times and live navigation.',
     blurb: 'For anyone who wants to stop using drugs, whatever the drug.',
@@ -156,7 +156,7 @@ export const fellowships: Fellowship[] = [
     name: 'Cocaine Anonymous',
     title: 'Cocaine Anonymous Meetings Near Me: Find CA Meetings Tonight',
     description:
-      'Find Cocaine Anonymous (CA) meetings near you, in person or online. What CA meetings are like, and a free app that maps recovery meetings near you with directions.',
+      'Find Cocaine Anonymous (CA) meetings near you, in person or online. What CA meetings are like, and an app that maps recovery meetings near you with directions.',
     h1: 'Find Cocaine Anonymous meetings near you',
     lede: 'Cocaine Anonymous meetings are free and open to anyone who wants to quit cocaine, crack or any other drug. SobrCircle helps you find one nearby.',
     blurb: 'For anyone who wants to quit cocaine, crack or any other drug.',
@@ -217,12 +217,12 @@ export const MILESTONES =
 export const topics: Topic[] = [
   {
     slug: 'sobriety-tracker',
-    title: 'Free Sobriety Tracker App: Count Days Sober and Milestones',
+    title: 'Sobriety Tracker App: Count Your Days Sober and Milestones',
     description:
-      'A free sobriety tracker app that counts your days sober, counts down to your next milestone and celebrates it with your circle. No ads. iPhone and Android.',
+      'A sobriety tracker app that counts your days sober, counts down to your next milestone and celebrates it with your circle. No ads. Free to download.',
     eyebrow: 'Sobriety tracker',
     h1: 'A sobriety tracker that celebrates with you',
-    lede: 'SobrCircle counts your days sober, shows how close your next milestone is, and lets the people in your circle celebrate it with you. Free on iPhone and Android, with no ads.',
+    lede: 'SobrCircle counts your days sober, shows how close your next milestone is, and lets the people in your circle celebrate it with you. No ads, and free to download on iPhone and Android.',
     phone: {
       src: '/assets/1.jpg?v=3',
       alt: 'SobrCircle sobriety tracker showing 548 days sober, 1 year 6 months 2 days, and the next milestone of 2 years in 182 days',
@@ -247,12 +247,12 @@ export const topics: Topic[] = [
       },
     ],
     faq: [
-      ['Is the SobrCircle sobriety tracker free?', 'Yes. The tracker and every core feature are free, with no ads, and your data is never sold.'],
+      ['Is the SobrCircle sobriety tracker free?', 'Yes. The sobriety tracker is free to use, with no ads, and your data is never sold.'],
       ['What milestones does it celebrate?', `SobrCircle marks ${MILESTONES}, each with its own badge.`],
       ['Does it work for drugs as well as alcohol?', 'Yes. The tracker counts from your sobriety date, whatever you are recovering from.'],
       ['How do I count my days sober right now?', 'Use the free sobriety calculator on this site, or download SobrCircle to keep counting every day.'],
     ],
-    getApp: 'Start counting today. Your days, your next milestone and a circle to celebrate with, free on iPhone and Android.',
+    getApp: 'Start counting today. Your days, your next milestone and a circle to celebrate with. Free to download on iPhone and Android.',
     related: [
       ['/sobriety-calculator/', 'Sobriety calculator'],
       ['/sober-community/', 'Sober community'],
@@ -263,7 +263,7 @@ export const topics: Topic[] = [
     slug: 'sober-community',
     title: 'Sober Community App: Rooms, Events and Sober Friends Near You',
     description:
-      'Join a free sober community app. Public and private rooms, group chats, members and community events near you, and a private circle of people you trust.',
+      'Join a sober community app with no ads. Public and private rooms, group chats, members and community events near you, and a private circle of people you trust.',
     eyebrow: 'Sober community',
     h1: 'A sober community that shows up',
     lede: 'Recovery happens between meetings too. SobrCircle gives you rooms to talk, events near you, members nearby who chose to be found, and a private circle of the people you trust.',
@@ -294,9 +294,9 @@ export const topics: Topic[] = [
     faq: [
       ['How do I meet sober people near me?', 'In SobrCircle you can find members near you who have chosen to be discoverable, join public rooms, and see community events on the map.'],
       ['Can people find me without my permission?', 'No. Only members who choose to be discoverable show up to people nearby, and you decide who joins your circle.'],
-      ['Is it free?', 'Yes. Every core feature is free, there are no ads, and your data is never sold.'],
+      ['Is SobrCircle free?', 'SobrCircle is free to download, with no ads, and your data is never sold. Tracking your days, finding meetings, one to one messages and joining any room or event cost nothing. Creating your own rooms and events is part of SobrCircle Supporter, which helps cover server costs.'],
     ],
-    getApp: 'Find your people. Rooms, events, members near you and a private circle, free on iPhone and Android.',
+    getApp: 'Find your people. Rooms, events, members near you and a private circle. Free to download on iPhone and Android.',
     related: [
       ['/sobriety-tracker/', 'Sobriety tracker'],
       ['/meetings/', 'Find meetings'],
@@ -306,12 +306,12 @@ export const topics: Topic[] = [
   },
 {
     slug: 'sober-grid-alternative',
-    title: 'Sober Grid Alternative: Free Sober Community App With No Ads',
+    title: 'Sober Grid Alternative: A Sober Community App With No Ads',
     description:
-      'Looking for a Sober Grid alternative? SobrCircle is a free sober community app with public rooms, members near you, events, a sobriety tracker and meetings.',
+      'Looking for a Sober Grid alternative? SobrCircle is a sober community app with no ads: public rooms, members near you, events, a sobriety tracker and meetings.',
     eyebrow: 'Sober Grid alternative',
     h1: 'Looking for a Sober Grid alternative?',
-    lede: 'Sober Grid is no longer available. If you are looking for a new sober community, SobrCircle is a free place to find one, built by someone in recovery, with no ads.',
+    lede: 'Sober Grid is no longer available. If you are looking for a new sober community, SobrCircle is a place to find one, built by someone in recovery, with no ads.',
     phone: {
       src: '/assets/4.jpg?v=3',
       alt: 'SobrCircle profile showing check ins, circle size and 548 days sober',
@@ -333,7 +333,7 @@ export const topics: Topic[] = [
         paragraphs: [
           'Your circle is private. People join it with a 6-character code you share, there is no limit on its size, and only members who choose to be discoverable show up to people nearby.',
           'It also finds meetings: 195,000+ of them, including AA, NA and CA, with their times and live navigation to the door.',
-          'Every core feature is free, there are no ads, and your data is never sold.',
+          'There are no ads and your data is never sold. Anyone can join rooms and events, and Supporters can create their own.',
         ],
       },
     ],
@@ -341,9 +341,9 @@ export const topics: Topic[] = [
       ['Is Sober Grid still available?', 'No. Sober Grid is no longer available.'],
       ['Is SobrCircle connected to Sober Grid?', 'No. SobrCircle is an independent app made in Windsor, Ontario, and is not affiliated with Sober Grid.'],
       ['Can I meet sober people near me on SobrCircle?', 'Yes. You can find members nearby who have chosen to be discoverable, join public rooms, and find community events on the map.'],
-      ['Is SobrCircle free?', 'Yes. Every core feature is free, there are no ads, and your data is never sold.'],
+      ['Is SobrCircle free?', 'SobrCircle is free to download, with no ads, and your data is never sold. Tracking your days, finding meetings, one to one messages and joining any room or event cost nothing. Creating your own rooms and events is part of SobrCircle Supporter, which helps cover server costs.'],
     ],
-    getApp: 'Find your sober community again. Free on iPhone and Android, with no ads.',
+    getApp: 'Find your sober community again. Free to download on iPhone and Android, with no ads.',
     related: [
       ['/sober-community/', 'Sober community'],
       ['/sobriety-tracker/', 'Sobriety tracker'],

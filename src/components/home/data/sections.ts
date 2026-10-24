@@ -20,7 +20,7 @@ export const sections: HomeSection[] = [
     type: 'hero',
     title: 'Recovery',
     content: [
-      [{ type: 'plain', text: 'The free sobriety app, built by someone in recovery.' }],
+      [{ type: 'plain', text: 'The sobriety app built by someone in recovery.' }],
       [{ type: 'accent', text: 'Recovery is harder alone. You don\u2019t have to be.' }],
       [{ type: 'plain', text: 'Count your days, find a meeting tonight, and stay close to the people who show up.' }],
     ],
@@ -65,6 +65,9 @@ export const sections: HomeSection[] = [
       [{ type: 'callout', text: 'Recovery happens between meetings too.' }],
       [
         { type: 'plain', text: 'Join a public room to talk with people who get it, or join a private room of up to 50. Group chats keep up to 12 of your closest in one thread.' },
+      ],
+      [
+        { type: 'plain', text: 'Anyone can join a room or event. Supporters create their own, which helps cover server costs.' },
       ],
       [
         { type: 'plain', text: 'Find members near you who\u2019ve chosen to be discoverable, make yourself discoverable when you\u2019re ready, and find community events close to home. ' },

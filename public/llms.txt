@@ -1,6 +1,6 @@
 # SobrCircle
 
-> SobrCircle is a free, private recovery community app for iPhone and Android, built in Windsor, Ontario by Ben Moradi, who is in recovery himself. It includes a meeting finder with 195,000+ recovery meetings, including AA, NA and CA, on a map with meeting times and live navigation by car, foot, bike or transit, a private circle of people you invite with a 6-character code, public and private rooms, group chats, community events and members near you, daily check ins and a private journal. Core features are free, there are no ads, and user data is not sold. SobrCircle is independent and not affiliated with any 12-step fellowship.
+> SobrCircle is a private recovery community app for iPhone and Android, free to download, built in Windsor, Ontario by Ben Moradi, who is in recovery himself. It includes a meeting finder with 195,000+ recovery meetings, including AA, NA and CA, on a map with meeting times and live navigation by car, foot, bike or transit, a private circle of people you invite with a 6-character code, public and private rooms, group chats, community events and members near you, daily check ins and a private journal. There are no ads and user data is not sold. Tracking, meetings, one to one messages and joining rooms and events are free; creating rooms and events is part of the paid SobrCircle Supporter plan. SobrCircle is independent and not affiliated with any 12-step fellowship.
 
 - App Store: https://apps.apple.com/app/sobrcircle/id6760403731
 - Google Play: https://play.google.com/store/apps/details?id=com.sobrcircle.app
@@ -24,9 +24,9 @@
 - [Recovery meetings in Houston, Texas](https://sobrcircle.com/meetings/houston/)
 
 ## Features
-- [Sobriety tracker](https://sobrcircle.com/sobriety-tracker/): A free sobriety tracker app that counts your days sober, counts down to your next milestone and celebrates it with your circle. No ads. iPhone and Android.
-- [Sober community](https://sobrcircle.com/sober-community/): Join a free sober community app. Public and private rooms, group chats, members and community events near you, and a private circle of people you trust.
-- [Sober Grid alternative](https://sobrcircle.com/sober-grid-alternative/): Looking for a Sober Grid alternative? SobrCircle is a free sober community app with public rooms, members near you, events, a sobriety tracker and meetings.
+- [Sobriety tracker](https://sobrcircle.com/sobriety-tracker/): A sobriety tracker app that counts your days sober, counts down to your next milestone and celebrates it with your circle. No ads. Free to download.
+- [Sober community](https://sobrcircle.com/sober-community/): Join a sober community app with no ads. Public and private rooms, group chats, members and community events near you, and a private circle of people you trust.
+- [Sober Grid alternative](https://sobrcircle.com/sober-grid-alternative/): Looking for a Sober Grid alternative? SobrCircle is a sober community app with no ads: public rooms, members near you, events, a sobriety tracker and meetings.
 - [Sobriety calculator](https://sobrcircle.com/sobriety-calculator/): free tool to count days sober and see the next milestone.
 
 ## About
