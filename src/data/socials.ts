@@ -34,6 +34,6 @@ export const socials: Social[] = [
   social('tiktok', 'TikTok', '@sobrcircle', 'https://www.tiktok.com/@sobrcircle'),
   social('youtube', 'YouTube', '@sobrcircle', 'https://www.youtube.com/@sobrcircle'),
   social('threads', 'Threads', '@sobrcircle', 'https://www.threads.com/@sobrcircle'),
-  social('facebook', 'Facebook', 'SobrCircle', 'https://www.facebook.com/share/1F6Voujq2F/'),
+  social('facebook', 'Facebook', '@sobrcircle', 'https://www.facebook.com/sobrcircle'),
   social('snapchat', 'Snapchat', 'SobrCircle', 'https://snapchat.com/t/jnahGvVR'),
 ]
