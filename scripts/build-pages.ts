@@ -76,6 +76,8 @@ type PageOpts = {
   jsonLd?: object[]
   nav?: 'meetings' | 'follow'
   noindex?: boolean
+  /** Share image: the map screenshot for meeting pages, the tracker for the rest. */
+  ogImage?: 'meetings' | 'share'
 }
 
 function nav(current?: PageOpts['nav']) {
@@ -121,6 +123,11 @@ function footer() {
 
 function page(o: PageOpts) {
   const url = SITE + o.path
+  const meetings = (o.ogImage ?? (o.path.startsWith('/meetings/') ? 'meetings' : 'share')) === 'meetings'
+  const ogImg = `${SITE}/assets/${meetings ? 'og-meetings' : 'og-share'}.png?v=7`
+  const ogAlt = meetings
+    ? 'Find recovery meetings near you with SobrCircle: 195,000+ meetings with times and live navigation'
+    : 'SobrCircle, the sobriety app built by someone in recovery: sobriety tracker, 195,000+ meetings, rooms and events'
   const ld = [
     ...(o.jsonLd ?? []),
   ]
@@ -140,13 +147,14 @@ function page(o: PageOpts) {
     <meta property="og:title" content="${esc(o.title)}">
     <meta property="og:description" content="${esc(o.description)}">
     <meta property="og:url" content="${url}">
-    <meta property="og:image" content="${SITE}/assets/og-share.png?v=6">
+    <meta property="og:image" content="${ogImg}">
+    <meta property="og:image:alt" content="${esc(ogAlt)}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="${esc(o.title)}">
     <meta name="twitter:description" content="${esc(o.description)}">
-    <meta name="twitter:image" content="${SITE}/assets/og-share.png?v=6">
+    <meta name="twitter:image" content="${ogImg}">
     <link rel="icon" href="/favicon.ico" sizes="48x48">
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=4">
