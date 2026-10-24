@@ -12,21 +12,39 @@
 - [Cocaine Anonymous meetings](https://sobrcircle.com/meetings/cocaine-anonymous/)
 - [Recovery meetings in Windsor, Ontario](https://sobrcircle.com/meetings/windsor/)
 - [Recovery meetings in Toronto, Ontario](https://sobrcircle.com/meetings/toronto/)
-- [Recovery meetings in London, Ontario](https://sobrcircle.com/meetings/london-ontario/)
-- [Recovery meetings in Ottawa, Ontario](https://sobrcircle.com/meetings/ottawa/)
-- [Recovery meetings in Hamilton, Ontario](https://sobrcircle.com/meetings/hamilton/)
+- [Recovery meetings in Montreal, Quebec](https://sobrcircle.com/meetings/montreal/)
 - [Recovery meetings in Vancouver, British Columbia](https://sobrcircle.com/meetings/vancouver/)
 - [Recovery meetings in Calgary, Alberta](https://sobrcircle.com/meetings/calgary/)
+- [Recovery meetings in Edmonton, Alberta](https://sobrcircle.com/meetings/edmonton/)
+- [Recovery meetings in Ottawa, Ontario](https://sobrcircle.com/meetings/ottawa/)
+- [Recovery meetings in Winnipeg, Manitoba](https://sobrcircle.com/meetings/winnipeg/)
+- [Recovery meetings in Hamilton, Ontario](https://sobrcircle.com/meetings/hamilton/)
+- [Recovery meetings in Kitchener, Ontario](https://sobrcircle.com/meetings/kitchener/)
+- [Recovery meetings in London, Ontario](https://sobrcircle.com/meetings/london-ontario/)
+- [Recovery meetings in Victoria, British Columbia](https://sobrcircle.com/meetings/victoria/)
+- [Recovery meetings in Halifax, Nova Scotia](https://sobrcircle.com/meetings/halifax/)
+- [Recovery meetings in Sarnia, Ontario](https://sobrcircle.com/meetings/sarnia/)
+- [Recovery meetings in Chatham, Ontario](https://sobrcircle.com/meetings/chatham/)
 - [Recovery meetings in Detroit, Michigan](https://sobrcircle.com/meetings/detroit/)
 - [Recovery meetings in New York City, New York](https://sobrcircle.com/meetings/new-york-city/)
 - [Recovery meetings in Los Angeles, California](https://sobrcircle.com/meetings/los-angeles/)
 - [Recovery meetings in Chicago, Illinois](https://sobrcircle.com/meetings/chicago/)
 - [Recovery meetings in Houston, Texas](https://sobrcircle.com/meetings/houston/)
+- [Recovery meetings in Phoenix, Arizona](https://sobrcircle.com/meetings/phoenix/)
+- [Recovery meetings in Philadelphia, Pennsylvania](https://sobrcircle.com/meetings/philadelphia/)
+- [Recovery meetings in Dallas, Texas](https://sobrcircle.com/meetings/dallas/)
+- [Recovery meetings in Miami, Florida](https://sobrcircle.com/meetings/miami/)
+- [Recovery meetings in Atlanta, Georgia](https://sobrcircle.com/meetings/atlanta/)
+- [Recovery meetings in Boston, Massachusetts](https://sobrcircle.com/meetings/boston/)
+- [Recovery meetings in Seattle, Washington](https://sobrcircle.com/meetings/seattle/)
+- [Recovery meetings in Denver, Colorado](https://sobrcircle.com/meetings/denver/)
 
 ## Features
 - [Sobriety tracker](https://sobrcircle.com/sobriety-tracker/): A sobriety tracker app that counts your days sober, counts down to your next milestone and celebrates it with your circle. No ads. Free to download.
 - [Sober community](https://sobrcircle.com/sober-community/): Join a sober community app with no ads. Public and private rooms, group chats, members and community events near you, and a private circle of people you trust.
 - [Sober Grid alternative](https://sobrcircle.com/sober-grid-alternative/): Looking for a Sober Grid alternative? SobrCircle is a sober community app with no ads: public rooms, members near you, events, a sobriety tracker and meetings.
+- [First meeting guide](https://sobrcircle.com/guides/first-aa-meeting/): What happens at your first AA meeting: open and closed meetings, whether you have to talk, what to bring, and how to find an AA meeting near you tonight.
+- [Milestones guide](https://sobrcircle.com/guides/sobriety-milestones/): The sobriety milestones people celebrate, from 24 hours to 30, 60 and 90 days, months and years, how chips and key tags work, and how to count your days.
 - [Sobriety calculator](https://sobrcircle.com/sobriety-calculator/): free tool to count days sober and see the next milestone.
 
 ## About

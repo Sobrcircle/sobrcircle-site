@@ -36,17 +36,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://sobrcircle.com/meetings/london-ontario/</loc>
-    <lastmod>2026-10-24</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://sobrcircle.com/meetings/ottawa/</loc>
-    <lastmod>2026-10-24</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://sobrcircle.com/meetings/hamilton/</loc>
+    <loc>https://sobrcircle.com/meetings/montreal/</loc>
     <lastmod>2026-10-24</lastmod>
     <priority>0.8</priority>
   </url>
@@ -57,6 +47,56 @@
   </url>
   <url>
     <loc>https://sobrcircle.com/meetings/calgary/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sobrcircle.com/meetings/edmonton/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sobrcircle.com/meetings/ottawa/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sobrcircle.com/meetings/winnipeg/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sobrcircle.com/meetings/hamilton/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sobrcircle.com/meetings/kitchener/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sobrcircle.com/meetings/london-ontario/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sobrcircle.com/meetings/victoria/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sobrcircle.com/meetings/halifax/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sobrcircle.com/meetings/sarnia/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sobrcircle.com/meetings/chatham/</loc>
     <lastmod>2026-10-24</lastmod>
     <priority>0.8</priority>
   </url>
@@ -86,6 +126,46 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://sobrcircle.com/meetings/phoenix/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sobrcircle.com/meetings/philadelphia/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sobrcircle.com/meetings/dallas/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sobrcircle.com/meetings/miami/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sobrcircle.com/meetings/atlanta/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sobrcircle.com/meetings/boston/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sobrcircle.com/meetings/seattle/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sobrcircle.com/meetings/denver/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://sobrcircle.com/sobriety-tracker/</loc>
     <lastmod>2026-10-24</lastmod>
     <priority>0.9</priority>
@@ -97,6 +177,16 @@
   </url>
   <url>
     <loc>https://sobrcircle.com/sober-grid-alternative/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://sobrcircle.com/guides/first-aa-meeting/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://sobrcircle.com/guides/sobriety-milestones/</loc>
     <lastmod>2026-10-24</lastmod>
     <priority>0.9</priority>
   </url>

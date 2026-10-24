@@ -351,4 +351,111 @@ export const topics: Topic[] = [
     ],
     note: 'Sober Grid is a name belonging to its owner. SobrCircle is not affiliated with, endorsed by or connected to Sober Grid.',
   },
+{
+    slug: 'guides/first-aa-meeting',
+    title: 'Your First AA Meeting: What to Expect and How to Find One',
+    description:
+      'What happens at your first AA meeting: open and closed meetings, whether you have to talk, what to bring, and how to find an AA meeting near you tonight.',
+    eyebrow: 'First meeting guide',
+    h1: 'What to expect at your first AA meeting',
+    lede: 'Walking through the door is the hardest part. Here is what usually happens at a first meeting, so nothing catches you off guard.',
+    phone: {
+      src: '/assets/6.webp?v=4',
+      alt: 'SobrCircle map showing a Wednesday 7:30 PM meeting with a transit route and a Start Navigation button',
+      caption: 'Find a meeting tonight, then get live navigation to the door.',
+    },
+    sections: [
+      {
+        h2: 'Before you go',
+        points: [
+          ['Pick an open or beginners meeting', 'Open meetings welcome anyone. Some groups also hold beginners meetings, which go slower and are made for people who are new.'],
+          ['Arrive a few minutes early', 'Most meetings start on time. Getting there early gives you time to find the room and pick a seat where you feel comfortable.'],
+          ['Bring nothing but yourself', 'There is no sign-up, no fee and nothing to fill in. Nobody needs your last name.'],
+        ],
+      },
+      {
+        h2: 'What usually happens',
+        points: [
+          ['A short opening', 'Someone chairs the meeting and reads a welcome. Many groups also read a short passage or the Twelve Steps.'],
+          ['Introductions', 'People may introduce themselves by first name. You can say you are new, or simply pass.'],
+          ['Sharing', 'A speaker tells their story, or members take turns talking about a topic. You never have to speak.'],
+          ['The basket', 'A basket may go around for voluntary contributions toward rent and coffee. Newcomers are never expected to give.'],
+          ['Staying after', 'People often stick around to talk. Someone may offer you a phone list, so you have people to call between meetings.'],
+        ],
+      },
+      {
+        h2: 'After your first meeting',
+        paragraphs: [
+          'Many people try a few different meetings before one feels right, because every group has its own feel. Going back is what matters.',
+          'Between meetings, SobrCircle helps you count your days, check in, and keep the people you meet close in your circle.',
+        ],
+      },
+    ],
+    faq: [
+      ['Do I have to be sober to go to an AA meeting?', 'No. All you need is a wish to stop drinking. Plenty of people walk into their first meeting still drinking.'],
+      ['Do I have to talk at my first meeting?', 'No. You can sit, listen and leave whenever you like.'],
+      ['What if I see someone I know?', 'Anonymity is a core part of AA. Who you see and what you hear at a meeting stays there.'],
+      ['Is AA religious?', 'AA is not tied to any religion. Some meetings are held in churches because the space is available, and members define a higher power, or none, in their own way.'],
+      ['How do I find an AA meeting near me tonight?', 'Open SobrCircle to see meetings near you on a map with their times and live navigation, or check the meeting list from your local AA office.'],
+    ],
+    related: [
+      ['/meetings/aa/', 'AA meetings near you'],
+      ['/meetings/', 'All meetings'],
+      ['/guides/sobriety-milestones/', 'Sobriety milestones'],
+    ],
+    getApp: 'Find a meeting tonight, see when it starts and get live navigation to the door. Free to download on iPhone and Android.',
+    note: 'SobrCircle is independent and is not affiliated with, endorsed by, or operated by Alcoholics Anonymous World Services, Inc. Every AA group runs its own meetings, so formats vary.',
+  },
+  {
+    slug: 'guides/sobriety-milestones',
+    title: 'Sobriety Milestones: 24 Hours, 30, 60 and 90 Days, and Beyond',
+    description:
+      'The sobriety milestones people celebrate, from 24 hours to 30, 60 and 90 days, months and years, how chips and key tags work, and how to count your days.',
+    eyebrow: 'Milestones guide',
+    h1: 'Sobriety milestones, from 24 hours to years',
+    lede: 'Every milestone marks days that took real work. Here are the ones people celebrate most, and how to keep track of yours.',
+    phone: {
+      src: '/assets/1.webp?v=4',
+      alt: 'SobrCircle sobriety tracker showing 548 days sober and the next milestone of 2 years in 182 days',
+      caption: 'Your days and your next milestone, front and center.',
+    },
+    sections: [
+      {
+        h2: 'The milestones people celebrate',
+        points: [
+          ['24 hours', 'The first full day. Many meetings celebrate it, because every longer stretch starts here.'],
+          ['30, 60 and 90 days', 'The first three months are often the hardest, so many groups mark each one.'],
+          ['Months through the first year', 'Some groups mark every month of the first year, and many mark 6 and 9 months.'],
+          ['1 year', 'A big one. Many people celebrate with their group and the people who helped them get there.'],
+          ['Every year after', 'Yearly anniversaries, often called sobriety birthdays, keep going for as long as you stay sober.'],
+        ],
+      },
+      {
+        h2: 'Chips, coins and key tags',
+        paragraphs: [
+          'Many 12 step groups hand out chips, coins or key tags at milestones. The colours and the exact milestones vary from group to group, and not every group uses them.',
+          'NA groups often give key tags instead of chips. Ask at your home group how they celebrate.',
+        ],
+      },
+      {
+        h2: 'How SobrCircle marks your milestones',
+        paragraphs: [
+          `SobrCircle counts your days, shows how long until your next milestone, and gives you a badge at ${MILESTONES}. When you hit one, your circle hears about it.`,
+          'Want to see where you are right now? The sobriety calculator works out your days, months and years, and the dates of your next milestones.',
+        ],
+      },
+    ],
+    faq: [
+      ['Why is 90 days a big milestone?', 'The first 90 days are often the hardest stretch. Many people are encouraged to go to 90 meetings in 90 days, and groups often celebrate reaching it.'],
+      ['How do I work out how many days sober I am?', 'Count the full days since your sobriety date, or use the free sobriety calculator on this site.'],
+      ['What is a sobriety birthday?', 'Many people call their yearly sobriety anniversary a birthday and celebrate it at a meeting.'],
+      ['What if I relapse?', 'Many people in recovery have relapsed and started again. Your new sobriety date is the day you start again, and your meetings will welcome you back.'],
+    ],
+    related: [
+      ['/sobriety-calculator/', 'Sobriety calculator'],
+      ['/sobriety-tracker/', 'Sobriety tracker'],
+      ['/guides/first-aa-meeting/', 'Your first AA meeting'],
+    ],
+    getApp: 'Count every day and celebrate each milestone with your circle. Free to download on iPhone and Android.',
+  },
 ]

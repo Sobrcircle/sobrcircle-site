@@ -360,6 +360,11 @@ ${fellowships
       </section>
 
       <section class="pg-section">
+        <h2>Guides</h2>
+        ${relatedChips([['/guides/first-aa-meeting/', 'Your first AA meeting'], ['/guides/sobriety-milestones/', 'Sobriety milestones']])}
+      </section>
+
+      <section class="pg-section">
         <h2>How it works</h2>
 ${howItWorks()}
 ${appFeatures()}
@@ -649,7 +654,7 @@ ${crumbs([['Home', '/'], ['Sobriety calculator']])}
 
       <section class="pg-section">
         <h2>Sobriety milestones</h2>
-        <p>Every milestone gets a badge in SobrCircle: ${esc(MILESTONES)}. The first year is marked month by month because those are the days that take the most.</p>
+        <p>Every milestone gets a badge in SobrCircle: ${esc(MILESTONES)}. The first year is marked month by month because those are the days that take the most. <a href="/guides/sobriety-milestones/">Read the sobriety milestones guide</a>.</p>
       </section>
 
 ${faqHtml(faq)}
