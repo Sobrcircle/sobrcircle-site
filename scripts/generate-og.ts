@@ -140,12 +140,80 @@ function escapeHtml(s: string) {
     .replace(/'/g, '&#39;')
 }
 
+// ── Readable copy for crawlers ─────────────────────────────────────────────
+// The book is a React app, so without this every page looks empty to search
+// engines. Each page's HTML gets its own words inside #root; React replaces
+// them as soon as it loads, so readers see nothing different.
+const STATIC_RE = /<main id="tf-static"[\s\S]*?<\/main>/i
+const STATIC_STYLE =
+  "max-width:640px;margin:0 auto;padding:48px 20px;color:#e8e4df;background:#0a0a0a;font-family:Georgia,'Times New Roman',serif;line-height:1.7"
+const linkStyle = 'color:#c4a882'
+
+function staticMain(inner: string) {
+  return `<main id="tf-static" style="${STATIC_STYLE}">${inner}</main>`
+}
+
+function contentsHtml() {
+  let out = ''
+  let open = false
+  for (const p of pages as any[]) {
+    if (p.type === 'chapter') {
+      if (open) out += '</ul>'
+      out += `<h2><a href="/twentyfour/${p.id}/" style="${linkStyle}">${escapeHtml(p.title)}</a></h2><ul>`
+      open = true
+    } else if (p.type === 'poem' && open) {
+      out += `<li><a href="/twentyfour/${p.id}/" style="${linkStyle}">${escapeHtml(p.title)}</a></li>`
+    }
+  }
+  if (open) out += '</ul>'
+  return out
+}
+
+function pageBodyHtml(page: any) {
+  const home = `<p><a href="/twentyfour/" style="${linkStyle}">twenty four</a>, by bm</p>`
+  const foot = `<p>twenty four is the story behind <a href="/" style="${linkStyle}">SobrCircle</a>, the sobriety app built by someone in recovery.</p>`
+  if (page.type === 'poem') {
+    const poems = (pages as any[]).filter((p) => p.type === 'poem')
+    const i = poems.findIndex((p) => p.id === page.id)
+    const prev = i > 0 ? poems.at(i - 1) : null
+    const next = i < poems.length - 1 ? poems.at(i + 1) : null
+    const stanzas = (page.stanzas || [])
+      .map((lines: string[]) => `<p>${lines.map((l) => escapeHtml(l)).join('<br>')}</p>`)
+      .join('')
+    const nav = [
+      prev ? `<a href="/twentyfour/${prev.id}/" style="${linkStyle}">previous: ${escapeHtml(prev.title)}</a>` : '',
+      next ? `<a href="/twentyfour/${next.id}/" style="${linkStyle}">next: ${escapeHtml(next.title)}</a>` : '',
+    ].filter(Boolean).join(' &middot; ')
+    return staticMain(`${home}<p>${escapeHtml(page.chapter || '')}</p><h1>${escapeHtml(page.title)}</h1>${stanzas}<p>${nav}</p>${foot}`)
+  }
+  if (page.type === 'chapter') {
+    const list = (pages as any[])
+      .filter((p) => p.type === 'poem' && p.chapter === page.title)
+      .map((p) => `<li><a href="/twentyfour/${p.id}/" style="${linkStyle}">${escapeHtml(p.title)}</a></li>`)
+      .join('')
+    return staticMain(`${home}<h1>${escapeHtml(page.title)}</h1><ul>${list}</ul>${foot}`)
+  }
+  const paras = (page.paragraphs || []).map((p: any) => `<p>${escapeHtml(p.text)}</p>`).join('')
+  return staticMain(`${home}<h1>${escapeHtml(page.title || page.label || 'twenty four')}</h1>${paras}${foot}`)
+}
+
+function bookHomeHtml() {
+  const note = (pages as any[]).find((p) => p.id === 'note')
+  const intro = (note?.paragraphs || []).slice(3, 6).map((p: any) => `<p>${escapeHtml(p.text)}</p>`).join('')
+  return staticMain(
+    `<h1>twenty four</h1><p>Twenty four poems on addiction, relapse and recovery, in four chapters, in the order they were lived. A poetry memoir by bm, the founder of <a href="/" style="${linkStyle}">SobrCircle</a>.</p>` +
+      intro +
+      `<h2>Contents</h2>${contentsHtml()}`,
+  )
+}
+
 function patchHtmlForPage(shell: string, opts: {
   id: string
   title: string
   description: string
   ogImage: string
   canonical: string
+  body?: string
 }) {
   const t = escapeHtml(opts.title)
   const d = escapeHtml(opts.description)
@@ -183,6 +251,8 @@ function patchHtmlForPage(shell: string, opts: {
   // og:image:width/height — reset to 1200x630 (our generated size)
   replaceMeta('property', 'og:image:width', '1200')
   replaceMeta('property', 'og:image:height', '630')
+
+  if (opts.body) html = html.replace(STATIC_RE, opts.body)
 
   return html
 }
@@ -264,12 +334,15 @@ async function main() {
       description: descriptionFor(page),
       ogImage: ogImageAbs,
       canonical,
+      body: pageBodyHtml(page),
     })
     const dir = path.join(TF_DIST, id)
     await fs.mkdir(dir, { recursive: true })
     await fs.writeFile(path.join(dir, 'index.html'), html)
     htmlCount++
   }
+
+  await fs.writeFile(shellPath, shell.replace(STATIC_RE, bookHomeHtml()))
 
   console.log(`[og] wrote ${ogCount} PNGs and ${htmlCount} per-route HTML files under dist/twentyfour/`)
 }
