@@ -2,6 +2,15 @@ const APP_STORE_URL = 'https://apps.apple.com/app/sobrcircle/id6760403731'
 const PLAY_STORE_URL =
   'https://play.google.com/store/apps/details?id=com.sobrcircle.app'
 
+// Google Play reads utm_* from the referrer parameter and reports installs by
+// source in Play Console > Statistics > Acquisition. Apple needs a provider
+// token (pt=) from App Store Connect for the same thing, so the App Store link
+// stays plain until that token is added.
+function playUrl(medium: string) {
+  const referrer = `utm_source=sobrcircle.com&utm_medium=${medium}`
+  return `${PLAY_STORE_URL}&referrer=${encodeURIComponent(referrer)}`
+}
+
 function AppleLogo() {
   return (
     <svg
@@ -32,9 +41,15 @@ function GooglePlayLogo() {
   )
 }
 
-export default function StoreBadges() {
+type Props = {
+  /** Where on the site the badges sit, reported to Play Console as utm_medium. */
+  placement?: string
+  className?: string
+}
+
+export default function StoreBadges({ placement = 'home-hero', className }: Props) {
   return (
-    <div className="home-store-badges">
+    <div className={`home-store-badges${className ? ` ${className}` : ''}`}>
       <a
         className="home-store-badge"
         href={APP_STORE_URL}
@@ -47,9 +62,9 @@ export default function StoreBadges() {
       </a>
       <a
         className="home-store-badge"
-        href={PLAY_STORE_URL}
+        href={playUrl(placement)}
         target="_blank"
-        rel="noopener noreferrer"
+        rel="noopener"
         aria-label="Get SobrCircle on Google Play"
       >
         <GooglePlayLogo />

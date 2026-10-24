@@ -234,7 +234,7 @@ async function main() {
 
   for (const page of shareable) {
     const id = page.id
-    const canonical = `${SITE}/twentyfour/${id}`
+    const canonical = `${SITE}/twentyfour/${id}/`
     const ogImagePath = `/twentyfour/og/${id}.png`
     const ogImageAbs = `${SITE}${ogImagePath}`
 

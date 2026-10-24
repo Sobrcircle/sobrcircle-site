@@ -1,0 +1,640 @@
+// Generates the static, crawlable pages that sit beside the React homepage:
+//   /meetings/            meeting finder hub
+//   /meetings/<type>/     one page per fellowship (AA, NA, CA)
+//   /meetings/<city>/     one page per city, with verified local directories
+//   /follow/              every SobrCircle social profile
+//   /404.html             real 404 status instead of the SPA fallback
+//   /sitemap.xml, /llms.txt
+//
+// Everything is plain HTML in public/, so search engines and AI assistants
+// read it without running JavaScript. Edit scripts/pages-data.ts and run
+// `npm run pages` to add a city or change a link, then commit the output.
+
+import fs from 'node:fs/promises'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import {
+  SITE,
+  APP_STORE_URL,
+  PLAY_STORE_URL,
+  APP_ID,
+  MEETING_COUNT,
+  socials,
+  fellowships,
+  cities,
+  type City,
+  type Fellowship,
+  type Resource,
+} from './pages-data.ts'
+import { pages as bookPages } from '../src/twentyfour/data/pages.ts'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const ROOT = path.resolve(__dirname, '..')
+const PUBLIC = path.join(ROOT, 'public')
+const TODAY = new Date().toISOString().slice(0, 10)
+const CSS_VERSION = '20261024'
+
+// ── helpers ──────────────────────────────────────────────────────────────
+
+const esc = (s: string) =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+
+const telHref = (phone: string) => {
+  const digits = phone.replace(/\D/g, '')
+  if (digits.length <= 4) return `tel:${digits}`
+  return `tel:+${digits.length === 10 ? '1' + digits : digits}`
+}
+
+const playUrl = (medium: string) =>
+  `${PLAY_STORE_URL}&referrer=${encodeURIComponent(`utm_source=sobrcircle.com&utm_medium=${medium}`)}`
+
+const icon = (name: keyof typeof ICONS, size = 20) =>
+  `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="currentColor" aria-hidden="true"><path d="${ICONS[name]}"/></svg>`
+
+const ICONS = {
+  apple:
+    'M17.05 12.04c-.03-2.85 2.33-4.22 2.43-4.29-1.32-1.94-3.39-2.2-4.12-2.23-1.75-.18-3.42 1.03-4.31 1.03-.89 0-2.25-1.01-3.71-.98-1.91.03-3.67 1.11-4.65 2.82-1.98 3.43-.51 8.5 1.42 11.29.94 1.36 2.07 2.89 3.54 2.83 1.42-.06 1.96-.92 3.68-.92 1.71 0 2.2.92 3.71.89 1.53-.03 2.5-1.39 3.44-2.76.69-1.01 1.1-2.03 1.4-3.07-.04-.02-2.69-1.04-2.72-4.1l-.02-.51ZM14.6 4.5c.79-.96 1.32-2.29 1.18-3.62-1.14.05-2.52.76-3.34 1.71-.73.85-1.37 2.21-1.2 3.51 1.27.1 2.57-.65 3.36-1.6Z',
+  play: 'M5 2.7v18.6a.6.6 0 0 0 .92.5l15.3-9.3a.6.6 0 0 0 0-1L5.92 2.2A.6.6 0 0 0 5 2.7Z',
+  ...Object.fromEntries(socials.map((s) => [s.id, s.icon])),
+} as Record<string, string>
+
+function badges(medium: string) {
+  return `<div class="pg-badges">
+        <a class="pg-badge" href="${APP_STORE_URL}" rel="noopener" aria-label="Download SobrCircle on the App Store">${icon('apple', 19)}<span>App Store</span></a>
+        <a class="pg-badge" href="${esc(playUrl(medium))}" rel="noopener" aria-label="Get SobrCircle on Google Play">${icon('play', 17)}<span>Google Play</span></a>
+      </div>`
+}
+
+type PageOpts = {
+  path: string // e.g. /meetings/windsor/
+  title: string
+  description: string
+  body: string
+  jsonLd?: object[]
+  nav?: 'meetings' | 'follow'
+  noindex?: boolean
+}
+
+function nav(current?: PageOpts['nav']) {
+  const link = (href: string, label: string, key?: PageOpts['nav']) =>
+    `<a href="${href}"${current && key === current ? ' aria-current="page"' : ''}>${label}</a>`
+  return `<nav class="pg-nav" aria-label="Main navigation">
+      <a class="nav-brand" href="/">
+        <img class="nav-brand-mark" src="/assets/circle.png" alt="" width="28" height="28">
+        <span><strong>Sobr</strong>Circle</span>
+      </a>
+      <div class="pg-nav-links">
+        ${link('/meetings/', 'Find Meetings', 'meetings')}
+        ${link('/follow/', 'Follow', 'follow')}
+        ${link('/#story', 'Our Story')}
+        ${link('/twentyfour/', 'Twenty Four')}
+      </div>
+    </nav>`
+}
+
+function footer() {
+  return `<footer class="pg-footer">
+      <div class="pg-footer-socials">
+        ${socials.map((s) => `<a href="${s.url}" rel="me noopener" aria-label="SobrCircle on ${s.name}">${icon(s.id, 18)}</a>`).join('\n        ')}
+      </div>
+      <div class="pg-footer-links">
+        <a href="/">Home</a>
+        <a href="/meetings/">Find Meetings</a>
+        <a href="/follow/">Follow</a>
+        <a href="/support/">Support</a>
+        <a href="/privacy/">Privacy</a>
+        <a href="/terms/">Terms</a>
+      </div>
+      <p class="pg-footer-note">SobrCircle is peer support for adults 18+, not medical care or emergency services. In a crisis in Canada or the US, call or text 988. SobrCircle is independent and is not affiliated with or endorsed by Alcoholics Anonymous, Narcotics Anonymous, Cocaine Anonymous or any other fellowship.</p>
+      <p class="pg-footer-note">&copy; ${new Date().getFullYear()} Moradi Labs Inc. Windsor, Ontario.</p>
+    </footer>`
+}
+
+function page(o: PageOpts) {
+  const url = SITE + o.path
+  const ld = [
+    ...(o.jsonLd ?? []),
+  ]
+  return `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>${esc(o.title)}</title>
+    <meta name="description" content="${esc(o.description)}">
+    ${o.noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" href="${url}">`}
+    <meta name="apple-itunes-app" content="app-id=${APP_ID}">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="SobrCircle">
+    <meta property="og:title" content="${esc(o.title)}">
+    <meta property="og:description" content="${esc(o.description)}">
+    <meta property="og:url" content="${url}">
+    <meta property="og:image" content="${SITE}/assets/og-share.png?v=6">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="${esc(o.title)}">
+    <meta name="twitter:description" content="${esc(o.description)}">
+    <meta name="twitter:image" content="${SITE}/assets/og-share.png?v=6">
+    <link rel="icon" type="image/png" sizes="64x64" href="/favicon-dark-64.png?v=4">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=4">
+    <link rel="stylesheet" href="/site.css?v=${CSS_VERSION}">
+    <link rel="stylesheet" href="/pages.css?v=${CSS_VERSION}">
+${ld.map((x) => `    <script type="application/ld+json">${JSON.stringify(x)}</script>`).join('\n')}
+  </head>
+  <body>
+    <div class="pg-shell">
+    ${nav(o.nav)}
+    <main>
+${o.body}
+    </main>
+    ${footer()}
+    </div>
+  </body>
+</html>
+`
+}
+
+function crumbs(items: Array<[string, string?]>) {
+  const html = items
+    .map(([label, href]) => (href ? `<a href="${href}">${esc(label)}</a>` : `<span>${esc(label)}</span>`))
+    .join(' / ')
+  return `      <nav class="pg-crumbs" aria-label="Breadcrumb">${html}</nav>`
+}
+
+function crumbsLd(items: Array<[string, string]>) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map(([name, p], i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name,
+      item: SITE + p,
+    })),
+  }
+}
+
+function faqLd(faq: Array<[string, string]>) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map(([q, a]) => ({
+      '@type': 'Question',
+      name: q,
+      acceptedAnswer: { '@type': 'Answer', text: a },
+    })),
+  }
+}
+
+function faqHtml(faq: Array<[string, string]>, heading = 'Questions people ask') {
+  return `      <section class="pg-section pg-faq">
+        <h2>${heading}</h2>
+${faq.map(([q, a]) => `        <details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('\n')}
+      </section>`
+}
+
+const appLd = {
+  '@context': 'https://schema.org',
+  '@type': 'MobileApplication',
+  '@id': `${SITE}/#app`,
+  name: 'SobrCircle',
+  url: `${SITE}/`,
+  applicationCategory: 'HealthApplication',
+  operatingSystem: 'iOS, Android',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'CAD' },
+  installUrl: [APP_STORE_URL, PLAY_STORE_URL],
+}
+
+function appFeatures(place?: string) {
+  const where = place ? `around ${place}` : 'near you'
+  return `      <ul class="pg-features">
+        <li><strong>${MEETING_COUNT} meetings on one map.</strong> See what's ${where} and pick one that fits tonight.</li>
+        <li><strong>Directions to the door.</strong> Step by step directions, including transit routes, right inside the app.</li>
+        <li><strong>Your circle comes with you.</strong> Friends who choose to share their location show up on the same map, so you can go together.</li>
+        <li><strong>Free, private, no ads.</strong> Every core feature is free, your data is never sold, and you can sign up without a credit card.</li>
+      </ul>`
+}
+
+function resourceCard(r: Resource, kind: string) {
+  const phone = r.phone ? `<p><a href="${telHref(r.phone)}">${esc(r.phone)}</a></p>` : ''
+  const note = r.note ? `<p class="meta-line">${esc(r.note)}</p>` : ''
+  return `          <div class="pg-card">
+            <p class="pg-kind">${esc(kind)}</p>
+            <a class="pg-card-link" href="${esc(r.url)}" rel="noopener">${esc(r.name)}</a>
+            ${phone}${note}
+          </div>`
+}
+
+function crisisCallout(helplines: Resource[]) {
+  const items = helplines
+    .map((h) => {
+      const phone = h.phone ? ` <a href="${telHref(h.phone)}">${esc(h.phone)}</a>` : ''
+      return `<p><a href="${esc(h.url)}" rel="noopener">${esc(h.name)}</a>${phone}${h.note ? ` <span class="meta-line">${esc(h.note)}</span>` : ''}</p>`
+    })
+    .join('\n          ')
+  return `      <div class="pg-callout">
+          <p><strong>Need help right now?</strong> Call or text 988 any time in Canada or the US if you're in crisis. Call 911 in an emergency.</p>
+          ${items}
+        </div>`
+}
+
+const disclaimer = `      <p class="meta-line" style="margin-top:28px">SobrCircle is an independent app by Moradi Labs Inc. and is not affiliated with, endorsed by, or operated by Alcoholics Anonymous World Services, Inc., Narcotics Anonymous World Services, Inc., Cocaine Anonymous World Services, Inc., or any 12 step fellowship. Fellowship names are used only to describe the meetings listed. Meeting details come from public listings and can change, so please confirm with the group or local office before you go.</p>`
+
+function cityChips(list: City[]) {
+  return `<div class="pg-chips">
+${list.map((c) => `          <a href="/meetings/${c.slug}/">${esc(c.name)}</a>`).join('\n')}
+        </div>`
+}
+
+function fellowshipChips(list: Fellowship[], place?: string) {
+  return `<div class="pg-chips">
+${list.map((f) => `          <a href="/meetings/${f.slug}/">${esc(f.label)} meetings${place ? '' : ' near you'}</a>`).join('\n')}
+        </div>`
+}
+
+// ── pages ────────────────────────────────────────────────────────────────
+
+function hubPage() {
+  const faq: Array<[string, string]> = [
+    [
+      'How do I find a recovery meeting near me?',
+      `Download SobrCircle for free on iPhone or Android and open the map. It shows ${MEETING_COUNT} meetings, including AA, NA and CA meetings, with directions from where you are.`,
+    ],
+    [
+      'Are recovery meetings free?',
+      'Yes. AA, NA and CA meetings have no dues or fees. Groups pass a basket for voluntary contributions, and newcomers are never expected to give.',
+    ],
+    [
+      'What is the difference between an open and a closed meeting?',
+      'Open meetings welcome anyone, including family, friends and people who are curious. Closed meetings are for people who have, or think they may have, a problem with alcohol or drugs.',
+    ],
+    [
+      'Do I have to talk at my first meeting?',
+      'No. You can sit, listen and leave whenever you like. Many people say they are new at the start so others can welcome them, but it is always your choice.',
+    ],
+    [
+      'Is SobrCircle part of AA or NA?',
+      'No. SobrCircle is an independent app built by someone in recovery. It helps you find meetings run by many different groups and stay connected to the people you choose.',
+    ],
+  ]
+  const body = `
+      <header class="pg-hero">
+${crumbs([['Home', '/'], ['Find Meetings']])}
+        <p class="eyebrow">Meeting finder</p>
+        <h1>Find recovery meetings near you</h1>
+        <p class="lede">SobrCircle puts ${MEETING_COUNT} meetings on one map, including AA, NA and Cocaine Anonymous meetings, with directions, for free. Built by someone who needed it.</p>
+        ${badges('meetings')}
+      </header>
+
+      <section class="pg-section">
+        <h2>Meetings by type</h2>
+        <div class="pg-grid">
+${fellowships
+  .map(
+    (f) => `          <a class="pg-card" href="/meetings/${f.slug}/">
+            <p class="pg-kind">${esc(f.short)}</p>
+            <h3>${esc(f.name)} meetings</h3>
+            <p>${esc(f.blurb)}</p>
+          </a>`,
+  )
+  .join('\n')}
+        </div>
+      </section>
+
+      <section class="pg-section">
+        <h2>Meetings by city</h2>
+        <p>Local meeting directories and help lines, city by city.</p>
+        ${cityChips(cities)}
+      </section>
+
+      <section class="pg-section">
+        <h2>What the app does</h2>
+${appFeatures()}
+      </section>
+
+${faqHtml(faq)}
+
+${crisisCallout([])}
+${disclaimer}
+`
+  return page({
+    path: '/meetings/',
+    nav: 'meetings',
+    title: 'Find AA, NA and 12 Step Meetings Near You: Free Meeting Finder',
+    description: `Find AA, NA and Cocaine Anonymous meetings near you tonight. SobrCircle maps ${MEETING_COUNT} meetings, including AA, NA and CA, with directions. Free on iPhone and Android.`,
+    body,
+    jsonLd: [appLd, crumbsLd([['Home', '/'], ['Find Meetings', '/meetings/']]), faqLd(faq)],
+  })
+}
+
+function fellowshipPage(f: Fellowship) {
+  const body = `
+      <header class="pg-hero">
+${crumbs([['Home', '/'], ['Find Meetings', '/meetings/'], [`${f.label} meetings`]])}
+        <p class="eyebrow">${esc(f.name)}</p>
+        <h1>${esc(f.h1)}</h1>
+        <p class="lede">${esc(f.lede)}</p>
+        ${badges(`meetings-${f.slug}`)}
+      </header>
+
+      <section class="pg-section">
+        <h2>What ${esc(f.short)} meetings are</h2>
+${f.about.map((p) => `        <p>${esc(p)}</p>`).join('\n')}
+      </section>
+
+      <section class="pg-section">
+        <h2>Kinds of ${esc(f.short)} meetings</h2>
+        <ul class="pg-features">
+${f.formats.map(([t, d]) => `          <li><strong>${esc(t)}.</strong> ${esc(d)}</li>`).join('\n')}
+        </ul>
+      </section>
+
+      <section class="pg-section">
+        <h2>Find ${esc(f.short)} meetings with SobrCircle</h2>
+${appFeatures()}
+      </section>
+
+      <section class="pg-section">
+        <h2>Official ${esc(f.short)} resources</h2>
+        <p>${esc(f.name)} also runs its own meeting search. These are its official sites.</p>
+        <div class="pg-grid">
+${f.official.map((r) => resourceCard(r, f.short)).join('\n')}
+        </div>
+      </section>
+
+      <section class="pg-section">
+        <h2>${esc(f.short)} meetings by city</h2>
+        ${cityChips(cities)}
+      </section>
+
+${faqHtml(f.faq)}
+
+${crisisCallout([])}
+${disclaimer}
+`
+  return page({
+    path: `/meetings/${f.slug}/`,
+    nav: 'meetings',
+    title: f.title,
+    description: f.description,
+    body,
+    jsonLd: [
+      crumbsLd([
+        ['Home', '/'],
+        ['Find Meetings', '/meetings/'],
+        [`${f.label} meetings`, `/meetings/${f.slug}/`],
+      ]),
+      faqLd(f.faq),
+    ],
+  })
+}
+
+function cityPage(c: City) {
+  const place = c.name
+  const full = `${c.name}, ${c.region}`
+  const local: string[] = []
+  if (c.aa) local.push(resourceCard(c.aa, 'AA'))
+  if (c.na) local.push(resourceCard(c.na, 'NA'))
+  if (c.ca) local.push(resourceCard(c.ca, 'CA'))
+  if (c.alanon) local.push(resourceCard(c.alanon, 'Families'))
+  for (const o of c.other ?? []) local.push(resourceCard(o, o.kind ?? 'Other'))
+
+  const nearby = cities.filter((x) => c.nearby?.includes(x.slug))
+  const others = nearby.length ? nearby : cities.filter((x) => x.slug !== c.slug && x.country === c.country).slice(0, 6)
+
+  const faq: Array<[string, string]> = [
+    [
+      `Where can I find AA meetings in ${place} tonight?`,
+      `Open SobrCircle and the map shows meetings around ${place} with directions. You can also check the local AA directory listed on this page${c.aa?.phone ? ` or call ${c.aa.phone}` : ''}.`,
+    ],
+    [
+      `Are there NA and Cocaine Anonymous meetings in ${place}?`,
+      `${c.na ? `Yes. NA meetings in the area are listed by ${c.na.name}` : 'NA meetings are listed in the app'}${c.ca ? `, and CA meetings by ${c.ca.name}` : ''}. SobrCircle shows them alongside AA meetings on one map.`,
+    ],
+    [
+      `Do recovery meetings in ${place} cost anything?`,
+      'No. Meetings are free to attend. Groups may pass a basket for voluntary contributions, and newcomers are never expected to give.',
+    ],
+    [
+      'Can I go to a meeting if I just want to listen?',
+      'Yes. Look for an open meeting, which anyone can attend. You never have to speak, and you can leave whenever you like.',
+    ],
+  ]
+
+  const body = `
+      <header class="pg-hero">
+${crumbs([['Home', '/'], ['Find Meetings', '/meetings/'], [place]])}
+        <p class="eyebrow">${esc(full)}</p>
+        <h1>Recovery meetings in ${esc(place)}</h1>
+        <p class="lede">${esc(c.lede ?? `Find AA, NA and Cocaine Anonymous meetings in ${place} and nearby. SobrCircle maps the meetings around you with directions, free on iPhone and Android.`)}</p>
+        ${badges(`city-${c.slug}`)}
+      </header>
+
+      <section class="pg-section">
+        <h2>Find a meeting in ${esc(place)} with SobrCircle</h2>
+${appFeatures(place)}
+      </section>
+
+${
+  local.length
+    ? `      <section class="pg-section">
+        <h2>Local meeting directories</h2>
+        <p>These local offices and groups keep their own ${esc(place)} meeting lists and phone lines.${c.note ? ` ${esc(c.note)}` : ''}</p>
+        <div class="pg-grid">
+${local.join('\n')}
+        </div>
+      </section>`
+    : ''
+}
+
+      <section class="pg-section">
+        <h2>Meetings by type</h2>
+        ${fellowshipChips(fellowships, place)}
+      </section>
+
+${faqHtml(faq)}
+
+${crisisCallout(c.helplines ?? [])}
+
+      <section class="pg-section" style="margin-top:34px">
+        <h2>Meetings in other cities</h2>
+        ${cityChips(others)}
+      </section>
+${disclaimer}
+`
+  return page({
+    path: `/meetings/${c.slug}/`,
+    nav: 'meetings',
+    title: `AA and NA Meetings in ${full}: Find a Meeting Tonight`.length > 64
+      ? `AA and NA Meetings in ${full} Tonight`
+      : `AA and NA Meetings in ${full}: Find a Meeting Tonight`,
+    description: `Find AA, NA and Cocaine Anonymous meetings in ${place} tonight. Local meeting directories, help lines, and a free app that maps meetings near you with directions.`,
+    body,
+    jsonLd: [
+      crumbsLd([
+        ['Home', '/'],
+        ['Find Meetings', '/meetings/'],
+        [place, `/meetings/${c.slug}/`],
+      ]),
+      faqLd(faq),
+    ],
+  })
+}
+
+function followPage() {
+  const body = `
+      <header class="pg-hero">
+${crumbs([['Home', '/'], ['Follow']])}
+        <p class="eyebrow">Follow SobrCircle</p>
+        <h1>Daily motivation, wherever you scroll</h1>
+        <p class="lede">Short videos from founder Ben Moradi, posted daily. Real talk, one hard truth at a time, plus the Left on Read series. Pick your platform.</p>
+      </header>
+
+      <section class="pg-socials" aria-label="SobrCircle social profiles">
+${socials
+  .map(
+    (s) => `        <a class="pg-social" href="${s.url}" rel="me noopener">
+          ${icon(s.id, 26)}
+          <span><span class="pg-social-name">${esc(s.name)}</span><span class="pg-social-handle">${esc(s.handle)}</span></span>
+          <span class="pg-social-arrow" aria-hidden="true">&rarr;</span>
+        </a>`,
+  )
+  .join('\n')}
+      </section>
+
+      <section class="pg-section" style="margin-top:34px">
+        <h2>Get the app</h2>
+        <p>The conversation keeps going in SobrCircle: your circle, daily check ins, a private journal and ${MEETING_COUNT} meetings on one map. Free on iPhone and Android.</p>
+        ${badges('follow')}
+      </section>
+`
+  return page({
+    path: '/follow/',
+    nav: 'follow',
+    title: 'Follow SobrCircle: Instagram, TikTok, YouTube, Threads, Snapchat',
+    description:
+      'Daily motivation videos from SobrCircle founder Ben Moradi. Follow on Instagram, TikTok, YouTube, Threads, Facebook and Snapchat.',
+    body,
+    jsonLd: [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        '@id': `${SITE}/#org`,
+        name: 'SobrCircle',
+        legalName: 'Moradi Labs Inc.',
+        url: `${SITE}/`,
+        logo: `${SITE}/apple-touch-icon.png`,
+        sameAs: socials.map((s) => s.url),
+      },
+    ],
+  })
+}
+
+function notFoundPage() {
+  const body = `
+      <header class="pg-hero">
+        <p class="eyebrow">404</p>
+        <h1>This page isn't here</h1>
+        <p class="lede">The link may be old or mistyped. Here's where most people are headed.</p>
+        <div class="pg-chips">
+          <a href="/">SobrCircle home</a>
+          <a href="/meetings/">Find meetings near you</a>
+          <a href="/follow/">Follow SobrCircle</a>
+          <a href="/twentyfour/">Twenty Four</a>
+          <a href="/support/">Support</a>
+        </div>
+      </header>
+`
+  return page({
+    path: '/404',
+    title: 'Page not found | SobrCircle',
+    description: 'This page could not be found. Find recovery meetings near you, follow SobrCircle, or head back to the SobrCircle home page.',
+    body,
+    noindex: true,
+  })
+}
+
+// ── sitemap & llms.txt ───────────────────────────────────────────────────
+
+function sitemap() {
+  const shareable = bookPages.filter(
+    (p) =>
+      p.type === 'poem' ||
+      p.type === 'chapter' ||
+      (p.type === 'prose' && ['note', 'dedication', 'acknowledgements', 'about'].includes(p.id)) ||
+      p.type === 'closing',
+  )
+  const urls: Array<[string, string]> = [
+    ['/', '1.0'],
+    ['/meetings/', '0.9'],
+    ...fellowships.map((f) => [`/meetings/${f.slug}/`, '0.8'] as [string, string]),
+    ...cities.map((c) => [`/meetings/${c.slug}/`, '0.8'] as [string, string]),
+    ['/follow/', '0.6'],
+    ['/twentyfour/', '0.7'],
+    ...shareable.map((p) => [`/twentyfour/${p.id}/`, '0.4'] as [string, string]),
+    ['/support/', '0.3'],
+    ['/privacy/', '0.2'],
+    ['/terms/', '0.2'],
+    ['/child-safety-standards/', '0.2'],
+    ['/delete-account/', '0.2'],
+  ]
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls
+  .map(([p, pr]) => `  <url>\n    <loc>${SITE}${p}</loc>\n    <lastmod>${TODAY}</lastmod>\n    <priority>${pr}</priority>\n  </url>`)
+  .join('\n')}
+</urlset>
+`
+}
+
+function llms() {
+  return `# SobrCircle
+
+> SobrCircle is a free, private recovery community app for iPhone and Android, built in Windsor, Ontario by Ben Moradi, who is in recovery himself. It includes a meeting finder with ${MEETING_COUNT} recovery meetings (AA, NA and CA) on a map with directions, including transit routes, a private circle of people you invite with a code, daily check ins, a private journal, group chats and meeting rooms. Core features are free, there are no ads, and user data is not sold. SobrCircle is independent and not affiliated with any 12-step fellowship.
+
+- App Store: ${APP_STORE_URL}
+- Google Play: ${PLAY_STORE_URL}
+
+## Meeting finder
+- [Find recovery meetings near you](${SITE}/meetings/)
+${fellowships.map((f) => `- [${f.name} meetings](${SITE}/meetings/${f.slug}/)`).join('\n')}
+${cities.map((c) => `- [Recovery meetings in ${c.name}, ${c.region}](${SITE}/meetings/${c.slug}/)`).join('\n')}
+
+## About
+- [Home and founder story](${SITE}/)
+- [Twenty Four, the founder's poetry memoir](${SITE}/twentyfour/)
+- [Follow SobrCircle](${SITE}/follow/)
+- [Support](${SITE}/support/)
+`
+}
+
+// ── write ────────────────────────────────────────────────────────────────
+
+async function write(rel: string, content: string) {
+  const file = path.join(PUBLIC, rel)
+  await fs.mkdir(path.dirname(file), { recursive: true })
+  await fs.writeFile(file, content)
+}
+
+async function main() {
+  // Clear old generated meeting pages so a removed city does not linger.
+  await fs.rm(path.join(PUBLIC, 'meetings'), { recursive: true, force: true })
+
+  await write('meetings/index.html', hubPage())
+  for (const f of fellowships) await write(`meetings/${f.slug}/index.html`, fellowshipPage(f))
+  for (const c of cities) await write(`meetings/${c.slug}/index.html`, cityPage(c))
+  await write('follow/index.html', followPage())
+  await write('404.html', notFoundPage())
+  await write('sitemap.xml', sitemap())
+  await write('llms.txt', llms())
+
+  console.log(`[pages] wrote meetings hub, ${fellowships.length} fellowship pages, ${cities.length} city pages, follow, 404, sitemap, llms.txt`)
+}
+
+main().catch((err) => {
+  console.error(err)
+  process.exit(1)
+})

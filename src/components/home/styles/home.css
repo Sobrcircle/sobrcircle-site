@@ -763,7 +763,9 @@
 }
 
 .home-footer-links a {
-  color: rgba(232, 228, 223, 0.4);
+  color: rgba(232, 228, 223, 0.55);
+  display: inline-block;
+  padding: 0.35rem 0;
   text-decoration: none;
   font-size: 0.68rem;
   font-weight: 600;
@@ -776,10 +778,33 @@
   color: rgba(232, 228, 223, 0.75);
 }
 
+.home-store-badges--footer {
+  animation: none;
+  margin: 0 auto 0.6rem;
+}
+
+.home-footer-socials {
+  display: flex;
+  gap: 0.2rem;
+  justify-content: center;
+}
+
+.home-footer-socials a {
+  color: rgba(232, 228, 223, 0.55);
+  display: inline-flex;
+  padding: 0.7rem;
+  transition: color 300ms ease, transform 300ms ease;
+}
+
+.home-footer-socials a:hover {
+  color: var(--home-accent);
+  transform: translateY(-1px);
+}
+
 .home-footer-note {
   margin: 0;
   max-width: 540px;
-  color: rgba(232, 228, 223, 0.25);
+  color: rgba(232, 228, 223, 0.55);
   font-size: 0.7rem;
   line-height: 1.6;
 }

@@ -55,6 +55,21 @@
 /site.css
   Cache-Control: no-store, must-revalidate
 
+/pages.css
+  Cache-Control: no-store, must-revalidate
+
+/meetings/*
+  Cache-Control: no-store, must-revalidate
+
+/follow/
+  Cache-Control: no-store, must-revalidate
+
+/sitemap.xml
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/llms.txt
+  Cache-Control: public, max-age=3600, must-revalidate
+
 /favicon-dark-64.png
   Cache-Control: public, max-age=3600, must-revalidate
 

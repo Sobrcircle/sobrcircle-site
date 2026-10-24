@@ -12,8 +12,9 @@
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a0a0a" />
     <meta name="theme-color" content="#0a0a0a" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="description" content="A private space for the people who show up. Recovery is harder alone — SobrCircle connects you with the people who matter most." />
+    <meta name="description" content="A free, private recovery app built by someone in recovery. Find 195,000+ meetings near you, including AA, NA and CA, with directions, and check in daily." />
     <link rel="canonical" href="https://sobrcircle.com/" />
+    <meta name="apple-itunes-app" content="app-id=6760403731" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="SobrCircle" />
     <meta property="og:title" content="SobrCircle - Recover Together." />
@@ -26,7 +27,49 @@
     <meta name="twitter:title" content="SobrCircle - Recover Together." />
     <meta name="twitter:description" content="A private space for the people who show up." />
     <meta name="twitter:image" content="https://sobrcircle.com/assets/og-share.png?v=6" />
-    <title>SobrCircle</title>
+    <title>SobrCircle: Free Private Recovery App and Meeting Finder</title>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "MobileApplication",
+            "@id": "https://sobrcircle.com/#app",
+            "name": "SobrCircle",
+            "url": "https://sobrcircle.com/",
+            "description": "A free, private recovery community app. Find 195,000+ recovery meetings near you with directions, check in daily, keep a private journal, and stay connected to a circle of people you choose.",
+            "applicationCategory": "HealthApplication",
+            "operatingSystem": "iOS, Android",
+            "image": "https://sobrcircle.com/assets/og-share.png",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CAD" },
+            "installUrl": [
+              "https://apps.apple.com/app/sobrcircle/id6760403731",
+              "https://play.google.com/store/apps/details?id=com.sobrcircle.app"
+            ],
+            "author": { "@id": "https://sobrcircle.com/#org" },
+            "publisher": { "@id": "https://sobrcircle.com/#org" }
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://sobrcircle.com/#org",
+            "name": "SobrCircle",
+            "legalName": "Moradi Labs Inc.",
+            "url": "https://sobrcircle.com/",
+            "logo": "https://sobrcircle.com/apple-touch-icon.png",
+            "founder": { "@type": "Person", "name": "Ben Moradi" },
+            "address": { "@type": "PostalAddress", "addressLocality": "Windsor", "addressRegion": "ON", "addressCountry": "CA" },
+            "sameAs": [
+              "https://www.instagram.com/sobrcircle/",
+              "https://www.tiktok.com/@sobrcircle",
+              "https://www.youtube.com/@sobrcircle",
+              "https://www.threads.com/@sobrcircle",
+              "https://www.facebook.com/share/1F6Voujq2F/",
+              "https://snapchat.com/t/jnahGvVR"
+            ]
+          }
+        ]
+      }
+    </script>
     <style>
       html::-webkit-scrollbar { width: 0; display: none; }
       html { scrollbar-width: none; -ms-overflow-style: none; }
@@ -34,7 +77,31 @@
     </style>
   </head>
   <body>
-    <div id="root"></div>
+    <!-- Static copy for search engines and AI crawlers. React replaces everything inside #root on load. -->
+    <div id="root">
+      <main style="max-width:680px;margin:0 auto;padding:48px 20px;color:#e8e4df;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;line-height:1.65">
+        <h1 style="font-family:Georgia,serif;font-weight:400">SobrCircle: a free, private recovery app</h1>
+        <p>Recovery is harder alone. You don't have to be. SobrCircle is a private space for the people who show up, built in Windsor, Ontario by someone in recovery.</p>
+        <p>
+          <a href="https://apps.apple.com/app/sobrcircle/id6760403731" style="color:#c4a882">Download SobrCircle on the App Store</a> ·
+          <a href="https://play.google.com/store/apps/details?id=com.sobrcircle.app&amp;referrer=utm_source%3Dsobrcircle.com%26utm_medium%3Dhome" style="color:#c4a882">Get it on Google Play</a>
+        </p>
+        <h2>Find recovery meetings near you</h2>
+        <p>Search more than 195,000 recovery meetings, including AA, NA and CA meetings, see what's nearby on the map, and get directions, including transit routes, right to the door. New city, same recovery. <a href="/meetings/" style="color:#c4a882">Find meetings near you</a>.</p>
+        <h2>Your circle, people you choose</h2>
+        <p>Your circle is people you invite with a private code. Start with the people who answer at 2 AM.</p>
+        <h2>Daily check ins</h2>
+        <p>Some days you need to say it out loud. A check in is a moment of honesty for you and for someone who needs to hear they're not the only one.</p>
+        <h2>A private journal</h2>
+        <p>A safe place to process the hard days and track your progress. Never visible to anyone.</p>
+        <h2>Free, with no ads and no data selling</h2>
+        <p>Every core feature is free. No ads, no data selling, and you can sign up without a credit card.</p>
+        <h2>Why SobrCircle exists</h2>
+        <p>Founder Ben Moradi struggled with addiction for most of his life. When he started getting better, there was no space built for the daily part of recovery, so he built one. His poetry memoir, <a href="/twentyfour/" style="color:#c4a882">Twenty Four</a>, tells the story behind the app.</p>
+        <p><a href="/meetings/" style="color:#c4a882">Find Meetings</a> · <a href="/follow/" style="color:#c4a882">Follow SobrCircle</a> · <a href="/support/" style="color:#c4a882">Support</a> · <a href="/privacy/" style="color:#c4a882">Privacy</a></p>
+        <p style="color:#948e88;font-size:0.85rem">SobrCircle is independent and is not affiliated with or endorsed by Alcoholics Anonymous, Narcotics Anonymous, Cocaine Anonymous or any other fellowship. In a crisis in Canada or the US, call or text 988.</p>
+      </main>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

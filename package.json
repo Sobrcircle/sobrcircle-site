@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build && npm run og",
     "og": "tsx scripts/generate-og.ts",
+    "pages": "tsx scripts/build-pages.ts",
     "lint": "eslint .",
     "preview": "vite preview"
   },

@@ -1,1 +1,7 @@
 /twentyfour/*  /twentyfour/index.html  200
+/20four        /twentyfour/  301
+/20four/*      /twentyfour/:splat  301
+/download      /  302
+/app           /  302
+/meetings-near-me  /meetings/  301
+/socials       /follow/  301
