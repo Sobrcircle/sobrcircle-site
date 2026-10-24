@@ -24,7 +24,7 @@ export const sections: HomeSection[] = [
       [{ type: 'accent', text: 'Recovery is harder alone. You don\u2019t have to be.' }],
       [{ type: 'plain', text: 'Count your days, find a meeting tonight, and stay close to the people who show up.' }],
     ],
-    phoneImage: '/assets/1.jpg?v=3',
+    phoneImage: '/assets/1.webp?v=4',
   },
   {
     id: 'map',
@@ -40,7 +40,7 @@ export const sections: HomeSection[] = [
         { type: 'accent', text: 'Your next meeting is a tap away.' },
       ],
     ],
-    phoneImage: '/assets/6.png?v=3',
+    phoneImage: '/assets/6.webp?v=4',
     cta: { href: '/meetings/', label: 'find meetings near you' },
   },
   {
@@ -55,7 +55,7 @@ export const sections: HomeSection[] = [
         { type: 'accent', text: 'Your circle grows with you.' },
       ],
     ],
-    phoneImage: '/assets/3.jpg?v=3',
+    phoneImage: '/assets/3.webp?v=4',
   },
   {
     id: 'community',
@@ -90,7 +90,7 @@ export const sections: HomeSection[] = [
         { type: 'plain', text: '.' },
       ],
     ],
-    phoneImage: '/assets/4.jpg?v=3',
+    phoneImage: '/assets/4.webp?v=4',
   },
   {
     id: 'journey',
@@ -119,7 +119,7 @@ export const sections: HomeSection[] = [
         { type: 'accent', text: 'Never visible to anyone.' },
       ],
     ],
-    phoneImage: '/assets/5.jpg?v=3',
+    phoneImage: '/assets/5.webp?v=4',
   },
   {
     id: 'story',
@@ -139,7 +139,7 @@ export const sections: HomeSection[] = [
       ],
       [{ type: 'plain', text: 'No ads. No data selling. No outside influences deciding what this becomes.' }],
     ],
-    phoneImage: '/assets/2.jpg?v=3',
+    phoneImage: '/assets/2.webp?v=4',
   },
   {
     id: 'twentyfour',

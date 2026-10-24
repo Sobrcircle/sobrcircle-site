@@ -35,7 +35,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(__dirname, '..')
 const PUBLIC = path.join(ROOT, 'public')
 const TODAY = new Date().toISOString().slice(0, 10)
-const CSS_VERSION = '20261024f'
+const CSS_VERSION = '20261024g'
 
 // ── helpers ──────────────────────────────────────────────────────────────
 
@@ -239,7 +239,7 @@ const MAP_ALT =
 
 function heroPhone() {
   return `        <figure class="pg-phone">
-          <div class="pg-phone-shell"><img src="/assets/6.png?v=3" alt="${MAP_ALT}" width="1320" height="2868" fetchpriority="high"></div>
+          <div class="pg-phone-shell"><img src="/assets/6.webp?v=4" alt="${MAP_ALT}" width="900" height="1955" fetchpriority="high"></div>
           <figcaption>Live navigation to a meeting, inside SobrCircle.</figcaption>
         </figure>`
 }
@@ -541,7 +541,7 @@ ${disclaimer}
 
 function phoneFigure(src: string, alt: string, caption: string) {
   return `        <figure class="pg-phone">
-          <div class="pg-phone-shell"><img src="${src}" alt="${esc(alt)}" width="1320" height="2868" fetchpriority="high"></div>
+          <div class="pg-phone-shell"><img src="${src}" alt="${esc(alt)}" width="900" height="1955" fetchpriority="high"></div>
           <figcaption>${esc(caption)}</figcaption>
         </figure>`
 }

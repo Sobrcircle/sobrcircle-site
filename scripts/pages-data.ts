@@ -224,7 +224,7 @@ export const topics: Topic[] = [
     h1: 'A sobriety tracker that celebrates with you',
     lede: 'SobrCircle counts your days sober, shows how close your next milestone is, and lets the people in your circle celebrate it with you. No ads, and free to download on iPhone and Android.',
     phone: {
-      src: '/assets/1.jpg?v=3',
+      src: '/assets/1.webp?v=4',
       alt: 'SobrCircle sobriety tracker showing 548 days sober, 1 year 6 months 2 days, and the next milestone of 2 years in 182 days',
       caption: 'Your days and your next milestone, front and center.',
     },
@@ -268,7 +268,7 @@ export const topics: Topic[] = [
     h1: 'A sober community that shows up',
     lede: 'Recovery happens between meetings too. SobrCircle gives you rooms to talk, events near you, members nearby who chose to be found, and a private circle of the people you trust.',
     phone: {
-      src: '/assets/3.jpg?v=3',
+      src: '/assets/3.webp?v=4',
       alt: 'SobrCircle group chat where members plan to go to a meeting together',
       caption: 'A group chat making plans for tonight’s meeting.',
     },
@@ -313,7 +313,7 @@ export const topics: Topic[] = [
     h1: 'Looking for a Sober Grid alternative?',
     lede: 'Sober Grid is no longer available. If you are looking for a new sober community, SobrCircle is a place to find one, built by someone in recovery, with no ads.',
     phone: {
-      src: '/assets/4.jpg?v=3',
+      src: '/assets/4.webp?v=4',
       alt: 'SobrCircle profile showing check ins, circle size and 548 days sober',
       caption: 'Your profile: check ins, your circle and your days.',
     },
