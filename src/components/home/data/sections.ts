@@ -36,7 +36,7 @@ export const sections: HomeSection[] = [
         { type: 'plain', text: '195,000+ meetings on one map, with the time, the place and live navigation to the door. Drive, walk, bike or take transit.' },
       ],
       [
-        { type: 'plain', text: 'Friends who choose to share their location show up too, so nobody has to walk in alone. ' },
+        { type: 'plain', text: 'Community events show up on the map too, along with friends who choose to share their location, so nobody has to walk in alone. ' },
         { type: 'accent', text: 'Your next meeting is a tap away.' },
       ],
     ],
@@ -49,13 +49,28 @@ export const sections: HomeSection[] = [
     title: 'Your Circle',
     content: [
       [{ type: 'callout', text: 'You already know who your people are.' }],
-      [{ type: 'plain', text: 'Every person in your circle is someone you chose. No strangers. No suggestions. Just a private invite code that you share on purpose.' }],
+      [{ type: 'plain', text: 'Add the people you trust with a private 6-character code. There\u2019s no limit on your circle, and you decide who\u2019s in it.' }],
       [
         { type: 'plain', text: 'Start with the people who answer at 2 AM. ' },
         { type: 'accent', text: 'Your circle grows with you.' },
       ],
     ],
     phoneImage: '/assets/3.jpg?v=3',
+  },
+  {
+    id: 'community',
+    type: 'feature',
+    title: 'Rooms and Events',
+    content: [
+      [{ type: 'callout', text: 'Recovery happens between meetings too.' }],
+      [
+        { type: 'plain', text: 'Join a public room to talk with people who get it, or gather up to 50 people in a private one. Group chats keep up to 12 of your closest in one thread.' },
+      ],
+      [
+        { type: 'plain', text: 'Find members and community events near you, and meet the faces behind the messages. ' },
+        { type: 'accent', text: 'Show up for each other.' },
+      ],
+    ],
   },
   {
     id: 'checkin',

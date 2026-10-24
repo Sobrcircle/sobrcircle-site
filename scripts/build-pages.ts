@@ -221,7 +221,7 @@ function howItWorks(place?: string) {
 function appFeatures() {
   return `      <ul class="pg-features">
         <li><strong>Your circle comes with you.</strong> Friends who choose to share their location show up on the same map, so nobody has to walk in alone.</li>
-        <li><strong>After the meeting.</strong> Check in, keep a private journal and stay close to the people you choose.</li>
+        <li><strong>Between meetings.</strong> Join a public room, find community events near you, check in and keep a private journal.</li>
         <li><strong>Free, private, no ads.</strong> Every core feature is free, your data is never sold, and you can sign up without a credit card.</li>
       </ul>`
 }
@@ -637,7 +637,7 @@ ${urls
 function llms() {
   return `# SobrCircle
 
-> SobrCircle is a free, private recovery community app for iPhone and Android, built in Windsor, Ontario by Ben Moradi, who is in recovery himself. It includes a meeting finder with ${MEETING_COUNT} recovery meetings (AA, NA and CA) on a map with meeting times and live navigation by car, foot, bike or transit, a private circle of people you invite with a code, daily check ins, a private journal, group chats and meeting rooms. Core features are free, there are no ads, and user data is not sold. SobrCircle is independent and not affiliated with any 12-step fellowship.
+> SobrCircle is a free, private recovery community app for iPhone and Android, built in Windsor, Ontario by Ben Moradi, who is in recovery himself. It includes a meeting finder with ${MEETING_COUNT} recovery meetings, including AA, NA and CA, on a map with meeting times and live navigation by car, foot, bike or transit, a private circle of people you invite with a 6-character code, public and private rooms, group chats, community events and members near you, daily check ins and a private journal. Core features are free, there are no ads, and user data is not sold. SobrCircle is independent and not affiliated with any 12-step fellowship.
 
 - App Store: ${APP_STORE_URL}
 - Google Play: ${PLAY_STORE_URL}

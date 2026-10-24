@@ -1,0 +1,90 @@
+# Tells Bing (which also feeds ChatGPT search and Copilot), Yandex, Seznam and
+# Naver about changed pages through IndexNow, every time main is pushed.
+# Google does not use IndexNow; it reads public/sitemap.xml instead.
+#
+# The key below must match public/<key>.txt, which proves we own the site.
+# Run it by hand from the Actions tab ("Run workflow") to resubmit every page.
+
+name: IndexNow
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'twentyfour/index.html'
+      - 'public/**/*.html'
+      - 'public/sitemap.xml'
+  workflow_dispatch:
+
+concurrency:
+  group: indexnow
+  cancel-in-progress: true
+
+env:
+  HOST: sobrcircle.com
+  KEY: b4436c13fa6e19b307b2480d6cb769a7
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Work out which URLs changed
+        id: urls
+        run: |
+          set -euo pipefail
+          site="https://${HOST}"
+          locs() { grep -o '<loc>[^<]*</loc>' | sed -e 's#<loc>##' -e 's#</loc>##' | sort -u; }
+          : > urls.txt
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || ! git rev-parse -q --verify HEAD~1 >/dev/null; then
+            # Manual run or first commit: submit every page in the sitemap.
+            locs < public/sitemap.xml >> urls.txt
+            changed=""
+          else
+            changed=$(git diff --name-only HEAD~1 HEAD)
+            # Pages newly added to the sitemap (lastmod-only changes are ignored).
+            comm -13 <(git show HEAD~1:public/sitemap.xml 2>/dev/null | locs) <(locs < public/sitemap.xml) >> urls.txt
+          fi
+          echo "$changed" | while read -r f; do
+            case "$f" in
+              index.html) echo "$site/" ;;
+              twentyfour/index.html) echo "$site/twentyfour/" ;;
+              public/404.html) ;;
+              public/*/index.html) p="${f#public/}"; echo "$site/${p%index.html}" ;;
+            esac
+          done >> urls.txt
+          sort -u urls.txt -o urls.txt
+          echo "count=$(wc -l < urls.txt | tr -d ' ')" >> "$GITHUB_OUTPUT"
+          cat urls.txt
+
+      - name: Wait for the Cloudflare deploy to go live
+        if: steps.urls.outputs.count != '0'
+        run: |
+          # The key file and the newest sitemap must be served before we ping.
+          for i in $(seq 1 60); do
+            key=$(curl -fsS "https://${HOST}/${KEY}.txt?v=${GITHUB_SHA}" || true)
+            if [ "$key" = "$KEY" ] && curl -fsS "https://${HOST}/sitemap.xml?v=${GITHUB_SHA}" | cmp -s - public/sitemap.xml; then
+              echo "Deploy is live."; exit 0
+            fi
+            sleep 15
+          done
+          echo "Deploy did not appear within 15 minutes." >&2
+          exit 1
+
+      - name: Submit to IndexNow
+        if: steps.urls.outputs.count != '0'
+        run: |
+          set -euo pipefail
+          body=$(jq -n --arg host "$HOST" --arg key "$KEY" \
+            --arg loc "https://${HOST}/${KEY}.txt" \
+            --rawfile urls urls.txt \
+            '{host: $host, key: $key, keyLocation: $loc, urlList: ($urls | split("\n") | map(select(length > 0)))}')
+          code=$(curl -sS -o response.txt -w '%{http_code}' -X POST https://api.indexnow.org/indexnow \
+            -H 'Content-Type: application/json; charset=utf-8' -d "$body")
+          echo "IndexNow responded $code"; cat response.txt || true
+          case "$code" in 200|202) ;; *) exit 1 ;; esac
