@@ -42,7 +42,7 @@ export default function HeroSection({ section }: Props) {
         <div className="home-hero-divider" aria-hidden="true" />
 
         {section.content.map((paragraph, i) => (
-          <p key={i} className="home-hero-line" data-animate data-delay={`${0.5 + i * 0.18}`}>
+          <p key={i} className={`home-hero-line${i === 0 ? ' home-hero-line--lead' : ''}`} data-animate data-delay={`${0.5 + i * 0.18}`}>
             {paragraph.map((span, j) => renderSpan(span, j))}
           </p>
         ))}

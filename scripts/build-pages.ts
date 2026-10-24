@@ -35,7 +35,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(__dirname, '..')
 const PUBLIC = path.join(ROOT, 'public')
 const TODAY = new Date().toISOString().slice(0, 10)
-const CSS_VERSION = '20261024e'
+const CSS_VERSION = '20261024f'
 
 // ── helpers ──────────────────────────────────────────────────────────────
 
@@ -79,18 +79,20 @@ type PageOpts = {
 }
 
 function nav(current?: PageOpts['nav']) {
-  const link = (href: string, label: string, key?: PageOpts['nav']) =>
-    `<a href="${href}"${current && key === current ? ' aria-current="page"' : ''}>${label}</a>`
+  const link = (href: string, label: string, key?: PageOpts['nav'], cls = '') =>
+    `<a href="${href}"${cls ? ` class="${cls}"` : ''}${current && key === current ? ' aria-current="page"' : ''}>${label}</a>`
+  // Same shape as the homepage bar: two links, the logo in the middle, two links.
   return `<nav class="pg-nav" aria-label="Main navigation">
-      <a class="nav-brand" href="/">
-        <img class="nav-brand-mark" src="/assets/circle.png" alt="" width="28" height="28">
-        <span><strong>Sobr</strong>Circle</span>
-      </a>
-      <div class="pg-nav-links">
+      <div class="pg-nav-group pg-nav-group--left">
         ${link('/meetings/', 'Meetings', 'meetings')}
         ${link('/#story', 'Our Story')}
+      </div>
+      <a class="pg-nav-brand" href="/" aria-label="SobrCircle home">
+        <img src="/assets/circle.png" alt="" width="28" height="28">
+      </a>
+      <div class="pg-nav-group pg-nav-group--right">
         ${link('/follow/', 'Follow', 'follow')}
-        <a class="pg-nav-cta" href="#get-app">Get the App</a>
+        ${link('#get-app', 'Get the App', undefined, 'pg-nav-cta')}
       </div>
     </nav>`
 }

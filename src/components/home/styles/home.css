@@ -380,6 +380,15 @@
   }
 }
 
+/* First hero line says what SobrCircle is, so it reads a step brighter */
+.home-hero-line--lead {
+  color: rgba(232, 228, 223, 0.86);
+}
+
+.home-hero-line {
+  text-wrap: balance;
+}
+
 /* Hero pointer to the meeting finder section */
 .home-hero-meetings {
   display: inline-block;
@@ -957,7 +966,7 @@
   }
 
   .home-nav {
-    column-gap: 0.9rem;
+    column-gap: 0.75rem;
   }
 
   .home-nav-logo {
@@ -982,12 +991,12 @@
   }
 
   .home-nav-group {
-    gap: 0.9rem;
+    gap: 0.75rem;
   }
 
   .home-nav-group a {
-    font-size: 0.78rem;
-    letter-spacing: 0.02em;
+    font-size: 0.74rem;
+    letter-spacing: 0.01em;
   }
 
   .home-copy {
@@ -1026,19 +1035,43 @@
   }
 }
 
-/* ─── Very narrow screens: keep 4 nav labels visible ─── */
-@media (max-width: 380px) {
+/* ─── Narrow phones: keep all 5 nav labels visible, logo centred ─── */
+@media (max-width: 410px) {
   .home-nav {
-    column-gap: 0.7rem;
+    column-gap: 0.55rem;
+    padding-left: 0.6rem;
+    padding-right: 0.6rem;
   }
 
   .home-nav-group {
-    gap: 0.7rem;
+    gap: 0.55rem;
   }
 
   .home-nav-group a {
-    font-size: 0.72rem;
+    font-size: 0.68rem;
+    letter-spacing: 0;
   }
+}
+
+@media (max-width: 340px) {
+  .home-nav {
+    column-gap: 0.4rem;
+    padding-left: 0.45rem;
+    padding-right: 0.45rem;
+  }
+
+  .home-nav-group {
+    gap: 0.4rem;
+  }
+
+  .home-nav-group a {
+    font-size: 0.62rem;
+  }
+}
+
+/* The logo keeps its size; the label groups give way around it. */
+.home-nav-brand {
+  min-width: 26px;
 }
 
 /* ─── Reduced motion ─── */

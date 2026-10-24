@@ -20,9 +20,9 @@ export const sections: HomeSection[] = [
     type: 'hero',
     title: 'Recovery',
     content: [
-      [{ type: 'plain', text: 'Recovery is harder alone.' }],
-      [{ type: 'accent', text: 'You don\u2019t have to be.' }],
-      [{ type: 'plain', text: 'A private space for the people who show up.' }],
+      [{ type: 'plain', text: 'The free sobriety app, built by someone in recovery.' }],
+      [{ type: 'accent', text: 'Recovery is harder alone. You don\u2019t have to be.' }],
+      [{ type: 'plain', text: 'Count your days, find a meeting tonight, and stay close to the people who show up.' }],
     ],
     phoneImage: '/assets/1.jpg?v=3',
   },
