@@ -64,10 +64,10 @@ export const sections: HomeSection[] = [
     content: [
       [{ type: 'callout', text: 'Recovery happens between meetings too.' }],
       [
-        { type: 'plain', text: 'Join a public room to talk with people who get it, or gather up to 50 people in a private one. Group chats keep up to 12 of your closest in one thread.' },
+        { type: 'plain', text: 'Join a public room to talk with people who get it, or join a private room of up to 50. Group chats keep up to 12 of your closest in one thread.' },
       ],
       [
-        { type: 'plain', text: 'Find members and community events near you, and meet the faces behind the messages. ' },
+        { type: 'plain', text: 'Find members near you who\u2019ve chosen to be discoverable, make yourself discoverable when you\u2019re ready, and find community events close to home. ' },
         { type: 'accent', text: 'Show up for each other.' },
       ],
     ],
@@ -88,6 +88,22 @@ export const sections: HomeSection[] = [
       ],
     ],
     phoneImage: '/assets/4.jpg?v=3',
+  },
+  {
+    id: 'journey',
+    type: 'feature',
+    title: 'Your Journey',
+    content: [
+      [{ type: 'callout', text: 'Every day counts. Especially today.' }],
+      [
+        { type: 'plain', text: 'Your sobriety tracker counts the days, shows how close your next milestone is, and marks each one with a badge, from 24 hours to years.' },
+      ],
+      [
+        { type: 'plain', text: 'When you hit a milestone, your circle hears about it. ' },
+        { type: 'accent', text: 'One day at a time, together.' },
+      ],
+    ],
+    cta: { href: '/sobriety-calculator/', label: 'count your days' },
   },
   {
     id: 'journal',

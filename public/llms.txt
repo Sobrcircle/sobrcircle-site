@@ -23,6 +23,12 @@
 - [Recovery meetings in Chicago, Illinois](https://sobrcircle.com/meetings/chicago/)
 - [Recovery meetings in Houston, Texas](https://sobrcircle.com/meetings/houston/)
 
+## Features
+- [Sobriety tracker](https://sobrcircle.com/sobriety-tracker/): A free sobriety tracker app that counts your days sober, counts down to your next milestone and celebrates it with your circle. No ads. iPhone and Android.
+- [Sober community](https://sobrcircle.com/sober-community/): Join a free sober community app. Public and private rooms, group chats, members and community events near you, and a private circle of people you trust.
+- [Sober Grid alternative](https://sobrcircle.com/sober-grid-alternative/): Looking for a Sober Grid alternative? SobrCircle is a free sober community app with public rooms, members near you, events, a sobriety tracker and meetings.
+- [Sobriety calculator](https://sobrcircle.com/sobriety-calculator/): free tool to count days sober and see the next milestone.
+
 ## About
 - [Home and founder story](https://sobrcircle.com/)
 - [Twenty Four, the founder's poetry memoir](https://sobrcircle.com/twentyfour/)

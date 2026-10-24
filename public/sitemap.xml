@@ -86,6 +86,26 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://sobrcircle.com/sobriety-tracker/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://sobrcircle.com/sober-community/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://sobrcircle.com/sober-grid-alternative/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://sobrcircle.com/sobriety-calculator/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://sobrcircle.com/follow/</loc>
     <lastmod>2026-10-24</lastmod>
     <priority>0.6</priority>

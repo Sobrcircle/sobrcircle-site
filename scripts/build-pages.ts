@@ -22,6 +22,9 @@ import {
   socials,
   fellowships,
   cities,
+  topics,
+  MILESTONES,
+  type Topic,
   type City,
   type Fellowship,
   type Resource,
@@ -32,7 +35,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(__dirname, '..')
 const PUBLIC = path.join(ROOT, 'public')
 const TODAY = new Date().toISOString().slice(0, 10)
-const CSS_VERSION = '20261024b'
+const CSS_VERSION = '20261024e'
 
 // ── helpers ──────────────────────────────────────────────────────────────
 
@@ -100,6 +103,9 @@ function footer() {
       <div class="pg-footer-links">
         <a href="/">Home</a>
         <a href="/meetings/">Find Meetings</a>
+        <a href="/sobriety-tracker/">Sobriety Tracker</a>
+        <a href="/sobriety-calculator/">Sobriety Calculator</a>
+        <a href="/sober-community/">Sober Community</a>
         <a href="/follow/">Follow</a>
         <a href="/twentyfour/">Twenty Four</a>
         <a href="/support/">Support</a>
@@ -236,10 +242,13 @@ function heroPhone() {
         </figure>`
 }
 
-function getApp(medium: string, place?: string) {
+function getApp(medium: string, place?: string, blurb?: string) {
+  const text =
+    blurb ??
+    `Find your next meeting${place ? ` in ${esc(place)}` : ''}, see when it starts and get live navigation to the door. Free on iPhone and Android.`
   return `      <section class="pg-section pg-getapp" id="get-app">
         <h2>Get SobrCircle free</h2>
-        <p>Find your next meeting${place ? ` in ${esc(place)}` : ''}, see when it starts and get live navigation to the door. Free on iPhone and Android.</p>
+        <p>${text}</p>
         ${badges(`${medium}-bottom`)}
       </section>`
 }
@@ -528,6 +537,138 @@ ${disclaimer}
   })
 }
 
+function phoneFigure(src: string, alt: string, caption: string) {
+  return `        <figure class="pg-phone">
+          <div class="pg-phone-shell"><img src="${src}" alt="${esc(alt)}" width="1320" height="2868" fetchpriority="high"></div>
+          <figcaption>${esc(caption)}</figcaption>
+        </figure>`
+}
+
+function relatedChips(list: Array<[string, string]>) {
+  return `<div class="pg-chips">
+${list.map(([href, label]) => `          <a href="${href}">${esc(label)}</a>`).join('\n')}
+        </div>`
+}
+
+function topicPage(t: Topic) {
+  const body = `
+      <header class="pg-hero pg-hero--phone">
+        <div class="pg-hero-copy">
+${crumbs([['Home', '/'], [t.eyebrow]])}
+        <p class="eyebrow">${esc(t.eyebrow)}</p>
+        <h1>${esc(t.h1)}</h1>
+        <p class="lede">${esc(t.lede)}</p>
+        ${badges(t.slug)}
+        </div>
+${phoneFigure(t.phone.src, t.phone.alt, t.phone.caption)}
+      </header>
+
+${t.sections
+  .map(
+    (sec) => `      <section class="pg-section">
+        <h2>${esc(sec.h2)}</h2>
+${(sec.paragraphs ?? []).map((p) => `        <p>${esc(p)}</p>`).join('\n')}
+${sec.points ? `        <ul class="pg-features">\n${sec.points.map(([a, b]) => `          <li><strong>${esc(a)}.</strong> ${esc(b)}</li>`).join('\n')}\n        </ul>` : ''}
+      </section>`,
+  )
+  .join('\n\n')}
+
+${faqHtml(t.faq)}
+
+${getApp(t.slug, undefined, esc(t.getApp))}
+
+      <section class="pg-section">
+        <h2>Keep exploring</h2>
+        ${relatedChips(t.related)}
+      </section>
+
+${crisisCallout([])}
+${t.note ? `      <p class="meta-line" style="margin-top:28px">${esc(t.note)}</p>` : ''}
+`
+  return page({
+    path: `/${t.slug}/`,
+    title: t.title,
+    description: t.description,
+    body,
+    jsonLd: [appLd, crumbsLd([['Home', '/'], [t.eyebrow, `/${t.slug}/`]]), faqLd(t.faq)],
+  })
+}
+
+function calculatorPage() {
+  const faq: Array<[string, string]> = [
+    [
+      'How do I calculate how many days sober I am?',
+      'Count the full days from your sobriety date to today. Enter your date above and the calculator does it for you, with years, months, weeks and hours.',
+    ],
+    [
+      'Does my sobriety date count as day one?',
+      'This calculator counts full days since your sobriety date, so the day after your sobriety date is day one. Some people count differently, and either way is fine.',
+    ],
+    ['What are the common sobriety milestones?', `SobrCircle celebrates ${MILESTONES}.`],
+    [
+      'Is my date saved anywhere?',
+      'No. The calculator runs entirely in your browser and your date never leaves your device. To keep counting every day, use the free SobrCircle app.',
+    ],
+  ]
+  const body = `
+      <header class="pg-hero">
+${crumbs([['Home', '/'], ['Sobriety calculator']])}
+        <p class="eyebrow">Free tool</p>
+        <h1>Sobriety calculator: how many days sober are you?</h1>
+        <p class="lede">Enter your sobriety date to see your days, months and years sober, and how long until your next milestone. Private, free and instant.</p>
+      </header>
+
+      <section class="sc-tool" aria-label="Sobriety calculator">
+        <form id="sc-form" class="sc-form">
+          <label for="sc-date">Your sobriety date</label>
+          <div class="sc-row">
+            <input id="sc-date" name="date" type="date" required>
+            <button type="submit" class="button-primary">Calculate</button>
+          </div>
+        </form>
+        <div id="sc-result" class="sc-result" aria-live="polite"><p>Pick your sobriety date to see your time.</p></div>
+      </section>
+
+      <section class="pg-section pg-getapp" id="get-app">
+        <h2>Keep counting with SobrCircle</h2>
+        <p>The free SobrCircle app keeps this count for you every day, shows your next milestone, and lets your circle celebrate with you when you get there.</p>
+        ${badges('calculator')}
+        <p style="margin-top:14px"><a href="/sobriety-tracker/">See how the sobriety tracker works</a></p>
+      </section>
+
+      <section class="pg-section">
+        <h2>Sobriety milestones</h2>
+        <p>Every milestone gets a badge in SobrCircle: ${esc(MILESTONES)}. The first year is marked month by month because those are the days that take the most.</p>
+      </section>
+
+${faqHtml(faq)}
+
+${crisisCallout([])}
+    <script src="/tools/sobriety-calculator.js?v=${CSS_VERSION}" defer></script>
+`
+  return page({
+    path: '/sobriety-calculator/',
+    title: 'Sobriety Calculator: How Many Days Sober Am I?',
+    description:
+      'Free sobriety calculator. Enter your sobriety date to see your days, months and years sober and your next milestone. Private, runs on your device.',
+    body,
+    jsonLd: [
+      crumbsLd([['Home', '/'], ['Sobriety calculator', '/sobriety-calculator/']]),
+      faqLd(faq),
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebApplication',
+        name: 'Sobriety Calculator',
+        url: `${SITE}/sobriety-calculator/`,
+        applicationCategory: 'HealthApplication',
+        operatingSystem: 'Any',
+        offers: { '@type': 'Offer', price: '0', priceCurrency: 'CAD' },
+        isAccessibleForFree: true,
+      },
+    ],
+  })
+}
+
 function followPage() {
   const body = `
       <header class="pg-hero">
@@ -591,6 +732,8 @@ function notFoundPage() {
           <a href="/support/">Support</a>
         </div>
       </header>
+
+${getApp('404')}
 `
   return page({
     path: '/404',
@@ -616,6 +759,8 @@ function sitemap() {
     ['/meetings/', '0.9'],
     ...fellowships.map((f) => [`/meetings/${f.slug}/`, '0.8'] as [string, string]),
     ...cities.map((c) => [`/meetings/${c.slug}/`, '0.8'] as [string, string]),
+    ...topics.map((t) => [`/${t.slug}/`, '0.9'] as [string, string]),
+    ['/sobriety-calculator/', '0.9'],
     ['/follow/', '0.6'],
     ['/twentyfour/', '0.7'],
     ...shareable.map((p) => [`/twentyfour/${p.id}/`, '0.4'] as [string, string]),
@@ -647,6 +792,10 @@ function llms() {
 ${fellowships.map((f) => `- [${f.name} meetings](${SITE}/meetings/${f.slug}/)`).join('\n')}
 ${cities.map((c) => `- [Recovery meetings in ${c.name}, ${c.region}](${SITE}/meetings/${c.slug}/)`).join('\n')}
 
+## Features
+${topics.map((t) => `- [${t.eyebrow}](${SITE}/${t.slug}/): ${t.description}`).join('\n')}
+- [Sobriety calculator](${SITE}/sobriety-calculator/): free tool to count days sober and see the next milestone.
+
 ## About
 - [Home and founder story](${SITE}/)
 - [Twenty Four, the founder's poetry memoir](${SITE}/twentyfour/)
@@ -670,6 +819,11 @@ async function main() {
   await write('meetings/index.html', hubPage())
   for (const f of fellowships) await write(`meetings/${f.slug}/index.html`, fellowshipPage(f))
   for (const c of cities) await write(`meetings/${c.slug}/index.html`, cityPage(c))
+  for (const t of topics) {
+    await fs.rm(path.join(PUBLIC, t.slug), { recursive: true, force: true })
+    await write(`${t.slug}/index.html`, topicPage(t))
+  }
+  await write('sobriety-calculator/index.html', calculatorPage())
   await write('follow/index.html', followPage())
   await write('404.html', notFoundPage())
   await write('sitemap.xml', sitemap())

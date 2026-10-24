@@ -398,6 +398,120 @@ a.pg-card:hover {
   margin-top: 16px;
 }
 
+/* Sobriety calculator */
+.sc-tool {
+  background: rgba(232, 228, 223, 0.02);
+  border: 1px solid var(--site-line);
+  border-radius: 22px;
+  margin: 0 0 40px;
+  padding: 26px 24px;
+}
+
+.sc-form label {
+  color: var(--site-accent);
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.sc-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.sc-row input {
+  appearance: none;
+  background: rgba(232, 228, 223, 0.04);
+  border: 1px solid var(--site-line);
+  border-radius: 12px;
+  color: var(--site-text);
+  color-scheme: dark;
+  flex: 1 1 200px;
+  font: inherit;
+  min-height: 50px;
+  padding: 12px 14px;
+}
+
+.sc-row input:focus {
+  border-color: rgba(196, 168, 130, 0.6);
+  box-shadow: 0 0 0 3px rgba(196, 168, 130, 0.12);
+  outline: none;
+}
+
+.sc-row .button-primary {
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  justify-content: center;
+  min-height: 50px;
+}
+
+.sc-result {
+  margin-top: 22px;
+  text-align: center;
+}
+
+.sc-result p {
+  margin: 0;
+}
+
+.sc-big {
+  color: var(--site-text) !important;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(3.2rem, 12vw, 5rem) !important;
+  line-height: 1;
+}
+
+.sc-label {
+  color: var(--site-accent) !important;
+  font-size: 0.75rem !important;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  margin-top: 8px !important;
+  text-transform: uppercase;
+}
+
+.sc-breakdown {
+  font-size: 1.05rem !important;
+  margin-top: 14px !important;
+}
+
+.sc-stats {
+  color: #948e88 !important;
+  margin-top: 4px !important;
+}
+
+.sc-upcoming {
+  list-style: none;
+  margin: 12px auto 0;
+  max-width: 320px;
+  padding: 0;
+}
+
+.sc-upcoming li {
+  border-bottom: 1px solid var(--site-line);
+  display: flex;
+  font-size: 0.88rem;
+  justify-content: space-between;
+  margin: 0;
+  padding: 7px 0;
+}
+
+.sc-upcoming li + li {
+  margin-top: 0;
+}
+
+.sc-next {
+  border-top: 1px solid var(--site-line);
+  margin-top: 18px !important;
+  padding-top: 16px;
+}
+
 /* Muted text used for disclaimers and notes must stay readable (4.5:1+). */
 .pg-shell .meta-line {
   color: #9a948e;

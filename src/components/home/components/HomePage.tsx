@@ -6,6 +6,7 @@ import { useSplitReveal } from '../hooks/useSplitReveal'
 import HeroSection from './HeroSection'
 import FeatureSection from './FeatureSection'
 import TwentyFourSection from './TwentyFourSection'
+import FollowSection from './FollowSection'
 import SiteNav from './SiteNav'
 import SiteFooter from './SiteFooter'
 import FilmGrain from './FilmGrain'
@@ -50,6 +51,7 @@ export default function HomePage() {
             }
           }
         })}
+        <FollowSection />
       </main>
 
       <SiteFooter />

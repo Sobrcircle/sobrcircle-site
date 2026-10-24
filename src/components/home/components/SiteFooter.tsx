@@ -1,4 +1,3 @@
-import { socials } from '@/data/socials'
 import StoreBadges from './StoreBadges'
 
 export default function SiteFooter() {
@@ -18,18 +17,11 @@ export default function SiteFooter() {
           </div>
         </div>
 
-        <nav className="home-footer-socials" aria-label="SobrCircle on social media">
-          {socials.map((s) => (
-            <a key={s.id} href={s.url} target="_blank" rel="me noopener noreferrer" aria-label={`SobrCircle on ${s.name}`}>
-              <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true">
-                <path d={s.icon} />
-              </svg>
-            </a>
-          ))}
-        </nav>
-
         <nav className="home-footer-links" aria-label="Site links">
           <a href="/meetings/">Find Meetings</a>
+          <a href="/sobriety-tracker/">Sobriety Tracker</a>
+          <a href="/sobriety-calculator/">Sobriety Calculator</a>
+          <a href="/sober-community/">Sober Community</a>
           <a href="/follow/">Follow</a>
           <a href="/support/">Support</a>
           <a href="/privacy/">Privacy</a>

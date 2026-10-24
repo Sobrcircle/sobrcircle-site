@@ -326,6 +326,60 @@
   color: rgba(232, 228, 223, 0.6);
 }
 
+/* ─── Follow Along (below Twenty Four) ─── */
+.home-follow {
+  padding-top: clamp(3rem, 8vh, 6rem);
+}
+
+.home-follow-grid {
+  display: grid;
+  gap: 0.65rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 2rem auto 0;
+  max-width: 460px;
+}
+
+.home-follow-bubble {
+  align-items: center;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  color: var(--home-text);
+  display: inline-flex;
+  font-size: 0.86rem;
+  font-weight: 600;
+  gap: 0.5rem;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.6rem 0.9rem;
+  text-decoration: none;
+  transition: border-color 0.45s ease, background 0.45s ease, transform 0.45s ease, box-shadow 0.45s ease;
+}
+
+.home-follow-bubble svg {
+  flex-shrink: 0;
+  transition: color 0.45s ease;
+}
+
+.home-follow-bubble:hover {
+  background: rgba(196, 168, 130, 0.06);
+  border-color: rgba(196, 168, 130, 0.55);
+  box-shadow: 0 10px 34px rgba(196, 168, 130, 0.14);
+  transform: translateY(-2px);
+}
+
+.home-follow-bubble:hover svg {
+  color: var(--home-accent);
+}
+
+@media (max-width: 480px) {
+  .home-follow-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 /* Hero pointer to the meeting finder section */
 .home-hero-meetings {
   display: inline-block;

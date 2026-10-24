@@ -191,3 +191,164 @@ export const fellowships: Fellowship[] = [
 ]
 
 export const cities: City[] = cityData
+
+// ── Feature landing pages (one search intent each) ─────────────────────────
+
+export type Topic = {
+  slug: string
+  nav?: string
+  title: string
+  description: string
+  eyebrow: string
+  h1: string
+  lede: string
+  phone: { src: string; alt: string; caption: string }
+  sections: Array<{ h2: string; paragraphs?: string[]; points?: Array<[string, string]> }>
+  faq: Array<[string, string]>
+  related: Array<[string, string]>
+  /** One sentence for the download section at the bottom of the page. */
+  getApp: string
+  note?: string
+}
+
+export const MILESTONES =
+  '24 hours, every month through your first year, 18 months, and every year after that'
+
+export const topics: Topic[] = [
+  {
+    slug: 'sobriety-tracker',
+    title: 'Free Sobriety Tracker App: Count Days Sober and Milestones',
+    description:
+      'A free sobriety tracker app that counts your days sober, counts down to your next milestone and celebrates it with your circle. No ads. iPhone and Android.',
+    eyebrow: 'Sobriety tracker',
+    h1: 'A sobriety tracker that celebrates with you',
+    lede: 'SobrCircle counts your days sober, shows how close your next milestone is, and lets the people in your circle celebrate it with you. Free on iPhone and Android, with no ads.',
+    phone: {
+      src: '/assets/1.jpg?v=3',
+      alt: 'SobrCircle sobriety tracker showing 548 days sober, 1 year 6 months 2 days, and the next milestone of 2 years in 182 days',
+      caption: 'Your days and your next milestone, front and center.',
+    },
+    sections: [
+      {
+        h2: 'What it tracks',
+        points: [
+          ['Days sober', 'Your total days, plus the years, months and days since your sobriety date.'],
+          ['Your next milestone', 'A countdown to the next one, so you always know what you are working toward.'],
+          ['Milestone badges', `A badge at ${MILESTONES}.`],
+          ['Check ins', 'Every daily check in is counted on your profile alongside your days.'],
+        ],
+      },
+      {
+        h2: 'More than a counter',
+        paragraphs: [
+          'A number alone does not keep anyone sober. When you hit a milestone, the people in your circle hear about it and can celebrate with you. On the hard days, the same people are a message away.',
+          'Around the tracker you get a private journal, daily check ins, public and private rooms, community events, and a map of 195,000+ meetings, including AA, NA and CA, with live navigation to the door.',
+        ],
+      },
+    ],
+    faq: [
+      ['Is the SobrCircle sobriety tracker free?', 'Yes. The tracker and every core feature are free, with no ads, and your data is never sold.'],
+      ['What milestones does it celebrate?', `SobrCircle marks ${MILESTONES}, each with its own badge.`],
+      ['Does it work for drugs as well as alcohol?', 'Yes. The tracker counts from your sobriety date, whatever you are recovering from.'],
+      ['How do I count my days sober right now?', 'Use the free sobriety calculator on this site, or download SobrCircle to keep counting every day.'],
+    ],
+    getApp: 'Start counting today. Your days, your next milestone and a circle to celebrate with, free on iPhone and Android.',
+    related: [
+      ['/sobriety-calculator/', 'Sobriety calculator'],
+      ['/sober-community/', 'Sober community'],
+      ['/meetings/', 'Find meetings'],
+    ],
+  },
+  {
+    slug: 'sober-community',
+    title: 'Sober Community App: Rooms, Events and Sober Friends Near You',
+    description:
+      'Join a free sober community app. Public and private rooms, group chats, members and community events near you, and a private circle of people you trust.',
+    eyebrow: 'Sober community',
+    h1: 'A sober community that shows up',
+    lede: 'Recovery happens between meetings too. SobrCircle gives you rooms to talk, events near you, members nearby who chose to be found, and a private circle of the people you trust.',
+    phone: {
+      src: '/assets/3.jpg?v=3',
+      alt: 'SobrCircle group chat where members plan to go to a meeting together',
+      caption: 'A group chat making plans for tonight’s meeting.',
+    },
+    sections: [
+      {
+        h2: 'Ways to connect',
+        points: [
+          ['Public rooms', 'Drop in and talk with people who get it.'],
+          ['Private rooms', 'Join private rooms of up to 50 people, or host your own as a Supporter.'],
+          ['Group and personal chats', 'Keep up to 12 of your closest in one group chat, or talk one to one.'],
+          ['Members near you', 'Find people nearby who have chosen to be discoverable, and choose whether you are discoverable too.'],
+          ['Community events', 'See sober events near you on the map and meet the faces behind the messages.'],
+        ],
+      },
+      {
+        h2: 'Your circle, your call',
+        paragraphs: [
+          'Your circle is the people you add with a private 6-character code. There is no limit on its size, and you decide who is in it. Friends can choose to share their location, so you can find each other and walk into a meeting together.',
+          'SobrCircle is for adults 18 and over. It is peer support from people who have been there, not medical care, and it has no ads.',
+        ],
+      },
+    ],
+    faq: [
+      ['How do I meet sober people near me?', 'In SobrCircle you can find members near you who have chosen to be discoverable, join public rooms, and see community events on the map.'],
+      ['Can people find me without my permission?', 'No. Only members who choose to be discoverable show up to people nearby, and you decide who joins your circle.'],
+      ['Is it free?', 'Yes. Every core feature is free, there are no ads, and your data is never sold.'],
+    ],
+    getApp: 'Find your people. Rooms, events, members near you and a private circle, free on iPhone and Android.',
+    related: [
+      ['/sobriety-tracker/', 'Sobriety tracker'],
+      ['/meetings/', 'Find meetings'],
+      ['/sober-grid-alternative/', 'Sober Grid alternative'],
+      ['/follow/', 'Follow SobrCircle'],
+    ],
+  },
+{
+    slug: 'sober-grid-alternative',
+    title: 'Sober Grid Alternative: Free Sober Community App With No Ads',
+    description:
+      'Looking for a Sober Grid alternative? SobrCircle is a free sober community app with public rooms, members near you, events, a sobriety tracker and meetings.',
+    eyebrow: 'Sober Grid alternative',
+    h1: 'Looking for a Sober Grid alternative?',
+    lede: 'Sober Grid is no longer available. If you are looking for a new sober community, SobrCircle is a free place to find one, built by someone in recovery, with no ads.',
+    phone: {
+      src: '/assets/4.jpg?v=3',
+      alt: 'SobrCircle profile showing check ins, circle size and 548 days sober',
+      caption: 'Your profile: check ins, your circle and your days.',
+    },
+    sections: [
+      {
+        h2: 'What you will find',
+        points: [
+          ['Sober people near you', 'Find members nearby who have chosen to be discoverable, and choose whether you are discoverable too.'],
+          ['Public rooms', 'Drop in and talk with people who get it.'],
+          ['Private rooms and group chats', 'Join private rooms of up to 50 people, or keep up to 12 of your closest in one group chat.'],
+          ['Community events', 'See sober events near you on the map.'],
+          ['A sobriety tracker', 'Count your days and celebrate each milestone with your circle.'],
+        ],
+      },
+      {
+        h2: 'What is different',
+        paragraphs: [
+          'Your circle is private. People join it with a 6-character code you share, there is no limit on its size, and only members who choose to be discoverable show up to people nearby.',
+          'It also finds meetings: 195,000+ of them, including AA, NA and CA, with their times and live navigation to the door.',
+          'Every core feature is free, there are no ads, and your data is never sold.',
+        ],
+      },
+    ],
+    faq: [
+      ['Is Sober Grid still available?', 'No. Sober Grid is no longer available.'],
+      ['Is SobrCircle connected to Sober Grid?', 'No. SobrCircle is an independent app made in Windsor, Ontario, and is not affiliated with Sober Grid.'],
+      ['Can I meet sober people near me on SobrCircle?', 'Yes. You can find members nearby who have chosen to be discoverable, join public rooms, and find community events on the map.'],
+      ['Is SobrCircle free?', 'Yes. Every core feature is free, there are no ads, and your data is never sold.'],
+    ],
+    getApp: 'Find your sober community again. Free on iPhone and Android, with no ads.',
+    related: [
+      ['/sober-community/', 'Sober community'],
+      ['/sobriety-tracker/', 'Sobriety tracker'],
+      ['/meetings/', 'Find meetings'],
+    ],
+    note: 'Sober Grid is a name belonging to its owner. SobrCircle is not affiliated with, endorsed by or connected to Sober Grid.',
+  },
+]
