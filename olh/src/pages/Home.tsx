@@ -1,26 +1,27 @@
-import { ArrowRight, ArrowUpRight, Check, ChevronDown, ClipboardCheck, FileText, KeyRound, MapPin, Phone, Scale } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, ClipboardCheck, FileText, KeyRound, MapPin, Phone, Scale } from 'lucide-react'
 import { site, url } from '../site'
 import { Actions, CTABand, FAQList, Heading, Section } from '../components/ui'
 import { ChapterNav } from '../components/ChapterNav'
-import { JobChips } from '../components/JobChips'
-import { GroupRow, LegalRates, ListingStrip, PlanCards } from '../components/olh'
-import { DashboardScreen } from '../components/mocks/screens'
-import { CaseTrack, OlhN4, OlhPhone } from '../components/mocks/olh'
+import { HighlightCard, ScrollerArrows, TabPanel, TabRow } from '../components/interact'
+import { GroupRow, ListingStrip, PlanChooser } from '../components/olh'
+import { HighlightSheets, ScopeSheets } from '../components/sheets'
+import { DashboardScreen, OwnerStatementScreen, ReportingScreen } from '../components/mocks/screens'
+import { CaseList, CaseTrack, ConsultCard, LedgerCheck, OlhN4, OlhPhone, VisitReport } from '../components/mocks/olh'
 import { homeFaqs } from '../content/faqs'
 
 const chapters = [
   { id: 'overview', label: 'Overview' },
-  { id: 'plans', label: 'Three plans' },
-  { id: 'shield', label: 'Landlord Shield' },
-  { id: 'legal', label: 'Legal Guarantee' },
+  { id: 'plans', label: 'Plans' },
+  { id: 'highlights', label: 'Highlights' },
   { id: 'rentals', label: 'Rentals' },
-  { id: 'how', label: 'How we work' },
+  { id: 'how', label: 'How it works' },
   { id: 'faq', label: 'Questions' },
 ]
 
-const services: { heading: string; note: string; links: { label: string; href: string }[] }[] = [
+const more: { key: string; label: string; note: string; links: { label: string; href: string }[] }[] = [
   {
-    heading: 'Management',
+    key: 'management',
+    label: 'Management',
     note: 'By property and owner',
     links: [
       { label: 'Condos', href: site.live.condos },
@@ -29,11 +30,14 @@ const services: { heading: string; note: string; links: { label: string; href: s
       { label: 'First-time landlords', href: site.live.firstTime },
       { label: 'Out-of-province & overseas owners', href: site.live.nonResident },
       { label: 'Switching managers', href: site.live.switching },
+      { label: 'Compare OLH', href: site.live.compare },
+      { label: 'All Ontario locations', href: site.live.locations },
     ],
   },
   {
-    heading: 'Projects',
-    note: 'Scoped separately',
+    key: 'projects',
+    label: 'Projects',
+    note: 'Scoped and quoted separately',
     links: [
       { label: 'Distressed building stabilization', href: site.live.distressed },
       { label: 'Renovations & project management', href: site.live.renovation },
@@ -44,7 +48,8 @@ const services: { heading: string; note: string; links: { label: string; href: s
     ],
   },
   {
-    heading: 'Leasing',
+    key: 'leasing',
+    label: 'Leasing',
     note: 'Through List It Realty',
     links: [
       { label: 'Basic & Premium rental listings', href: url('rentals/#leasing') },
@@ -53,17 +58,21 @@ const services: { heading: string; note: string; links: { label: string; href: s
       { label: 'Screening & credit checks', href: site.live.screening },
       { label: 'Screening questions', href: site.live.screeningQuestions },
       { label: 'LTB judgment database', href: site.live.judgments },
+      { label: 'Browse rentals', href: url('rentals/') },
     ],
   },
   {
-    heading: 'Legal & resources',
+    key: 'legal',
+    label: 'Legal & resources',
     note: 'Free help included',
     links: [
       { label: 'Eviction help', href: url('legal/#eviction') },
+      { label: 'Licensed paralegals', href: site.live.paralegal },
       { label: 'Eviction timelines', href: site.live.evictionTime },
       { label: 'LTB forms', href: site.live.ltbForms },
       { label: 'Ontario law library', href: site.live.law },
       { label: 'Self-help centre & guides', href: site.live.selfHelp },
+      { label: 'Bill 60 updates', href: site.live.bill60 },
       { label: 'Ask Ezy', href: site.live.askEzy },
     ],
   },
@@ -77,7 +86,7 @@ export function Home() {
       {/* ---- Hero --------------------------------------------------------- */}
       {/* Phones: eyebrow, the picture, then the words and buttons on the first screen.
           Laptops: words left, picture right, both above the fold. */}
-      <section id="overview" data-hero className="relative overflow-hidden bg-white pb-12 pt-6 sm:pt-12 lg:pb-16 lg:pt-14">
+      <section id="overview" data-hero className="relative overflow-clip bg-white pb-10 pt-6 sm:pt-12 lg:pb-14 lg:pt-14">
         <div className="hero-grid">
           <p className="eyebrow hero-eyebrow">OLH Landlord Shield · Ontario landlords since {site.since}</p>
           <div className="hero-visual">
@@ -91,14 +100,14 @@ export function Home() {
               Self-manage your rentals. <span className="text-brand">With a team behind you.</span>
             </h1>
             <p className="hero-lead mt-5 text-lead text-ink-3">
-              The full LandlordEzy Automation Suite in your own account, a rent ledger our team checks every month, and a licensed
-              paralegal to talk to. Prefer us to run it? Property Management is a step away.
+              The LandlordEzy Automation Suite in your own account, a rent ledger our team checks every month, and a licensed paralegal
+              to talk to. Prefer us to run it? Property Management is a step away.
             </p>
             <div className="hero-actions mt-7">
               <Actions
                 align="split"
                 primary={{ label: 'Book a 15-minute call', href: site.live.book }}
-                secondary={{ label: 'Price my portfolio', href: url('pricing/') }}
+                secondary={{ label: 'See the plans', href: '#plans' }}
                 note={
                   <>
                     <strong className="whitespace-nowrap font-semibold text-ink-2">Shield from $49/mo</strong> ·{' '}
@@ -113,124 +122,99 @@ export function Home() {
             </div>
           </div>
         </div>
-        <div className="wrap">
-          <JobChips className="mx-auto mt-10 max-w-[60rem] text-center sm:mt-14 lg:mt-16" />
-        </div>
       </section>
 
-      {/* ---- One group ----------------------------------------------------- */}
-      <section aria-labelledby="group-title" className="bg-white pb-14 pt-4 sm:pb-20">
-        <div className="wrap">
-          <h2 id="group-title" className="text-center text-[0.9375rem] font-semibold text-ink-3">
-            One group, three disciplines, one software
-          </h2>
-          <GroupRow className="mx-auto mt-8 max-w-[68rem]" />
-        </div>
-      </section>
-
-      {/* ---- Plans ---------------------------------------------------------- */}
-      <Section id="plans" tone="alt" labelledBy="plans-title">
+      {/* ---- Plans: choose here, read here --------------------------------- */}
+      <Section id="plans" labelledBy="plans-title" className="!pt-10 sm:!pt-14">
         <div className="wrap">
           <Heading
             id="plans-title"
             eyebrow="Three plans"
-            title="Which level suits you?"
-            lead="Manage your own tenants with a team behind you, hand us the day-to-day, or have LTB work arranged in advance. Priced for your whole portfolio."
+            title="How do you want to run your rentals?"
+            lead="Pick the one that sounds like you. Every plan is one monthly total for your whole portfolio."
+            size="md"
           />
-          <PlanCards className="mx-auto mt-12 max-w-[72rem] md:mt-14" />
-          <div className="mx-auto mt-8 flex max-w-[60rem] flex-col items-center gap-4 text-center">
-            <a href={url('pricing/')} className="btn-primary" data-track="pricing:home-plans">
-              Price my portfolio
-            </a>
-            <p className="text-[0.875rem] text-ink-3">
-              Shield is month-to-month. Management plans: 90 days, then 30 days’ notice. 1–10 tenancies priced online; larger or
-              mixed portfolios quoted.
-            </p>
-            <p className="text-[0.9375rem] text-ink-2">
-              <strong className="font-semibold">Already have a tenant problem?</strong> Standalone eviction help from $1,495 + HST
-              and disbursements, through one hearing. <a href={url('legal/#eviction')}>Existing-case help</a>
-            </p>
+          <div className="mx-auto mt-9 max-w-[70rem] md:mt-11">
+            <PlanChooser
+              visuals={{
+                shield: <OlhN4 className="mx-auto w-full max-w-[30rem]" />,
+                management: <OwnerStatementScreen className="w-full" />,
+                guarantee: (
+                  <div className="rounded-4xl bg-brand-ink p-4 sm:p-5">
+                    <CaseTrack className="!grid-cols-1 sm:!grid-cols-2 lg:!grid-cols-2" />
+                  </div>
+                ),
+              }}
+            />
           </div>
+          <ul className="mx-auto mt-8 flex max-w-[70rem] flex-col items-center justify-center gap-x-8 gap-y-3 text-center text-[0.9375rem] text-ink-3 md:flex-row">
+            {[
+              { q: 'Tenant problem right now?', a: 'Eviction help from $1,495', href: url('legal/#eviction') },
+              { q: 'Need a tenant?', a: 'Leasing from $549', href: url('rentals/#leasing') },
+              { q: 'Looking for a place?', a: 'Homes for rent', href: '#rentals' },
+            ].map((x) => (
+              <li key={x.q}>
+                {x.q}{' '}
+                <a href={x.href}>
+                  <span className="whitespace-nowrap">{x.a}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       </Section>
 
-      {/* ---- Shield spotlight: the N4 ------------------------------------- */}
-      <section id="shield" aria-labelledby="shield-title" className="relative overflow-hidden bg-brand-ink py-20 text-white sm:py-28">
-        <div className="glow-blue pointer-events-none absolute -right-40 top-10 h-[40rem] w-[40rem] opacity-70" aria-hidden />
-        <div className="wrap relative grid items-center gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
-          <div data-reveal>
-            <p className="eyebrow-dark">Included with OLH Landlord Shield</p>
-            <h2 id="shield-title" className="mt-3 text-display-lg !text-white">
-              From missed rent to a served N4. In your own account.
-            </h2>
-            <p className="mt-6 max-w-[34rem] text-lead text-white/70">
-              LandlordEzy fills the official N4 from your rent ledger and works out the arrears, so you can prepare one in around 60
-              seconds when the ledger is accurate. You review it, sign it and serve it. No OLH drafting fee.
-            </p>
-            <ul className="mt-8 space-y-3 text-white/85">
-              {['A rent-unpaid alert, with the arrears already in your ledger', 'E-signature and a Certificate of Service', 'Reminders around the termination and filing dates', 'If it goes further: a licensed paralegal at the member rate'].map((t) => (
-                <li key={t} className="flex gap-3">
-                  <Check className="mt-1 h-4 w-4 shrink-0 text-brand-glow" strokeWidth={2.6} aria-hidden />
-                  {t}
-                </li>
-              ))}
-            </ul>
-            <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-3">
-              <a href={url('landlord-shield/')} className="btn-primary" data-track="shield:home">
-                See Landlord Shield
-              </a>
-              <a href={url('landlord-shield/#suite')} className="link-more-dark">
-                Everything in the suite
-              </a>
-            </div>
-          </div>
-          <div>
-            <OlhN4 className="mx-auto w-full max-w-[34rem]" dark />
-            <p className="mt-3 text-center text-[0.75rem] text-white/50">Illustration with sample figures, not a real tenancy.</p>
-          </div>
+      {/* ---- One group ------------------------------------------------------ */}
+      <section aria-labelledby="group-title" className="bg-white pb-16 pt-6 sm:pb-24 sm:pt-10">
+        <div className="wrap">
+          <h2 id="group-title" className="scroll-fill mx-auto max-w-[62rem] text-center">
+            <span>
+              One group. Property managers, licensed paralegals and a brokerage, all working from the same software. Under one roof
+              since {site.since}.
+            </span>
+          </h2>
+          <GroupRow className="mx-auto mt-12 max-w-[68rem] md:mt-16" />
         </div>
       </section>
 
-      {/* ---- Legal Guarantee --------------------------------------------- */}
-      <Section id="legal" labelledBy="legal-title">
-        <div className="wrap grid gap-12 lg:grid-cols-[1fr_1.15fr] lg:items-start lg:gap-16">
-          <div data-reveal>
-            <p className="eyebrow">The Legal Guarantee</p>
-            <h2 id="legal-title" className="mt-3 text-display-md">
-              When a tenancy needs the Board, the work is already arranged.
-            </h2>
-            <p className="mt-5 text-lead text-ink-3">
-              Landlord Pro Legal Services, our licensed paralegal team, handles eligible new Landlord and Tenant Board matters for
-              every enrolled unit, not just one. You approve the steps. We do the work.
-            </p>
-            <div className="mt-8">
-              <LegalRates />
-            </div>
-            <ul className="mt-7 space-y-2 text-[0.875rem] text-ink-3">
-              {['Not rent reimbursement, a guaranteed result or a timeline', 'Not for a dispute that started before you enrolled', 'LTB fees, sheriff, process servers and outside costs are extra', 'Under a separate written engagement with Landlord Pro Legal Services'].map((t) => (
-                <li key={t} className="flex gap-2">
-                  <span aria-hidden className="text-ink-4">–</span>
-                  {t}
-                </li>
-              ))}
-            </ul>
-            <div className="mt-7 flex flex-wrap gap-x-6 gap-y-3">
-              <a href={url('legal/')} className="link-more">
-                How the Legal Guarantee works
-              </a>
-              <a href={url('legal/#compare')} className="link-more">
-                Shield vs Legal Guarantee
-              </a>
-            </div>
-          </div>
-          <div className="rounded-5xl bg-brand-ink p-5 sm:p-7" data-reveal>
-            <CaseTrack className="!grid-cols-1 sm:!grid-cols-2" />
-          </div>
+      {/* ---- Highlights: sideways cards, each opens a sheet ------------------- */}
+      <section id="highlights" aria-labelledby="highlights-title" className="section overflow-hidden bg-canvas-alt" data-scroller>
+        <div className="wrap flex items-end justify-between gap-6">
+          <h2 id="highlights-title" className="text-display-md">
+            Get the highlights.
+          </h2>
+          <ScrollerArrows className="mb-1.5" />
         </div>
-      </Section>
+        <ul className="hscroll no-scrollbar mt-8 md:mt-10" data-scroller-track tabIndex={0} aria-label="Highlights">
+          <HighlightCard sheet="sheet-n4" href={url('landlord-shield/#n4')} eyebrow="The N4" title="From missed rent to a served N4. In about 60 seconds." tone="dark">
+            <OlhN4 className="w-full" dark />
+          </HighlightCard>
+          <HighlightCard sheet="sheet-ledger" href={url('landlord-shield/#rent')} eyebrow="Your rent ledger" title="Checked by a person. Every month.">
+            <LedgerCheck className="w-full" />
+          </HighlightCard>
+          <HighlightCard sheet="sheet-paralegal" href={url('legal/#compare')} eyebrow="Member legal access" title="A licensed paralegal to talk to." tone="blue">
+            <ConsultCard className="w-full" />
+          </HighlightCard>
+          <HighlightCard sheet="sheet-guarantee" href={url('legal/#guarantee')} eyebrow="The Legal Guarantee" title="When it needs the Board, the work is already arranged." tone="dark">
+            <CaseList />
+          </HighlightCard>
+          <HighlightCard sheet="sheet-reporting" href={url('landlord-shield/#reporting')} eyebrow="Equifax rent reporting" title="On-time rent can build your tenant’s credit.">
+            <ReportingScreen className="w-full" />
+          </HighlightCard>
+          <HighlightCard sheet="sheet-visits" href={url('pricing/#visits')} eyebrow="Local visits" title="Eyes on the property, when you need them." tone="blue">
+            <VisitReport className="w-full" />
+          </HighlightCard>
+          <HighlightCard sheet="sheet-suite" href={url('landlord-shield/#suite')} eyebrow="The Automation Suite" title="Software we built and own. Included.">
+            <div className="hcard-bleed">
+              <DashboardScreen />
+            </div>
+          </HighlightCard>
+        </ul>
+        <p className="wrap mt-4 text-[0.8125rem] text-ink-4">Product screens are illustrations with sample figures, not real tenancies.</p>
+      </section>
 
       {/* ---- Rentals ------------------------------------------------------- */}
-      <Section id="rentals" tone="alt" labelledBy="rentals-title">
+      <Section id="rentals" labelledBy="rentals-title">
         <div className="wrap">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
@@ -244,9 +228,9 @@ export function Home() {
             </a>
           </div>
           <ListingStrip limit={8} className="mt-8" />
-          <a href={url('rentals/#leasing')} className="mt-8 flex flex-col gap-3 rounded-4xl bg-white p-6 text-ink shadow-card hover:no-underline sm:flex-row sm:items-center sm:justify-between sm:p-7" data-track="leasing:home">
+          <a href={url('rentals/#leasing')} className="spot mt-8 flex flex-col gap-3 rounded-4xl bg-canvas-alt p-6 text-ink hover:no-underline sm:flex-row sm:items-center sm:justify-between sm:p-7" data-track="leasing:home">
             <span className="flex items-center gap-4">
-              <span className="icon-badge shrink-0">
+              <span className="icon-badge shrink-0 !bg-white">
                 <KeyRound className="h-[22px] w-[22px]" strokeWidth={1.7} aria-hidden />
               </span>
               <span>
@@ -261,24 +245,24 @@ export function Home() {
         </div>
       </Section>
 
-      {/* ---- How we work ---------------------------------------------------- */}
-      <Section id="how" labelledBy="how-title">
+      {/* ---- How it works + everything else --------------------------------- */}
+      <Section id="how" tone="alt" labelledBy="how-title">
         <div className="wrap">
           <Heading
             id="how-title"
-            eyebrow="How we work"
-            title="Day-to-day management. Local visits when you need them."
-            lead="Everything documented in LandlordEzy. When a property needs eyes on it, you book a visit at a set price, confirmed before anyone attends."
+            eyebrow="How it works"
+            title="It starts with a 15-minute call."
+            lead="Day-to-day management, documented in LandlordEzy. Local visits when you need them, at a set price."
             size="md"
           />
-          <ol className="mx-auto mt-12 grid max-w-[68rem] gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <ol className="steprow no-scrollbar mt-10 md:mt-12">
             {[
               { Icon: Phone, t: 'A 15-minute call', b: 'Your units, your cities, your current tenants and what you need from us.' },
               { Icon: FileText, t: 'A clear monthly total', b: 'One price for the portfolio. Anything local or project-based is quoted separately.' },
               { Icon: ClipboardCheck, t: 'Onboarding in LandlordEzy', b: 'Leases, ledgers and documents organised, and tenants introduced to their portal.' },
               { Icon: Scale, t: 'Every month', b: 'A checked ledger and statement, Equifax rent reporting, and legal help on the same team.' },
             ].map(({ Icon, t, b }, idx) => (
-              <li key={t} className="tile p-6 sm:p-7" data-reveal style={{ ['--reveal-delay' as string]: `${idx * 0.07}s` }}>
+              <li key={t} className="steprow-item spot" data-reveal style={{ ['--reveal-delay' as string]: `${idx * 0.08}s` }}>
                 <span className="flex items-center gap-3">
                   <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand text-[0.875rem] font-semibold text-white">{idx + 1}</span>
                   <Icon className="h-5 w-5 text-brand" strokeWidth={1.8} aria-hidden />
@@ -289,34 +273,34 @@ export function Home() {
             ))}
           </ol>
 
-          <div className="mx-auto mt-16 max-w-[68rem]">
-            <h3 className="text-headline">More than monthly management.</h3>
-            <p className="mt-2 text-ink-3">Specialist work is scoped and quoted on its own, so your monthly plan stays simple.</p>
-            <div className="mt-8 grid gap-x-8 gap-y-2 md:grid-cols-2 lg:grid-cols-4 lg:gap-y-0">
-              {services.map((g) => (
-                <details key={g.heading} className="fgroup border-b border-line lg:border-0" open data-fold-mobile>
-                  <summary className="fgroup-head">
-                    <span>
-                      <span className="block font-semibold text-ink">{g.heading}</span>
-                      <span className="block text-[0.8125rem] text-ink-4">{g.note}</span>
-                    </span>
-                    <ChevronDown className="fgroup-icon h-4 w-4 text-ink-3" aria-hidden />
-                  </summary>
-                  <ul className="space-y-2 pb-5 pt-1 text-[0.9375rem] lg:pt-3">
-                    {g.links.map((l) => (
-                      <li key={l.label}>
-                        <a href={l.href} className="text-ink-2 hover:text-brand-text">
-                          {l.label}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </details>
-              ))}
+          <div className="mx-auto mt-16 max-w-[68rem] md:mt-20" data-tabs-root>
+            <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+              <div>
+                <h3 className="text-headline">More than monthly management.</h3>
+                <p className="mt-2 text-ink-3">Specialist work is scoped and quoted on its own, so your monthly plan stays simple.</p>
+              </div>
+              <TabRow name="more" label="More from OLH" tabs={more.map((g) => ({ key: g.key, label: g.label }))} className="shrink-0" />
             </div>
+            {more.map((g, idx) => (
+              <TabPanel key={g.key} name="more" tab={g.key} first={idx === 0} className="mt-6">
+                <p className="tabpanel-label">
+                  {g.label} <span className="font-normal text-ink-4">· {g.note}</span>
+                </p>
+                <ul className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
+                  {g.links.map((l) => (
+                    <li key={l.label}>
+                      <a href={l.href} className="morelink spot">
+                        <span>{l.label}</span>
+                        <ArrowUpRight className="h-4 w-4 shrink-0 text-brand" aria-hidden />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </TabPanel>
+            ))}
           </div>
 
-          <a href={site.live.sireg} className="mx-auto mt-14 flex max-w-[68rem] flex-col gap-3 rounded-4xl bg-canvas-alt p-6 text-ink hover:no-underline sm:flex-row sm:items-center sm:justify-between sm:p-7" rel="noopener" data-track="sireg:home">
+          <a href={site.live.sireg} className="spot mx-auto mt-10 flex max-w-[68rem] flex-col gap-3 rounded-4xl bg-white p-6 text-ink shadow-card hover:no-underline sm:flex-row sm:items-center sm:justify-between sm:p-7" rel="noopener" data-track="sireg:home">
             <span className="flex items-start gap-4">
               <span className="icon-badge shrink-0">
                 <MapPin className="h-[22px] w-[22px]" strokeWidth={1.7} aria-hidden />
@@ -336,7 +320,7 @@ export function Home() {
       </Section>
 
       {/* ---- FAQ ------------------------------------------------------------ */}
-      <Section id="faq" tone="alt" labelledBy="faq-title">
+      <Section id="faq" labelledBy="faq-title">
         <div className="wrap-content">
           <h2 id="faq-title" className="text-display-md">
             Good to know before you call.
@@ -358,6 +342,9 @@ export function Home() {
           </>
         }
       />
+
+      <HighlightSheets />
+      <ScopeSheets />
     </>
   )
 }

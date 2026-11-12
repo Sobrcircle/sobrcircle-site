@@ -513,6 +513,27 @@ function setupCalc() {
       el.textContent = text
       el.hidden = !show
     })
+  // Prices roll to their new value instead of snapping (skipped on first paint
+  // and for visitors who ask for reduced motion).
+  let rolled = false
+  const roll = (sel: string, to: number) =>
+    document.querySelectorAll<HTMLElement>(sel).forEach((el) => {
+      const from = Number(el.dataset.v ?? (el.textContent ?? '').replace(/[^\d.]/g, ''))
+      el.dataset.v = String(to)
+      if (!rolled || reduceMotion || from === to || !Number.isFinite(from)) {
+        el.textContent = to.toLocaleString('en-CA')
+        return
+      }
+      const start = performance.now()
+      const tick = (now: number) => {
+        if (el.dataset.v !== String(to)) return // a newer value took over
+        const k = Math.min(1, (now - start) / 420)
+        const eased = 1 - Math.pow(1 - k, 3)
+        el.textContent = Math.round(from + (to - from) * eased).toLocaleString('en-CA')
+        if (k < 1) requestAnimationFrame(tick)
+      }
+      requestAnimationFrame(tick)
+    })
   const row = (label: string, value: string, cls = '') => {
     const tr = document.createElement('tr')
     if (cls) tr.className = cls
@@ -551,7 +572,7 @@ function setupCalc() {
     const plus = mgmt + legal
     const unit = n === 1 ? 'tenancy' : 'tenancies'
 
-    out.textContent = String(n)
+    if (out.textContent !== String(n)) out.textContent = String(n)
     if (word) word.textContent = `${c.noun} ${unit}`
     range.setAttribute('aria-valuetext', `${n} ${unit}`)
     range.style.setProperty('--pct', `${((n - t.min) / (t.max - t.min)) * 100}%`)
@@ -560,9 +581,10 @@ function setupCalc() {
       b.disabled = (d < 0 && n <= t.min) || (d > 0 && n >= t.max)
     })
 
-    set('[data-out="shield"]', shield.toLocaleString('en-CA'))
-    set('[data-out="management"]', mgmt.toLocaleString('en-CA'))
-    set('[data-out="guarantee"]', plus.toLocaleString('en-CA'))
+    roll('[data-out="shield"]', shield)
+    roll('[data-out="management"]', mgmt)
+    roll('[data-out="guarantee"]', plus)
+    rolled = true
     const chain = (first: number, add: number, total: number) => (n === 1 ? `${fmt(first)} first tenancy` : `${fmt(first)} + ${n - 1} × ${fmt(add)} = ${fmt(total)}`)
     set('[data-math="shield"]', chain(t.shield.first, t.shield.additional, shield))
     set('[data-math="management"]', chain(c.first, c.additional, mgmt))
@@ -609,10 +631,10 @@ function setupCalc() {
   })
 }
 
-/* ---- rentals strip: filter and arrows ------------------------------------ */
+/* ---- rentals strip: the For rent / For sale filter --------------------------- */
 function setupListings() {
   document.querySelectorAll<HTMLElement>('[data-listings]').forEach((wrap) => {
-    const track = wrap.querySelector<HTMLElement>('[data-strip-track]')
+    const track = wrap.querySelector<HTMLElement>('[data-scroller-track]')
     const items = Array.from(wrap.querySelectorAll<HTMLElement>('.strip-item'))
     const buttons = Array.from(wrap.querySelectorAll<HTMLButtonElement>('[data-filter]'))
     const status = wrap.querySelector<HTMLElement>('[data-listing-status]')
@@ -628,13 +650,8 @@ function setupListings() {
           if (on && it.dataset.kind !== 'all') shown++
         })
         track.scrollTo({ left: 0, behavior: 'auto' })
+        track.dispatchEvent(new Event('scroll'))
         if (status) status.textContent = `Showing ${shown} ${f === 'sale' ? 'for sale' : f === 'rent' ? 'for rent' : 'listings'}.`
-      }),
-    )
-    wrap.querySelectorAll<HTMLButtonElement>('[data-strip]').forEach((b) =>
-      b.addEventListener('click', () => {
-        const step = Math.max(240, track.clientWidth * 0.8) * Number(b.dataset.strip)
-        track.scrollBy({ left: step, behavior: scrollBehavior })
       }),
     )
   })
@@ -672,10 +689,296 @@ function setupJobs() {
   chip.setAttribute('data-suggested', 'true')
 }
 
+/* ---- a highlight that slides between tabs -------------------------------- */
+/**
+ * Every [data-pill] group gets one indicator that rests under the selected item
+ * and slides when the selection changes. In "hover" groups (the header and the
+ * chapter bar) it also follows the pointer, then settles back.
+ */
+function setupPills() {
+  const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches
+  document.querySelectorAll<HTMLElement>('[data-pill]').forEach((box) => {
+    const items = () => Array.from(box.querySelectorAll<HTMLElement>('[data-pill-item]'))
+    const ind = document.createElement('span')
+    ind.className = 'pill-ind'
+    ind.setAttribute('aria-hidden', 'true')
+    box.prepend(ind)
+    box.classList.add('pill-on')
+    let placed = false
+
+    const current = () =>
+      items().find((el) => el.matches('[aria-selected="true"], [aria-pressed="true"], [aria-current]') || !!el.querySelector('input:checked')) ?? null
+
+    const place = (el: HTMLElement | null) => {
+      const host = ind.offsetParent as HTMLElement | null
+      if (!el || !host || !el.getClientRects().length) {
+        ind.dataset.on = 'false'
+        return
+      }
+      const a = el.getBoundingClientRect()
+      const b = host.getBoundingClientRect()
+      if (!placed) ind.style.transition = 'none'
+      ind.style.setProperty('--x', `${a.left - b.left - host.clientLeft + host.scrollLeft}px`)
+      ind.style.setProperty('--y', `${a.top - b.top - host.clientTop + host.scrollTop}px`)
+      ind.style.setProperty('--w', `${a.width}px`)
+      ind.style.setProperty('--h', `${a.height}px`)
+      ind.dataset.on = 'true'
+      if (!placed) {
+        void ind.offsetWidth
+        ind.style.transition = ''
+        placed = true
+      }
+    }
+    const sync = () => place(current())
+
+    new MutationObserver(sync).observe(box, { subtree: true, attributes: true, attributeFilter: ['aria-selected', 'aria-pressed', 'aria-current'] })
+    box.addEventListener('change', sync)
+    if ('ResizeObserver' in window) new ResizeObserver(sync).observe(box)
+    window.addEventListener('pageshow', sync)
+
+    if (box.dataset.pill === 'hover' && canHover) {
+      items().forEach((el) => el.addEventListener('pointerenter', () => place(el)))
+      box.addEventListener('pointerleave', sync)
+      box.addEventListener('focusin', (e) => {
+        const el = (e.target as Element).closest<HTMLElement>('[data-pill-item]')
+        if (el && el.matches(':focus-visible')) place(el)
+      })
+      box.addEventListener('focusout', sync)
+    }
+    sync()
+  })
+}
+
+/* ---- tabs that swap a panel in place -------------------------------------- */
+function setupTabs() {
+  document.querySelectorAll<HTMLElement>('[data-tabs]').forEach((list) => {
+    const name = list.dataset.tabs
+    const root = list.closest<HTMLElement>('[data-tabs-root]')
+    if (!root || !name) return
+    const tabs = Array.from(list.querySelectorAll<HTMLElement>('[data-tab]'))
+    const panels = Array.from(root.querySelectorAll<HTMLElement>(`[id^="${name}-panel-"]`))
+
+    const select = (key: string, focus = false) => {
+      tabs.forEach((t) => {
+        const on = t.dataset.tab === key
+        t.setAttribute('aria-selected', String(on))
+        t.tabIndex = on ? 0 : -1
+        if (on && focus) t.focus({ preventScroll: true })
+        if (on && list.scrollWidth > list.clientWidth) {
+          const left = t.offsetLeft - 12
+          const right = t.offsetLeft + t.offsetWidth + 12 - list.clientWidth
+          if (list.scrollLeft > left) list.scrollTo({ left, behavior: scrollBehavior })
+          else if (list.scrollLeft < right) list.scrollTo({ left: right, behavior: scrollBehavior })
+        }
+      })
+      panels.forEach((p) => (p.hidden = p.dataset.tabPanel !== key))
+    }
+
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => {
+        root.classList.add('tabs-live')
+        select(t.dataset.tab!)
+      })
+      t.addEventListener('keydown', (e) => {
+        const move = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key]
+        const to = e.key === 'Home' ? 0 : e.key === 'End' ? tabs.length - 1 : move ? (i + move + tabs.length) % tabs.length : -1
+        if (to < 0) return
+        e.preventDefault()
+        root.classList.add('tabs-live')
+        select(tabs[to].dataset.tab!, true)
+      })
+    })
+    // A link can arrive with a tab chosen: /olh/?plan=guarantee
+    const wanted = new URLSearchParams(location.search).get(name)
+    if (wanted && tabs.some((t) => t.dataset.tab === wanted)) select(wanted)
+  })
+}
+
+/* ---- sheets: detail that opens over the page ------------------------------ */
+/**
+ * A [data-dialog] link opens the <dialog> it names instead of leaving the page.
+ * It closes with the button, Escape, a tap outside, a swipe down on phones, or
+ * the Back gesture (opening adds a history entry, like the Menu).
+ */
+function setupDialogs() {
+  if (typeof HTMLDialogElement === 'undefined' || !HTMLDialogElement.prototype.showModal) return
+  let open: HTMLDialogElement | null = null
+  let opener: HTMLElement | null = null
+  let pushed = false
+  let pendingHref: string | null = null
+  let pendingHash: string | null = null
+
+  const finish = () => {
+    const dlg = open
+    if (!dlg) return
+    open = null
+    const done = () => {
+      dlg.classList.remove('is-closing')
+      dlg.querySelector<HTMLElement>('[data-dialog-panel]')?.style.removeProperty('--drag')
+      if (dlg.open) dlg.close()
+      if (pendingHash) {
+        const target = document.getElementById(pendingHash)
+        pendingHash = null
+        target?.scrollIntoView({ behavior: scrollBehavior, block: 'start' })
+      } else opener?.focus({ preventScroll: true })
+      if (pendingHref) {
+        const href = pendingHref
+        pendingHref = null
+        window.location.assign(href)
+      }
+    }
+    if (reduceMotion) return done()
+    dlg.classList.add('is-closing')
+    window.setTimeout(done, 270)
+  }
+
+  /** Close through history when we added an entry, so Back and close stay in step. */
+  const close = () => {
+    if (!open) return
+    if (pushed) {
+      pushed = false
+      history.back()
+    } else finish()
+  }
+
+  window.addEventListener('popstate', () => {
+    if (open) {
+      pushed = false
+      finish()
+    }
+  })
+
+  document.addEventListener('click', (e) => {
+    const trigger = (e.target as Element).closest<HTMLElement>('[data-dialog]')
+    if (!trigger || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
+    const dlg = document.getElementById(trigger.dataset.dialog ?? '')
+    if (!(dlg instanceof HTMLDialogElement) || open) return
+    e.preventDefault()
+    opener = trigger
+    open = dlg
+    dlg.showModal()
+    const panel = dlg.querySelector<HTMLElement>('[data-dialog-panel]')
+    if (panel) panel.scrollTop = 0
+    history.pushState({ olhDialog: dlg.id }, '')
+    pushed = true
+  })
+
+  document.querySelectorAll<HTMLDialogElement>('dialog[data-dialog-el]').forEach((dlg) => {
+    const panel = dlg.querySelector<HTMLElement>('[data-dialog-panel]')
+    dlg.addEventListener('cancel', (e) => {
+      e.preventDefault()
+      close()
+    })
+    dlg.addEventListener('click', (e) => {
+      const el = e.target as Element
+      if (el === dlg || el.closest('[data-dialog-close]')) {
+        e.preventDefault()
+        return close()
+      }
+      // Links inside the sheet: close first so the history stays tidy, then go.
+      const a = el.closest<HTMLAnchorElement>('a[href]')
+      if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target === '_blank') return
+      const href = a.getAttribute('href') ?? ''
+      if (/^(tel|mailto):/.test(href)) return
+      e.preventDefault()
+      const here = new URL(a.href, location.href)
+      if (here.pathname === location.pathname && here.hash) pendingHash = here.hash.slice(1)
+      else pendingHref = a.href
+      close()
+    })
+
+    // Phones: swipe the sheet down from its top bar to dismiss it.
+    const bar = dlg.querySelector<HTMLElement>('[data-dialog-grab]')
+    if (!bar || !panel) return
+    let startY = 0
+    let startT = 0
+    let dy = 0
+    let dragging = false
+    bar.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0 || (e.target as Element).closest('button, a')) return
+      dragging = true
+      startY = e.clientY
+      startT = performance.now()
+      dy = 0
+      panel.classList.add('is-dragging')
+      bar.setPointerCapture(e.pointerId)
+    })
+    bar.addEventListener('pointermove', (e) => {
+      if (!dragging) return
+      dy = Math.max(0, e.clientY - startY)
+      panel.style.setProperty('--drag', `${dy}px`)
+    })
+    const end = () => {
+      if (!dragging) return
+      dragging = false
+      panel.classList.remove('is-dragging')
+      const velocity = dy / Math.max(1, performance.now() - startT)
+      if (dy > 110 || (dy > 24 && velocity > 0.6)) close()
+      else panel.style.setProperty('--drag', '0px')
+    }
+    bar.addEventListener('pointerup', end)
+    bar.addEventListener('pointercancel', end)
+  })
+}
+
+/* ---- sideways rows: arrows on laptops, swipe everywhere -------------------- */
+function setupScrollers() {
+  document.querySelectorAll<HTMLElement>('[data-scroller]').forEach((root) => {
+    const track = root.querySelector<HTMLElement>('[data-scroller-track]')
+    const prev = root.querySelector<HTMLButtonElement>('[data-scroller-prev]')
+    const next = root.querySelector<HTMLButtonElement>('[data-scroller-next]')
+    if (!track || !prev || !next) return
+    const update = () => {
+      prev.disabled = track.scrollLeft <= 2
+      next.disabled = track.scrollLeft >= track.scrollWidth - track.clientWidth - 2
+    }
+    // Move by whole cards: as many as fit, at least one.
+    const step = () => {
+      const card = Array.from(track.children).find((c) => !(c as HTMLElement).hidden) as HTMLElement | undefined
+      if (!card) return track.clientWidth * 0.8
+      const one = card.getBoundingClientRect().width + (parseFloat(getComputedStyle(track).columnGap) || 0)
+      return Math.max(1, Math.floor((track.clientWidth * 0.85) / one)) * one
+    }
+    let frame = 0
+    track.addEventListener('scroll', () => (frame ||= requestAnimationFrame(() => ((frame = 0), update()))), { passive: true })
+    prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: scrollBehavior }))
+    next.addEventListener('click', () => track.scrollBy({ left: step(), behavior: scrollBehavior }))
+    if ('ResizeObserver' in window) new ResizeObserver(update).observe(track)
+    update()
+  })
+}
+
+/* ---- a soft light that follows the pointer over .spot surfaces ------------- */
+function setupSpot() {
+  if (reduceMotion || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
+  let frame = 0
+  let last: PointerEvent | null = null
+  document.addEventListener(
+    'pointermove',
+    (e) => {
+      last = e
+      frame ||= requestAnimationFrame(() => {
+        frame = 0
+        const el = (last!.target as Element).closest?.<HTMLElement>('.spot')
+        if (!el) return
+        const r = el.getBoundingClientRect()
+        el.style.setProperty('--mx', `${last!.clientX - r.left}px`)
+        el.style.setProperty('--my', `${last!.clientY - r.top}px`)
+      })
+    },
+    { passive: true },
+  )
+}
+
 setupMotion()
 setupFlyouts()
 setupChapters()
 setupSheet()
+setupTabs()
+setupPills()
+setupDialogs()
+setupScrollers()
+setupSpot()
 setupMobileCta()
 setupCalc()
 setupListings()

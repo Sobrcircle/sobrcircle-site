@@ -4,7 +4,7 @@
  * the sample figures from Paul's design preview.
  */
 import type { CSSProperties } from 'react'
-import { BadgeCheck, CalendarClock, CheckCircle2, FileCheck2, Gavel, ScrollText, Wallet } from 'lucide-react'
+import { BadgeCheck, CalendarClock, Camera, Check, CheckCircle2, FileCheck2, Gavel, Mail, ScrollText, Sparkles, Wallet } from 'lucide-react'
 import { PhoneFrame, SampleTag } from './kit'
 
 const i = (n: number) => ({ ['--i' as string]: String(n) }) as CSSProperties
@@ -149,6 +149,149 @@ export function CaseTrack({ className = '' }: { className?: string }) {
             <span className="block font-display text-[1.125rem] font-semibold text-white">{t}</span>
             <span className="mt-0.5 block text-[0.9375rem] leading-snug text-white/70">{s}</span>
           </span>
+        </li>
+      ))}
+    </ol>
+  )
+}
+
+/* ------------------------------------------------------------------------ */
+/* Small illustrations for the highlight cards                              */
+/* ------------------------------------------------------------------------ */
+
+/** An e-Transfer arrives, is matched, marked paid, then checked by the OLH team. */
+export function LedgerCheck({ className = '' }: { className?: string }) {
+  return (
+    <figure className={`m-0 ${className}`} role="img" aria-label="Illustration: an e-Transfer is matched to November rent, marked paid, and the ledger is checked by the OLH team">
+      <div className="mock-fit" style={{ ['--em' as string]: '30' }}>
+        <div className="mock play" data-play aria-hidden="true">
+          <div className="space-y-[0.6em]">
+            <div className="m-card !rounded-[1.1em]" data-step style={i(0)}>
+              <p className="m-xs m-faint flex items-center gap-[0.4em]">
+                <Mail className="m-ico-s" /> Interac notification
+              </p>
+              <p className="m-sm mt-[0.3em] font-semibold">MAYA THOMPSON sent you $2,100.00</p>
+            </div>
+            <div className="m-card !rounded-[1.1em] !bg-[#eaf2ff] !shadow-none" data-step style={i(1)}>
+              <p className="m-sm flex items-center gap-[0.45em] font-semibold text-[#0659d6]">
+                <Sparkles className="m-ico-s" /> Matched to Unit 2 · November rent
+              </p>
+            </div>
+            <div className="m-card !rounded-[1.1em]" data-step style={i(2)}>
+              <div className="flex items-center justify-between">
+                <span>
+                  <span className="m-sm block font-semibold">November 2026</span>
+                  <span className="m-xs m-faint">Receipt emailed to Maya</span>
+                </span>
+                <span className="m-pill go">
+                  <Check className="m-ico-s" strokeWidth={3} /> Paid
+                </span>
+              </div>
+            </div>
+            <div className="m-card !rounded-[1.1em] !bg-[#050c3b] !shadow-none" data-step style={i(3)}>
+              <div className="flex items-center justify-between gap-[0.8em]">
+                <span>
+                  <span className="m-sm block font-semibold text-white">Checked by the OLH team</span>
+                  <span className="m-xs text-white/60">November statement sent · no balance owing</span>
+                </span>
+                <BadgeCheck className="m-ico-l shrink-0 text-[#79d220]" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </figure>
+  )
+}
+
+/** This month's 15 minutes with a licensed paralegal. */
+export function ConsultCard({ className = '' }: { className?: string }) {
+  return (
+    <figure className={`m-0 ${className}`} role="img" aria-label="Illustration: a 15-minute consultation with a licensed paralegal booked for Tuesday at 2 p.m.">
+      <div className="mock-fit" style={{ ['--em' as string]: '30' }}>
+        <div className="mock" aria-hidden="true">
+          <div className="m-card !rounded-[1.3em] !p-[1.4em]">
+            <div className="flex items-center justify-between">
+              <p className="m-label">This month’s consultation</p>
+              <span className="m-pill go">Booked</span>
+            </div>
+            <div className="mt-[1em] flex items-center gap-[0.9em]">
+              <span className="flex h-[3.6em] w-[3.6em] shrink-0 flex-col items-center justify-center rounded-[0.9em] bg-[#eaf2ff] text-[#0659d6]">
+                <span className="text-[0.62em] font-bold uppercase tracking-wider">Tue</span>
+                <span className="text-[1.5em] font-bold leading-none">17</span>
+              </span>
+              <span>
+                <span className="block text-[1.15em] font-bold tracking-[-0.02em]">2:00 – 2:15 p.m.</span>
+                <span className="m-sm m-muted">Licensed paralegal · by phone</span>
+              </span>
+            </div>
+            <div className="m-divider my-[1em]" />
+            <p className="m-label">You asked about</p>
+            <div className="mt-[0.5em] flex flex-wrap gap-[0.4em]">
+              <span className="m-pill brand">Late rent, first time</span>
+              <span className="m-pill brand">N4 timing</span>
+              <span className="m-pill brand">Entry notice</span>
+            </div>
+          </div>
+          <div className="m-card mt-[0.6em] !rounded-[1.1em] !bg-[#f5f5f7] !shadow-none">
+            <p className="m-xs m-muted wrap-ok">Advice about your enrolled tenancies. Anything more is quoted first.</p>
+          </div>
+        </div>
+      </div>
+    </figure>
+  )
+}
+
+/** A visit report: dated photos, a checklist, filed in LandlordEzy. */
+export function VisitReport({ className = '' }: { className?: string }) {
+  const photos = ['linear-gradient(135deg,#cfe0ff,#8fb6ff)', 'linear-gradient(135deg,#dff3cf,#a9dc7e)', 'linear-gradient(135deg,#ffe6c2,#ffc27a)']
+  return (
+    <figure className={`m-0 ${className}`} role="img" aria-label="Illustration of a visit report with dated photos and a checklist, filed in LandlordEzy">
+      <div className="mock-fit" style={{ ['--em' as string]: '30' }}>
+        <div className="mock" aria-hidden="true">
+          <div className="m-card !rounded-[1.3em] !p-[1.4em]">
+            <div className="flex items-center justify-between">
+              <p className="m-h">Visit report</p>
+              <span className="m-pill go">Filed</span>
+            </div>
+            <p className="m-xs m-faint mt-[0.2em]">48 Maple Ave, Unit 2 · Nov 6, 2:10 p.m.</p>
+            <div className="mt-[0.9em] grid grid-cols-3 gap-[0.45em]">
+              {photos.map((bg, idx) => (
+                <span key={bg} className="flex aspect-[4/3] items-end justify-between rounded-[0.6em] p-[0.4em]" style={{ background: bg }}>
+                  <Camera className="m-ico-s text-white/90" />
+                  <span className="text-[0.56em] font-semibold text-white/90">2:1{idx + 2} p.m.</span>
+                </span>
+              ))}
+            </div>
+            <div className="mt-[0.7em]">
+              {[
+                ['Exterior and entry', 'go', 'OK'],
+                ['Smoke and CO alarms', 'go', 'OK'],
+                ['Furnace filter', 'warn', 'Replace'],
+              ].map(([t, c, l]) => (
+                <div key={t} className="m-row">
+                  <span className="m-sm">{t}</span>
+                  <span className={`m-pill ${c}`}>{l}</span>
+                </div>
+              ))}
+            </div>
+            <p className="m-xs m-faint mt-[0.7em]">45 minutes on site · report in LandlordEzy</p>
+          </div>
+        </div>
+      </div>
+    </figure>
+  )
+}
+
+/** The six stages of a Legal Guarantee matter, as a compact vertical track (dark cards). */
+export function CaseList({ className = '' }: { className?: string }) {
+  const steps = ['Notice', 'Application', 'Evidence', 'Settlement', 'Hearing', 'After the order']
+  return (
+    <ol className={`caselist ${className}`}>
+      {steps.map((t, idx) => (
+        <li key={t}>
+          <span className="caselist-n">{idx + 1}</span>
+          {t}
         </li>
       ))}
     </ol>

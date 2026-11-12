@@ -8,11 +8,28 @@ phone buttons, and HTML-drawn product screens. Paul's words, plans and prices; o
 
 - **Preview:** https://sobrcircle.com/olh/ (kept out of search on purpose)
 
+## How the pages flow (the Apple pattern)
+
+Modelled on Apple's own plan pages (Apple One is six sections; iPhone's "Get to know" cards open
+detail in a sheet). Three rules:
+
+1. **Choose on the page.** The home page's plan chooser is one big segmented control: picking a
+   plan swaps the panel below in place. Nothing above the fold sends a visitor to another page.
+2. **Detail opens over the page.** "+" cards and "Full scope" open a sheet (a native `<dialog>`)
+   and close back to the same spot. Without JavaScript they are ordinary links to the full page.
+3. **Sideways for sets, down for the story.** Highlights, rentals, steps and the plan comparison
+   scroll sideways (arrows on laptops, swipe on phones); the page itself stays short.
+
+Motion is progressive: a highlight slides between tabs and follows the pointer in the header and
+chapter bar, cards get a soft pointer light, the "One group" statement fills as it scrolls, prices
+roll when the calculator changes, and pages cross-fade. All of it is skipped for visitors who ask
+for reduced motion, and none of it is needed to read or use the site.
+
 ## Pages
 
 | Path | What | Paul's preview sections it covers |
 | --- | --- | --- |
-| `/olh/` | Home | Hero, three plans, Shield N4 spotlight, Legal Guarantee, rentals, how we work, FAQ |
+| `/olh/` | Home: hero, plan chooser, highlights row, rentals, how it works, FAQ | Hero, three plans, N4, Legal Guarantee, rentals, how we work, FAQ |
 | `/olh/pricing/` | Portfolio calculator, what's included, local visits, terms, FAQ | Pricing, Visits, Terms |
 | `/olh/landlord-shield/` | Landlord Shield: N4/N1, the Automation Suite, rent handling, rent reporting, scope | Shield explained, Automation Suite, Rent reporting |
 | `/olh/legal/` | Member legal access vs Legal Guarantee, member case rules, 12-month example, eviction help | Shield vs Guarantee, Legal |
@@ -29,10 +46,13 @@ Everything else in Paul's menus links to the live ontariolandlordhelp.ca or land
 | `src/content/listings.ts` | The rentals snapshot (photos in `public/img/listings/`) |
 | `src/content/nav.ts` | Menus and footer |
 | `src/site.ts` | Phone, email, and every link into the live sites |
-| `src/components/olh.tsx` | Plan cards, calculator, rentals strip, legal rates |
+| `src/content/scope.tsx` | What each plan covers, step lists and the Automation Suite (shared by pages and sheets) |
+| `src/components/olh.tsx` | Plan chooser, plan cards, calculator, rentals strip, legal rates |
+| `src/components/interact.tsx` | Sheet, sideways scroller arrows, highlight cards, pill tabs |
+| `src/components/sheets.tsx` | The ten detail sheets (seven highlights, three plan scopes) |
 | `src/components/mocks/olh.tsx` | The N4 (Paul's sample figures), the lock-screen phone, the case track |
 | `src/pages/` | Page layouts |
-| `src/client/main.ts` | The small browser script (menu, chapters, calculator, listings filter) |
+| `src/client/main.ts` | The small browser script (menu, chapters, tabs, sheets, scrollers, calculator) |
 | `../public/olh/` | **Built output** (committed, served by Cloudflare Pages) |
 
 ## Commands

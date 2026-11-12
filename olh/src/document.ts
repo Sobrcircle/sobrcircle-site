@@ -105,6 +105,7 @@ export function renderDocument(route: Route, body: string, assets: Assets): stri
     `<meta name="twitter:description" content="${attr(route.description)}" />`,
     `<meta name="twitter:image" content="${attr(ogImage)}" />`,
     `<link rel="stylesheet" href="${assets.css}" />`,
+    '<noscript><style>[data-tab-panel][hidden]{display:block!important;margin-top:1.5rem}.tabrow,.chooser{display:none!important}.tabpanel-label{display:block!important}</style></noscript>',
     `<script type="module" src="${assets.js}"></script>`,
     `<script type="application/ld+json">${jsonLd({ '@context': 'https://schema.org', '@graph': graph })}</script>`,
   ]

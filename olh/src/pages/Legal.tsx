@@ -5,6 +5,7 @@ import { ChapterNav } from '../components/ChapterNav'
 import { LegalRates } from '../components/olh'
 import { CaseTrack } from '../components/mocks/olh'
 import { legalFaqs } from '../content/faqs'
+import { guaranteeFacts } from '../content/scope'
 
 const chapters = [
   { id: 'overview', label: 'Overview' },
@@ -46,7 +47,7 @@ export function Legal() {
               { href: '#guarantee', Icon: ShieldCheck, t: 'Arranged in advance', b: 'The Legal Guarantee: eligible new LTB work, all enrolled units.', track: 'legal:door-guarantee', hi: true },
               { href: '#eviction', Icon: Siren, t: 'A problem right now', b: 'Standalone eviction help from $1,495, scoped up front.', track: 'legal:door-now' },
             ].map(({ href, Icon, t, b, track, hi }) => (
-              <a key={t} href={href} className={`group flex flex-col rounded-4xl p-6 text-ink hover:no-underline ${hi ? 'bg-brand-ink text-white' : 'bg-canvas-alt'}`} data-track={track}>
+              <a key={t} href={href} className={`spot group flex flex-col rounded-4xl p-6 text-ink hover:no-underline ${hi ? 'tile-dark bg-brand-ink text-white' : 'bg-canvas-alt'}`} data-track={track}>
                 <Icon className={`h-6 w-6 ${hi ? 'text-brand-glow' : 'text-brand'}`} strokeWidth={1.8} aria-hidden />
                 <span className={`mt-4 block font-display text-[1.25rem] font-semibold tracking-[-0.015em] ${hi ? 'text-white' : ''}`}>{t}</span>
                 <span className={`mt-1 block text-[0.9375rem] ${hi ? 'text-white/70' : 'text-ink-3'}`}>{b}</span>
@@ -156,15 +157,10 @@ export function Legal() {
               tenancies after enrolment. No hidden one-case-at-a-time limit. You approve the steps. We do the work.
             </p>
           </div>
-          <CaseTrack className="mx-auto mt-12 max-w-[64rem]" />
+          <CaseTrack className="m-snap mx-auto mt-12 max-w-[64rem]" />
           <div className="mx-auto mt-12 grid max-w-[64rem] gap-8 lg:grid-cols-[1.1fr_1fr] lg:items-start">
-            <dl className="grid gap-3 sm:grid-cols-2">
-              {[
-                ['Covered', 'Notices, eligible applications including L1, evidence and disclosure, settlement, hearing representation, order review and agreed next steps.'],
-                ['Extra', 'Government and LTB fees, sheriff, process servers and approved outside costs.'],
-                ['Separate', 'Court appeals, non-LTB matters and exceptional scope, quoted first.'],
-                ['Not promised', 'Rent reimbursement, an eviction, or any particular result or timeline.'],
-              ].map(([k, v]) => (
+            <dl className="m-snap grid gap-3 md:grid-cols-2">
+              {guaranteeFacts.map(([k, v]) => (
                 <div key={k} className="rounded-3xl bg-white/[0.06] p-5 ring-1 ring-white/10">
                   <dt className="font-semibold text-white">{k}</dt>
                   <dd className="mt-1 text-[0.9375rem] text-white/70">{v}</dd>
@@ -194,14 +190,14 @@ export function Legal() {
       <Section id="member" labelledBy="member-title">
         <div className="wrap">
           <Heading id="member-title" eyebrow="On a member plan" title="If a new problem starts." size="md" />
-          <ol className="mx-auto mt-12 grid max-w-[68rem] gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <ol className="steprow no-scrollbar mt-10 md:mt-12">
             {[
               { Icon: CalendarCheck, t: 'Join before trouble', b: 'Each enrolled unit has its own enrollment date. No waiting period. Tell us about any existing issues when you join.' },
               { Icon: FileWarning, t: 'A new problem starts', b: 'Rent is first missed after the unit’s enrollment date. Call or book with our team.' },
               { Icon: Handshake, t: 'Eligibility and engagement', b: 'We confirm eligibility, run a conflict check and send a written engagement with Landlord Pro Legal Services.' },
               { Icon: Gavel, t: 'We handle the case', b: 'You pay the member case fee and stay on your plan throughout. When the case work ends, nothing changes back.' },
             ].map(({ Icon, t, b }, idx) => (
-              <li key={t} className="tile p-6 sm:p-7" data-reveal style={{ ['--reveal-delay' as string]: `${idx * 0.06}s` }}>
+              <li key={t} className="steprow-item spot !bg-canvas-alt !shadow-none" data-reveal style={{ ['--reveal-delay' as string]: `${idx * 0.06}s` }}>
                 <span className="flex items-center gap-3">
                   <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand text-[0.875rem] font-semibold text-white">{idx + 1}</span>
                   <Icon className="h-5 w-5 text-brand" strokeWidth={1.8} aria-hidden />
@@ -247,18 +243,18 @@ export function Legal() {
             lead="Paying when you need it, or having it arranged in advance. Here’s what each plan costs over a year with one qualifying case."
             size="md"
           />
-          <figure className="mx-auto mt-12 max-w-[56rem] rounded-4xl bg-white p-6 shadow-card sm:p-9" data-reveal>
+          <figure className="play mx-auto mt-12 max-w-[56rem] rounded-4xl bg-white p-6 shadow-card sm:p-9" data-play>
             <figcaption className="sr-only">Twelve-month cost with one qualifying new non-payment case, by plan</figcaption>
             <ul className="space-y-7">
-              {example.map((e) => (
+              {example.map((e, idx) => (
                 <li key={e.plan}>
                   <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                     <span className="font-semibold text-ink">{e.plan}</span>
                     <span className="font-display text-[1.5rem] font-bold tracking-[-0.02em] tabular-nums">${e.total.toLocaleString('en-CA')}</span>
                   </div>
                   <div className="mt-2.5 flex h-3.5 overflow-hidden rounded-full bg-canvas-alt" aria-hidden="true">
-                    <span className={e.hi ? 'bg-brand' : 'bg-ink-2'} style={{ width: `${(e.fees / max) * 100}%` }} />
-                    {e.legal > 0 && <span className="ml-0.5 bg-warn" style={{ width: `${(e.legal / max) * 100}%` }} />}
+                    <span className={e.hi ? 'bg-brand' : 'bg-ink-2'} data-fill style={{ width: `${(e.fees / max) * 100}%`, ['--i' as string]: String(idx * 0.5) }} />
+                    {e.legal > 0 && <span className="ml-0.5 bg-warn" data-fill style={{ width: `${(e.legal / max) * 100}%`, ['--i' as string]: String(idx * 0.5 + 0.9) }} />}
                   </div>
                   <p className="mt-2 text-[0.875rem] text-ink-3">
                     ${e.fees.toLocaleString('en-CA')} in monthly fees{e.legal ? ` + $${e.legal} member case` : ''}. {e.note}

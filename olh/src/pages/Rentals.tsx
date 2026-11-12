@@ -71,9 +71,9 @@ export function Rentals() {
             size="md"
           />
           <div className="mx-auto mt-12 grid max-w-[72rem] gap-4 lg:grid-cols-3 lg:gap-5">
-            {packages.map((p) => (
-              <article key={p.name} className={`relative flex flex-col rounded-4xl bg-white p-7 sm:p-8 ${p.hi ? 'shadow-float ring-2 ring-brand' : 'shadow-card'}`} data-reveal>
-                {p.hi && <p className="absolute -top-3 left-7 rounded-full bg-brand px-3 py-1 text-[0.75rem] font-semibold text-white sm:left-8">12-month Legal Guarantee</p>}
+            {packages.map((p, idx) => (
+              <article key={p.name} className={`spot relative flex flex-col rounded-4xl bg-white p-7 sm:p-8 ${p.hi ? 'shadow-float ring-2 ring-brand' : 'shadow-card'}`} data-reveal style={{ ['--reveal-delay' as string]: `${idx * 0.09}s` }}>
+                {p.hi && <p className="absolute -top-3 left-7 z-[2] rounded-full bg-brand px-3 py-1 text-[0.75rem] font-semibold text-white sm:left-8">12-month Legal Guarantee</p>}
                 <h3 className="text-title">{p.name}</h3>
                 <p className="mt-1 text-[0.9375rem] text-ink-3">{p.who}</p>
                 <p className="mt-5 font-display text-[2.25rem] font-bold leading-none tracking-[-0.03em]">
@@ -130,7 +130,7 @@ export function Rentals() {
               { href: site.live.screeningQuestions, Icon: ListChecks, t: 'Tenant screening questions', d: 'Ask consistently, before the showing.' },
               { href: site.live.judgments, Icon: Scale, t: 'LTB judgment database', d: 'Search Landlord and Tenant Board orders.' },
             ].map(({ href, Icon, t, d }) => (
-              <a key={t} href={href} className="group flex items-center gap-4 rounded-4xl bg-white p-5 text-ink shadow-card hover:no-underline sm:p-6" rel="noopener">
+              <a key={t} href={href} className="spot group flex items-center gap-4 rounded-4xl bg-white p-5 text-ink shadow-card hover:no-underline sm:p-6" rel="noopener">
                 <span className="icon-badge shrink-0">
                   <Icon className="h-[22px] w-[22px]" strokeWidth={1.7} aria-hidden />
                 </span>

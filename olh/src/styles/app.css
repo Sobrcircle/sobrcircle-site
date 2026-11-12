@@ -214,10 +214,6 @@
 }
 .menu-pill[aria-expanded='true'] { @apply border-brand text-brand-text; }
 
-/* Rule-change line under the header (content/alert.ts) */
-.alertbar { @apply border-b border-line-soft bg-brand-soft; }
-.alertbar a { text-decoration: none; }
-
 /* Chapter bar: sticky under the nav, a progress line that fills blue to green,
    with a small gap where each chapter starts. */
 .chapnav {
@@ -493,7 +489,7 @@ html:not(.js) .play [data-ring] { stroke-dashoffset: var(--ring-to, 0); }
 
 /* Print: guides and calculators print cleanly */
 @media print {
-  .gnav, .chapnav, .alertbar, .sheet, .mcta, .preview-bar, footer, .no-print { display: none !important; }
+  .gnav, .chapnav, .sheet, .dlg, .mcta, .preview-bar, footer, .no-print { display: none !important; }
   body { color: #000; }
 }
 
@@ -664,7 +660,6 @@ html:not(.js) .stepper { visibility: hidden; }
 .lcard-badge { @apply absolute left-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-[0.75rem] font-semibold text-ink backdrop-blur; }
 .lcard-badge.is-sale { @apply bg-brand-ink/85 text-white; }
 .lcard-more { @apply items-start justify-center bg-canvas-alt p-6 shadow-none; min-height: 100%; }
-.strip-arrow { @apply inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-[1.375rem] leading-none text-ink shadow-card transition-colors hover:text-brand-text; }
 
 /* The Automation Suite: groups that fold on phones. */
 .suite-group { @apply rounded-4xl bg-white p-6 shadow-card sm:p-7; }
@@ -676,3 +671,274 @@ html:not(.js) .stepper { visibility: hidden; }
 
 /* The logo is artwork, so the narrow-phone header rule shrinks it instead of a wordmark. */
 @media (max-width: 374px) { .gnav .logo-img { width: 88px !important; height: auto; } }
+
+/* ===========================================================================
+   Motion and interaction layer
+   Everything below is progressive: the page is complete without it, nothing
+   here runs for visitors who ask for reduced motion, and pointer effects only
+   apply to devices with a real pointer.
+=========================================================================== */
+
+/* ---- A highlight that slides between tabs ---------------------------------
+   The script adds one .pill-ind to every [data-pill] group and moves it under
+   the selected item (and, in the header and chapter bar, under the pointer). */
+.pill-ind {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--w, 0);
+  height: var(--h, 0);
+  transform: translate(var(--x, 0), var(--y, 0));
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 0 0 0.5px rgba(0, 0, 0, 0.04);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), width 0.5s cubic-bezier(0.16, 1, 0.3, 1), height 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+}
+.pill-ind[data-on='true'] { opacity: 1; }
+.segmented, .seg, .tabrow, .chooser, .chapnav-links { position: relative; }
+.segmented > button, .seg-option, .tabrow-tab, .chooser-opt, .chapnav-links > li, .gnav-link { position: relative; z-index: 1; }
+.segmented.pill-on button[aria-pressed='true'] { background: transparent; box-shadow: none; }
+.seg.pill-on .seg-option input:checked + span { background: transparent; box-shadow: none; }
+.seg .pill-ind { border-radius: 0.75rem; }
+.chapnav-links .pill-ind { background: #f0f0f3; box-shadow: none; }
+.chapnav-links.pill-on .chapnav-link[aria-current] { background: transparent; }
+.gnav .pill-ind { background: rgba(0, 0, 0, 0.055); box-shadow: none; }
+
+/* ---- Pill tabs that swap a panel in place ---------------------------------- */
+.tabrow { display: flex; width: fit-content; max-width: 100%; gap: 0.125rem; overflow-x: auto; border-radius: 999px; background: #e8e8ed; padding: 0.25rem; }
+.tabrow-tab { @apply min-h-[40px] shrink-0 whitespace-nowrap rounded-full px-4 text-[0.9375rem] font-medium text-ink-2 transition-colors duration-200; }
+.tabrow-tab:hover { @apply text-ink; }
+.tabrow-tab[aria-selected='true'] { @apply text-ink; }
+.tabrow:not(.pill-on) .tabrow-tab[aria-selected='true'] { background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
+.tabpanel-label { display: none; @apply mb-3 font-semibold text-ink; }
+@media (prefers-reduced-motion: no-preference) {
+  .tabs-live .tabpanel:not([hidden]) { animation: panel-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) both; }
+}
+@keyframes panel-in { from { opacity: 0; transform: translateY(12px); } }
+
+/* ---- The plan chooser: one oversized segmented control --------------------- */
+.chooser { display: grid; gap: 0.25rem; border-radius: 1.75rem; background: #ececf0; padding: 0.375rem; }
+.chooser-opt { display: flex; min-height: 60px; cursor: pointer; align-items: center; justify-content: space-between; gap: 1rem; border-radius: 1.375rem; padding: 0.75rem 1.125rem; text-align: left; transition: background-color 0.25s ease; }
+.chooser-need { @apply font-display text-[1.0625rem] font-semibold leading-tight tracking-[-0.015em] text-ink; }
+.chooser-meta { @apply shrink-0 text-right text-[0.8125rem] text-ink-3; }
+.chooser-name { display: none; }
+.chooser-price strong { @apply text-[1.0625rem] font-semibold text-ink; }
+.chooser:not(.pill-on) .chooser-opt[aria-selected='true'] { background: #fff; box-shadow: 0 0 0 2px #096ef9; }
+.chooser .pill-ind { border-radius: 1.375rem; box-shadow: 0 0 0 2px #096ef9, 0 14px 30px -14px rgba(5, 12, 59, 0.35); }
+@media (hover: hover) { .chooser-opt:not([aria-selected='true']):hover { background: rgba(255, 255, 255, 0.6); } }
+@media (min-width: 834px) {
+  .chooser { grid-template-columns: repeat(3, minmax(0, 1fr)); border-radius: 2rem; }
+  .chooser-opt { flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 0.5rem; border-radius: 1.625rem; padding: 1.125rem 1.375rem 1rem; }
+  .chooser-need { font-size: 1.25rem; }
+  .chooser-meta { display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem; text-align: left; font-size: 0.875rem; }
+  .chooser-name { display: inline; }
+  .chooser .pill-ind { border-radius: 1.625rem; }
+}
+.chooser-panel { margin-top: 0.875rem; border-radius: 2rem; background: #f5f5f7; padding: 1.75rem 1.5rem 2rem; }
+.chooser-visual { display: none; }
+@media (min-width: 640px) { .chooser-panel { padding: 2.5rem; } .chooser-visual { display: block; } }
+@media (min-width: 1068px) { .chooser-panel { display: grid; min-height: 35.5rem; align-items: center; border-radius: 2.5rem; padding: 3.5rem; } }
+
+/* ---- "Full scope +" --------------------------------------------------------- */
+.link-plus { @apply inline-flex min-h-[44px] items-center gap-2.5 text-[1.0625rem] text-brand-text; }
+.link-plus:hover { text-decoration: none; }
+.link-plus-icon { @apply inline-flex h-6 w-6 items-center justify-center rounded-full bg-brand text-white; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+.link-plus:hover .link-plus-icon { transform: rotate(90deg) scale(1.08); }
+
+/* ---- Sheets: detail that opens over the page -------------------------------- */
+.dlg { width: 100%; max-width: none; height: 100%; max-height: none; margin: 0; padding: 0; overflow: hidden; border: 0; background: transparent; color: inherit; }
+.dlg[open] { display: flex; align-items: flex-end; justify-content: center; }
+.dlg::backdrop { background: rgba(0, 0, 0, 0.46); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
+html:has(.dlg[open]) { overflow: hidden; }
+.dlg-panel {
+  position: relative;
+  width: 100%;
+  max-width: 56rem;
+  max-height: calc(100vh - 2.5rem);
+  max-height: calc(100dvh - 2.5rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-radius: 1.75rem 1.75rem 0 0;
+  background: #fff;
+  padding-bottom: env(safe-area-inset-bottom);
+  transform: translateY(var(--drag, 0px));
+}
+.dlg-panel.is-dragging { transition: none; }
+.dlg-bar { position: sticky; top: 0; z-index: 3; display: flex; height: 3.25rem; align-items: center; justify-content: flex-end; padding: 0 0.875rem; touch-action: none; background: linear-gradient(#fff 55%, rgba(255, 255, 255, 0)); }
+.dlg-grab { position: absolute; left: 50%; top: 0.5rem; width: 2.5rem; height: 0.3125rem; margin-left: -1.25rem; border-radius: 999px; background: #d2d2d7; }
+.dlg-close { @apply inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#333336] text-white transition-colors duration-200 hover:bg-black; }
+.dlg-body { padding: 0.25rem 1.5rem 2.25rem; }
+@media (min-width: 834px) {
+  .dlg[open] { align-items: center; padding: 2rem; }
+  .dlg-panel { max-height: calc(100dvh - 4rem); border-radius: 1.75rem; }
+  .dlg-grab { display: none; }
+  .dlg-bar { height: 4rem; padding: 0 1.125rem; }
+  .dlg-body { padding: 0 4.5rem 4rem; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .dlg[open] .dlg-panel { animation: dlg-up 0.55s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .dlg[open]::backdrop { animation: dlg-fade 0.4s ease both; }
+  .dlg.is-closing .dlg-panel { animation: dlg-down 0.28s cubic-bezier(0.4, 0, 1, 1) both; }
+  .dlg.is-closing::backdrop { animation: dlg-fade 0.28s ease reverse both; }
+  @media (min-width: 834px) {
+    .dlg[open] .dlg-panel { animation-name: dlg-pop; }
+    .dlg.is-closing .dlg-panel { animation-name: dlg-unpop; }
+  }
+}
+@keyframes dlg-up { from { transform: translateY(100%); } }
+@keyframes dlg-down { to { transform: translateY(100%); } }
+@keyframes dlg-pop { from { opacity: 0; transform: translateY(24px) scale(0.965); } }
+@keyframes dlg-unpop { to { opacity: 0; transform: translateY(16px) scale(0.975); } }
+@keyframes dlg-fade { from { opacity: 0; } }
+
+/* ---- Sideways rows ------------------------------------------------------------ */
+/* Full-bleed: the first card lines up with the page column, the rest run off the right edge. */
+.hscroll {
+  --edge: max(var(--gutter), calc((100vw - 75rem) / 2 + var(--gutter)));
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  padding: 0.5rem var(--edge) 1.75rem;
+  scroll-padding-inline: var(--edge);
+}
+.hscroll:focus-visible, .steprow:focus-visible { outline-offset: -3px; }
+.paddle { @apply inline-flex h-9 w-9 items-center justify-center rounded-full text-ink transition-all duration-200; background: rgba(0, 0, 0, 0.08); }
+.paddle:hover:not(:disabled) { background: rgba(0, 0, 0, 0.14); }
+.paddle:active:not(:disabled) { transform: scale(0.94); }
+.paddle:disabled { opacity: 0.35; cursor: default; }
+
+.hcard-item { flex: 0 0 min(80vw, 23.25rem); scroll-snap-align: start; }
+.hcard { position: relative; display: flex; height: 30rem; flex-direction: column; overflow: hidden; border-radius: 1.75rem; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+.hcard:hover { text-decoration: none; }
+@media (min-width: 834px) { .hcard { height: 34rem; } }
+@media (hover: hover) { .hcard:hover { transform: scale(1.016); box-shadow: 0 24px 50px -24px rgba(5, 12, 59, 0.35); } }
+.hcard:active { transform: scale(0.985); }
+.hcard-light { background: #fff; color: #1d1d1f; }
+.hcard-blue { background: linear-gradient(165deg, #eef4ff 0%, #dbe8ff 100%); color: #1d1d1f; }
+.hcard-dark { background: radial-gradient(90% 60% at 80% 0%, rgba(76, 155, 255, 0.4), rgba(76, 155, 255, 0) 70%), #050c3b; color: #fff; }
+.hcard-copy { padding: 1.5rem 1.5rem 0; }
+.hcard-eyebrow { @apply text-[0.875rem] font-semibold text-ink-3; }
+.hcard-title { @apply mt-1.5 font-display text-[1.5rem] font-semibold leading-[1.14] tracking-[-0.02em]; color: inherit; }
+.hcard-dark .hcard-eyebrow { color: rgba(255, 255, 255, 0.7); }
+.hcard-visual { display: flex; min-height: 0; flex: 1; align-items: center; justify-content: center; padding: 1rem 1.5rem 4rem; }
+.hcard-visual:has(.hcard-bleed) { align-items: flex-start; justify-content: flex-start; padding: 1.75rem 0 0 1.5rem; }
+.hcard-bleed { width: 185%; flex-shrink: 0; }
+.hcard-plus { position: absolute; right: 1.125rem; bottom: 1.125rem; z-index: 2; display: inline-flex; width: 2.25rem; height: 2.25rem; align-items: center; justify-content: center; border-radius: 999px; background: #1d1d1f; color: #fff; transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1); }
+.hcard-dark .hcard-plus { background: #fff; color: #1d1d1f; }
+.hcard:hover .hcard-plus { transform: rotate(90deg) scale(1.08); }
+@media (min-width: 834px) {
+  .hcard-copy { padding: 1.875rem 1.875rem 0; }
+  .hcard-title { font-size: 1.75rem; }
+  .hcard-visual { padding: 1.5rem 1.875rem 4.5rem; }
+  .hcard-visual:has(.hcard-bleed) { padding: 2.25rem 0 0 1.875rem; }
+}
+
+.caselist { display: grid; width: 100%; gap: 0.5rem; }
+.caselist li { @apply flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-[0.9375rem] font-semibold text-white; background: rgba(255, 255, 255, 0.07); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1); }
+.caselist-n { @apply inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[0.75rem] font-semibold text-brand-glow; background: rgba(255, 255, 255, 0.12); }
+@media (min-width: 834px) { .caselist { gap: 0.625rem; } .caselist li { padding-block: 0.8rem; font-size: 1rem; } }
+
+/* Steps: a swipeable row on phones, four across on laptops. */
+.steprow { display: flex; gap: 0.75rem; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; margin-inline: calc(-1 * var(--gutter)); padding: 0.25rem var(--gutter) 0.75rem; scroll-padding-inline: var(--gutter); }
+.steprow-item { flex: 0 0 min(76%, 19rem); scroll-snap-align: start; border-radius: 2rem; background: #fff; padding: 1.5rem; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06); }
+@media (min-width: 834px) {
+  .steprow { display: grid; max-width: 68rem; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; overflow: visible; margin-inline: auto; padding: 0; }
+  .steprow-item { padding: 1.75rem; }
+}
+@media (min-width: 1068px) { .steprow { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+.morelink { @apply flex min-h-[52px] items-center justify-between gap-3 rounded-2xl bg-white px-4 py-3 text-[0.9375rem] font-medium leading-snug text-ink shadow-card transition-transform duration-300; }
+.morelink:hover { text-decoration: none; transform: translateY(-2px); }
+
+/* ---- A soft light that follows the pointer ----------------------------------- */
+.spot { position: relative; isolation: isolate; }
+.spot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  background: radial-gradient(20rem circle at var(--mx, 50%) var(--my, 50%), rgba(9, 110, 249, 0.1), rgba(9, 110, 249, 0) 62%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+.hcard-dark.spot::after, .tile-dark.spot::after { background: radial-gradient(22rem circle at var(--mx, 50%) var(--my, 50%), rgba(120, 175, 255, 0.26), rgba(120, 175, 255, 0) 62%); }
+@media (hover: hover) and (pointer: fine) { .spot:hover::after { opacity: 1; } }
+
+/* ---- Scroll-linked moments (where the browser can do it natively) -------------- */
+/* The statement fills from gray to ink as it crosses the screen. */
+.scroll-fill { @apply font-display font-semibold tracking-[-0.022em] text-ink; font-size: clamp(1.625rem, 3.7vw, 3rem); line-height: 1.16; text-wrap: balance; }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .scroll-fill { view-timeline: --fill block; }
+    .scroll-fill > span {
+      background: linear-gradient(90deg, #1d1d1f 50%, #b4b4ba 50%) 100% 0 / 200% 100% no-repeat;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: fill-text linear both;
+      animation-timeline: --fill;
+      animation-range: entry 70% cover 58%;
+    }
+    /* The hero picture eases back as the page moves on to the plans. */
+    @media (min-width: 1068px) {
+      .hero-visual { animation: hero-leave linear both; animation-timeline: view(); animation-range: exit 0% exit 100%; }
+    }
+  }
+}
+@keyframes fill-text { to { background-position: 0 0; } }
+@keyframes hero-leave { to { opacity: 0.55; transform: translateY(-28px) scale(0.97); } }
+
+/* ---- Page-to-page: a quick cross-fade instead of a hard cut -------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root) { animation: vt-out 0.16s ease both; }
+  ::view-transition-new(root) { animation: vt-in 0.36s cubic-bezier(0.16, 1, 0.3, 1) both; }
+}
+.gnav { view-transition-name: olh-nav; }
+.preview-bar { view-transition-name: olh-preview; }
+@keyframes vt-out { to { opacity: 0; } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(10px); } }
+
+/* ---- Plan comparison: a table that swipes sideways on phones ------------------- */
+/* position: relative keeps the table's screen-reader-only labels inside the scroller. */
+.cmp-scroll { position: relative; overflow-x: auto; margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); scroll-padding-inline: var(--gutter); }
+.cmp-scroll:focus-visible { outline-offset: -3px; }
+.cmp { width: 100%; min-width: 43rem; border-spacing: 0; border-collapse: separate; text-align: center; font-size: 0.9375rem; }
+.cmp th, .cmp td { border-bottom: 1px solid #e5e5ea; padding: 1rem 0.875rem; vertical-align: middle; color: #424245; }
+.cmp thead th { border-bottom-color: #d2d2d7; padding-block: 1.25rem; vertical-align: bottom; }
+.cmp tbody th { width: 24%; text-align: left; font-weight: 600; color: #1d1d1f; padding-left: 0; }
+/* The first column stays put while the plans slide under it. */
+.cmp th:first-child { position: sticky; left: 0; z-index: 1; background: #fff; }
+.cmp .cmp-hi { background: #f4f8ff; }
+.cmp thead .cmp-hi { border-radius: 1.25rem 1.25rem 0 0; box-shadow: inset 0 2px 0 #096ef9; }
+.cmp .cmp-foot th, .cmp .cmp-foot td { border-bottom: 0; }
+.cmp .cmp-foot .cmp-hi { border-radius: 0 0 1.25rem 1.25rem; }
+.cmp .link-plus { justify-content: center; font-size: 0.9375rem; }
+@media (max-width: 833px) { .cmp tbody th { width: 9.5rem; min-width: 9.5rem; font-size: 0.875rem; padding-right: 0.5rem; box-shadow: 8px 0 12px -10px rgba(0, 0, 0, 0.25); } }
+
+/* The 12-month chart: each bar segment grows from the left when the chart comes into view. */
+figure.play [data-fill] { display: block; }
+
+/* ---- Phones: stacked lists become one swipeable row ---------------------------
+   Add .m-snap to a list and, under 834px, its items sit side by side with the
+   next one peeking in. Laptops keep whatever layout the list already has. */
+@media (max-width: 833px) {
+  .m-snap { display: flex !important; gap: 0.75rem; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; margin-inline: calc(-1 * var(--gutter)); padding: 0.25rem var(--gutter) 0.75rem; scroll-padding-inline: var(--gutter); scrollbar-width: none; }
+  .m-snap::-webkit-scrollbar { display: none; }
+  .m-snap > * { flex: 0 0 min(80%, 20rem); scroll-snap-align: start; margin-top: 0 !important; }
+  /* Pricing: the cards keep the price and the terms; the detail is in the table below. */
+  .plan-more { display: none; }
+  /* The Shield hero phone runs off the bottom of its frame instead of filling a screen. */
+  .phone-crop { max-height: 21rem; overflow: hidden; -webkit-mask-image: linear-gradient(#000 78%, transparent); mask-image: linear-gradient(#000 78%, transparent); }
+}
+
+.fold-plain > summary { cursor: pointer; }
+.fold-plain[open] .fold-icon { transform: rotate(180deg); }
+@media (min-width: 834px) { .fold-plain > summary { cursor: default; } }

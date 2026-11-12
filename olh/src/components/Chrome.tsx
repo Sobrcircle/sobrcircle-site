@@ -1,7 +1,6 @@
 import { ArrowUpRight, ChevronDown, Phone, Search, X } from 'lucide-react'
 import { site, url } from '../site'
 import { footerColumns, plansMenu, resourcesMenu, type NavGroup, type NavLink } from '../content/nav'
-import { alert } from '../content/alert'
 import { jobs } from '../content/jobs'
 import { Logo } from './Logo'
 
@@ -72,11 +71,12 @@ export function GlobalNav({ current }: { current: string }) {
           <a href={url()} className="-ml-1 rounded-lg p-1" aria-label="OLH Property Management home">
             <Logo />
           </a>
-          <ul className="hidden items-center gap-0.5 lg:flex">
+          <ul className="hidden items-center gap-0.5 lg:flex" data-pill="hover">
             <li data-flyout-item>
               <a
                 href={url('landlord-shield/')}
                 className="gnav-link inline-flex items-center gap-1"
+                data-pill-item
                 aria-current={inPlans ? 'page' : undefined}
                 aria-haspopup="true"
                 aria-expanded="false"
@@ -88,17 +88,17 @@ export function GlobalNav({ current }: { current: string }) {
               <Flyout id="fly-plans" groups={plansMenu} />
             </li>
             <li>
-              <a href={url('pricing/')} className="gnav-link" aria-current={top('pricing/')}>
+              <a href={url('pricing/')} className="gnav-link" data-pill-item aria-current={top('pricing/')}>
                 Pricing
               </a>
             </li>
             <li>
-              <a href={url('legal/')} className="gnav-link" aria-current={top('legal/')}>
+              <a href={url('legal/')} className="gnav-link" data-pill-item aria-current={top('legal/')}>
                 Legal help
               </a>
             </li>
             <li>
-              <a href={url('rentals/')} className="gnav-link" aria-current={top('rentals/')}>
+              <a href={url('rentals/')} className="gnav-link" data-pill-item aria-current={top('rentals/')}>
                 Rentals
               </a>
             </li>
@@ -106,6 +106,7 @@ export function GlobalNav({ current }: { current: string }) {
               <a
                 href={site.live.selfHelp}
                 className="gnav-link inline-flex items-center gap-1"
+                data-pill-item
                 aria-haspopup="true"
                 aria-expanded="false"
                 aria-controls="fly-resources"
@@ -134,25 +135,6 @@ export function GlobalNav({ current }: { current: string }) {
       </nav>
       <div className="scrim" data-open="false" data-scrim aria-hidden="true" />
     </>
-  )
-}
-
-/** The slim rule-change line under the header (content/alert.ts). Scrolls away with the page. */
-export function AlertBar({ current }: { current: string }) {
-  if (!alert || current === '404') return null
-  return (
-    <aside className="alertbar" aria-label="Rule change">
-      <p className="wrap flex min-h-[36px] flex-wrap items-center justify-center gap-x-2 gap-y-0.5 py-1.5 text-center text-[0.75rem] leading-snug sm:text-[0.8125rem]">
-        <span className="chip-brand hidden !bg-white sm:inline-flex">{alert.label}</span>
-        <span className="text-ink-2">
-          <strong className="font-semibold text-ink sm:hidden">{alert.label}: </strong>
-          {alert.text}
-        </span>
-        <a href={alert.link.href} className="whitespace-nowrap font-semibold" rel="noopener" data-track="alert">
-          {alert.link.label} ›
-        </a>
-      </p>
-    </aside>
   )
 }
 

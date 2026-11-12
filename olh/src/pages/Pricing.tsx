@@ -1,16 +1,33 @@
-import { Check, Clock, Hourglass, Minus, PauseCircle, Scale, ShieldCheck, Tag, Users, X } from 'lucide-react'
+import { Check, Clock, Hourglass, Minus, PauseCircle, ShieldCheck, Tag, X } from 'lucide-react'
 import { site, url } from '../site'
 import { CTABand, FAQList, Fine, Heading, Section } from '../components/ui'
 import { ChapterNav } from '../components/ChapterNav'
-import { Calculator, HowCalculated, PlanCards } from '../components/olh'
+import { Calculator, HowCalculated, PlanCards, ScopeLink } from '../components/olh'
+import { ScopeSheets } from '../components/sheets'
+import { notInAnyPlan, visitPrices } from '../content/scope'
+import { plans } from '../content/pricing'
 import { pricingFaqs } from '../content/faqs'
 
 const chapters = [
   { id: 'calculator', label: 'Calculator' },
-  { id: 'included', label: 'What’s included' },
+  { id: 'included', label: 'Compare' },
   { id: 'visits', label: 'Local visits' },
   { id: 'terms', label: 'Terms' },
   { id: 'faq', label: 'Questions' },
+]
+
+/** Side by side, in Paul's terms. `true` renders a tick. */
+const compare: { row: string; cells: [string | true, string | true, string | true] }[] = [
+  { row: 'Who deals with your tenants', cells: ['You do', 'Our team', 'Our team'] },
+  { row: 'LandlordEzy software', cells: ['Your own account', 'Included, with an owner portal', 'Included, with an owner portal'] },
+  { row: 'Rent ledger and statements', cells: ['Checked by our team monthly', 'Run by our team', 'Run by our team'] },
+  { row: 'Late rent and the N4', cells: ['You prepare, sign and serve', 'Arrears follow-up and the N4 process', 'Arrears follow-up and the N4 process'] },
+  { row: 'Maintenance', cells: ['Your own vendors', 'Coordinated for you', 'Coordinated for you'] },
+  { row: 'Equifax rent reporting', cells: [true, true, true] },
+  { row: 'Monthly paralegal consultation', cells: [true, true, true] },
+  { row: 'A new LTB matter', cells: ['Member case from $995', 'Member case from $995', 'Included, no activation fee'] },
+  { row: 'Standard local visit', cells: ['$75 + HST', '$75 + HST', '$55 + HST'] },
+  { row: 'Term', cells: ['Month-to-month', '90 days, then 30 days’ notice', '90 days, then 30 days’ notice'] },
 ]
 
 export function Pricing() {
@@ -32,7 +49,7 @@ export function Pricing() {
           <div className="mt-7" aria-labelledby="calc-title">
             <Calculator />
           </div>
-          <PlanCards live className="mx-auto mt-6 max-w-[72rem] lg:mt-8" />
+          <PlanCards className="mx-auto mt-6 max-w-[72rem] lg:mt-8" />
           <HowCalculated />
           <div className="mx-auto mt-10 max-w-[44rem] rounded-4xl bg-white p-6 text-center shadow-card sm:p-7">
             <p className="text-[0.9375rem] text-ink-2">
@@ -48,85 +65,71 @@ export function Pricing() {
       </section>
 
       {/* ---- What's included ------------------------------------------------ */}
+      {/* ---- Compare ---------------------------------------------------------- */}
       <Section id="included" labelledBy="included-title">
         <div className="wrap">
           <Heading
             id="included-title"
             eyebrow="What’s included"
-            title="Property Management, and the Legal Guarantee."
-            lead="Day-to-day management by our Ontario team, documented in LandlordEzy. Add the Legal Guarantee to have LTB work arranged in advance."
+            title="Side by side."
+            lead="Day-to-day management by our Ontario team, documented in LandlordEzy. Or the same software in your own hands, with the team behind you."
             size="md"
           />
-          <div className="mx-auto mt-12 grid max-w-[64rem] gap-5 lg:grid-cols-2">
-            <div className="tile p-7 sm:p-9" data-reveal>
-              <span className="icon-badge">
-                <Users className="h-[22px] w-[22px]" strokeWidth={1.7} aria-hidden />
-              </span>
-              <h3 className="mt-5 text-title">Property Management</h3>
-              <p className="mt-1 text-[0.9375rem] text-ink-3">From $99 a month · whole house from $149</p>
-              <ul className="mt-6 space-y-3 text-[0.9375rem]">
-                {[
-                  ['Rent administration', 'ledger, monthly owner statements and arrears follow-up'],
-                  ['The N4 process', 'for late rent'],
-                  ['Tenant communication', 'through LandlordEzy, email and phone'],
-                  ['Routine maintenance coordination', 'with one provider per job'],
-                  ['Connected records', 'leases, documents and owner records in one place'],
-                  ['LandlordEzy included', 'no separate software bill'],
-                  ['Member legal access', 'a monthly paralegal consultation, and a member case rate'],
-                ].map(([b, t]) => (
-                  <li key={b} className="flex gap-3">
-                    <Check className="mt-[3px] h-4 w-4 shrink-0 text-brand" strokeWidth={2.6} aria-hidden />
-                    <span className="text-ink-2">
-                      <strong className="font-semibold text-ink">{b}</strong>, {t}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="tile-dark p-7 sm:p-9" data-reveal>
-              <div className="glow-blue pointer-events-none absolute inset-x-0 -top-20 h-64 opacity-60" aria-hidden />
-              <div className="relative">
-                <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-brand-glow">
-                  <Scale className="h-[22px] w-[22px]" strokeWidth={1.7} aria-hidden />
-                </span>
-                <h3 className="mt-5 text-title !text-white">Property Management + Legal Guarantee</h3>
-                <p className="mt-1 text-[0.9375rem] text-white/65">Everything in Property Management, plus legal work on eligible new LTB matters for all enrolled units.</p>
-                <ul className="mt-6 space-y-3 text-[0.9375rem]">
-                  {[
-                    ['Notices', 'reviewed or prepared'],
-                    ['Eligible LTB applications', 'including L1 for non-payment'],
-                    ['Evidence and disclosure', 'prepared from your records'],
-                    ['Settlement and mediation', 'where it serves you'],
-                    ['Licensed hearing representation', 'by Landlord Pro Legal Services'],
-                    ['Order review', 'and agreed next-step coordination'],
-                  ].map(([b, t]) => (
-                    <li key={b} className="flex gap-3">
-                      <Check className="mt-[3px] h-4 w-4 shrink-0 text-brand-glow" strokeWidth={2.6} aria-hidden />
-                      <span className="text-white/80">
-                        <strong className="font-semibold text-white">{b}</strong>, {t}
-                      </span>
-                    </li>
+          <div className="mx-auto mt-10 max-w-[68rem] md:mt-12" data-reveal>
+            <div className="cmp-scroll no-scrollbar" tabIndex={0} role="region" aria-label="Plan comparison">
+              <table className="cmp">
+                <thead>
+                  <tr>
+                    <th scope="col">
+                      <span className="sr-only">Feature</span>
+                    </th>
+                    {plans.map((p) => (
+                      <th key={p.key} scope="col" className={p.recommended ? 'cmp-hi' : ''}>
+                        <span className="block font-display text-[1.0625rem] font-semibold leading-tight tracking-[-0.01em] text-ink">{p.short}</span>
+                        <span className="mt-1 block text-[0.8125rem] font-normal text-ink-3">from ${p.from}/mo</span>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {compare.map((r) => (
+                    <tr key={r.row}>
+                      <th scope="row">{r.row}</th>
+                      {r.cells.map((c, idx) => (
+                        <td key={idx} className={idx === 0 ? 'cmp-hi' : ''}>
+                          {c === true ? (
+                            <>
+                              <Check className="mx-auto h-[18px] w-[18px] text-brand" strokeWidth={2.8} aria-hidden />
+                              <span className="sr-only">Included</span>
+                            </>
+                          ) : (
+                            c
+                          )}
+                        </td>
+                      ))}
+                    </tr>
                   ))}
-                </ul>
-                <a href={url('legal/#guarantee')} className="link-more-dark mt-7">
-                  How the Legal Guarantee works
-                </a>
-              </div>
+                  <tr className="cmp-foot">
+                    <th scope="row">Everything in the plan</th>
+                    {plans.map((p) => (
+                      <td key={p.key} className={p.recommended ? 'cmp-hi' : ''}>
+                        <ScopeLink plan={p.key} href={url(p.href)} />
+                      </td>
+                    ))}
+                  </tr>
+                </tbody>
+              </table>
             </div>
+            <p className="mt-3 text-center text-[0.8125rem] text-ink-4 md:hidden">Swipe sideways to compare.</p>
           </div>
-          <div className="mx-auto mt-5 flex max-w-[64rem] gap-4 rounded-4xl border border-line-soft p-6 sm:p-7" data-reveal>
+          <div className="mx-auto mt-6 flex max-w-[68rem] gap-4 rounded-4xl border border-line-soft p-6 sm:p-7" data-reveal>
             <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-canvas-alt text-ink-3">
               <X className="h-5 w-5" strokeWidth={2} aria-hidden />
             </span>
             <p className="text-[0.9375rem] text-ink-3">
-              <strong className="font-semibold text-ink">Not in any plan.</strong> Physical site visits, repairs, renovation and
-              project work, and tenant placement are each quoted before they’re booked. Condo fee payments aren’t managed. LTB filing
-              fees, sheriff, process servers and other approved outside costs are billed at cost.
+              <strong className="font-semibold text-ink">Not in any plan.</strong> {notInAnyPlan}
             </p>
           </div>
-          <p className="mx-auto mt-8 max-w-[64rem] text-center text-[0.9375rem] text-ink-3">
-            Managing your own tenants? <a href={url('landlord-shield/')}>See everything in OLH Landlord Shield</a>.
-          </p>
         </div>
       </Section>
 
@@ -140,13 +143,9 @@ export function Pricing() {
             lead="Booked separately from your monthly plan, at a set per-visit price, subject to availability and confirmed with you before anyone attends."
             size="md"
           />
-          <div className="mx-auto mt-12 grid max-w-[64rem] gap-4 md:grid-cols-3">
-            {[
-              { price: '$75', unit: '+ HST per visit', t: 'Standard scheduled visit', b: 'On Landlord Shield and Property Management. Up to 45 minutes on site, dated photos, a standard checklist, a full report in LandlordEzy and follow-up.' },
-              { price: '$55', unit: '+ HST per visit', t: 'With the Legal Guarantee', b: 'The same visit at a lower price for Property Management + Legal Guarantee clients. Still booked and billed one visit at a time.', hi: true },
-              { price: 'from $149', unit: '+ HST', t: 'Urgent or after-hours', b: 'Subject to availability, on all three plans.' },
-            ].map((v) => (
-              <div key={v.t} className={`flex flex-col rounded-4xl bg-white p-7 ${v.hi ? 'shadow-float ring-2 ring-brand' : 'shadow-card'}`} data-reveal>
+          <div className="m-snap mx-auto mt-12 grid max-w-[64rem] gap-4 md:grid-cols-3">
+            {visitPrices.map((v) => (
+              <div key={v.t} className={`spot flex flex-col rounded-4xl bg-white p-7 ${v.hi ? 'shadow-float ring-2 ring-brand' : 'shadow-card'}`} data-reveal>
                 <p className="font-display text-[2.25rem] font-bold leading-none tracking-[-0.03em] tabular-nums">
                   {v.price} <span className="text-[0.875rem] font-medium tracking-normal text-ink-3">{v.unit}</span>
                 </p>
@@ -222,6 +221,8 @@ export function Pricing() {
         lead="Tell us your properties and cities. We’ll confirm the monthly total and anything local in writing."
         secondary={{ label: 'Back to home', href: url() }}
       />
+
+      <ScopeSheets />
     </>
   )
 }

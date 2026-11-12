@@ -54,10 +54,10 @@ export function ChapterNav({
         </a>
         {title && <p className="chapnav-title">{title}</p>}
         <nav className="chapnav-links-wrap" aria-label="On this page">
-          <ul className="chapnav-links no-scrollbar">
+          <ul className="chapnav-links no-scrollbar" data-pill="hover">
             {chapters.map((c) => (
               <li key={c.id}>
-                <a href={`#${c.id}`} className="chapnav-link" data-chapter-link={c.id} data-track="chapters:jump">
+                <a href={`#${c.id}`} className="chapnav-link" data-chapter-link={c.id} data-pill-item data-track="chapters:jump">
                   {c.label}
                 </a>
               </li>
