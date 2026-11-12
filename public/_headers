@@ -106,3 +106,18 @@
 
 /landlordezy/og/*
   Cache-Control: public, max-age=86400, must-revalidate
+
+# /olh — design preview of OLH Property Management's proposed site, built on the
+# LandlordEzy concept's design system (source: olh/). Kept out of search for the
+# same reasons as /landlordezy: another company's brand, and proposed pricing.
+/olh/*
+  X-Robots-Tag: noindex, nofollow, noarchive, noimageindex
+
+/olh/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/olh/og/*
+  Cache-Control: public, max-age=86400, must-revalidate
+
+/olh/img/*
+  Cache-Control: public, max-age=86400, must-revalidate

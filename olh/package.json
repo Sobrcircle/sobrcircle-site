@@ -1,0 +1,11 @@
+{
+  "name": "olh-concept",
+  "private": true,
+  "type": "module",
+  "description": "OLH Property Management website concept. Prerendered React + Tailwind, built with Vite on the same system as ../landlordezy. Dependencies resolve from the parent sobrcircle-site node_modules.",
+  "scripts": {
+    "build": "tsx scripts/build.tsx",
+    "typecheck": "tsc -p tsconfig.json",
+    "og": "tsx scripts/og.ts"
+  }
+}
