@@ -39,23 +39,47 @@ export function MapleLeaf({ className = '' }: { className?: string }) {
 }
 
 /**
- * The OLH Property Management logo: Paul's own artwork (from the design preview),
- * trimmed and resized in public/img. A raster on purpose: it is the real brand,
- * not a redraw. Swap in the official vector when there is one.
+ * The OLH Property Management lockup. The header uses the real mark (the Ontario
+ * map, house and check, cropped from Paul's artwork) with the name set in type
+ * beside it, so it stays sharp and readable at header size. The footer keeps the
+ * full artwork, tagline and all.
  */
 export function Logo({ className = '', size = 'nav' }: { className?: string; size?: 'nav' | 'footer' }) {
-  const h = size === 'nav' ? 34 : 44
+  if (size === 'footer') {
+    return (
+      <img
+        src={url('img/olh-logo-360.png')}
+        srcSet={`${url('img/olh-logo-360.png')} 360w, ${url('img/olh-logo-720.png')} 720w`}
+        sizes="136px"
+        width={136}
+        height={44}
+        alt="OLH Property Management"
+        className={`logo-img block h-auto ${className}`}
+        style={{ width: '136px' }}
+        decoding="async"
+      />
+    )
+  }
   return (
-    <img
-      src={url('img/olh-logo-360.png')}
-      srcSet={`${url('img/olh-logo-360.png')} 360w, ${url('img/olh-logo-720.png')} 720w`}
-      sizes={`${Math.round(h * 3.08)}px`}
-      width={Math.round(h * 3.08)}
-      height={h}
-      alt="OLH Property Management"
-      className={`logo-img block h-auto ${className}`}
-      style={{ width: `${Math.round(h * 3.08)}px` }}
-      decoding="async"
-    />
+    <span className={`logo-lockup ${className}`}>
+      <img
+        src={url('img/olh-mark-44.png')}
+        srcSet={`${url('img/olh-mark-44.png')} 1x, ${url('img/olh-mark-88.png')} 2x, ${url('img/olh-mark-132.png')} 3x`}
+        width={40}
+        height={44}
+        alt=""
+        className="logo-mark"
+        decoding="async"
+      />
+      <span className="logo-type" aria-hidden="true">
+        <span className="logo-olh">OLH</span>
+        <span className="logo-pm">
+          Property
+          <br />
+          Management
+        </span>
+      </span>
+      <span className="sr-only">OLH Property Management</span>
+    </span>
   )
 }

@@ -1,4 +1,4 @@
-import { ArrowUpRight, ChevronDown, Phone, Search, X } from 'lucide-react'
+import { ArrowUpRight, ChevronDown, Search, X } from 'lucide-react'
 import { site, url } from '../site'
 import { footerColumns, resourcesMenu, servicesMenu, type NavGroup, type NavLink } from '../content/nav'
 import { jobs } from '../content/jobs'
@@ -121,9 +121,6 @@ export function GlobalNav({ current }: { current: string }) {
             </li>
           </ul>
           <div className="flex items-center gap-2">
-            <a href={`tel:${site.phone.tel}`} className="gnav-link hidden items-center gap-1.5 xl:inline-flex" data-track="call:nav">
-              <Phone className="h-3.5 w-3.5" aria-hidden /> {site.phone.display}
-            </a>
             <a href={site.live.login} className="gnav-link hidden lg:inline-flex">
               Log in
             </a>
@@ -142,6 +139,7 @@ export function GlobalNav({ current }: { current: string }) {
 }
 
 const goTo: { label: string; path?: string; href?: string }[] = [
+  { label: 'Home', path: '' },
   { label: 'Pricing', path: 'pricing/' },
   { label: 'Property Management', path: 'property-management/' },
   { label: 'Landlord Shield', path: 'landlord-shield/' },
@@ -150,6 +148,7 @@ const goTo: { label: string; path?: string; href?: string }[] = [
   { label: 'Free resources', path: 'resources/' },
   { label: 'Why OLH', path: 'about/' },
   { label: 'Contact', path: 'contact/' },
+  { label: 'Log in', href: site.live.login },
 ]
 
 /**

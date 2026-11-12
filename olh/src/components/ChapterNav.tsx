@@ -1,5 +1,5 @@
-import { ChevronDown } from 'lucide-react'
-import { site } from '../site'
+import { ChevronDown, ChevronRight } from 'lucide-react'
+import { url } from '../site'
 
 export type Chapter = { id: string; label: string }
 
@@ -9,7 +9,9 @@ export type Chapter = { id: string; label: string }
  *
  * - Phones (and `label` mode): the current chapter's name and "n of N". Tapping
  *   it opens the Menu sheet, which lists the chapters and the rest of the site.
- * - Laptops (`links` mode): the page title, every chapter as a link, and an optional button.
+ * - Laptops (`links` mode): a Home crumb and the page title on the left, the
+ *   chapters centred under the main menu. (`cta` is accepted but no longer shown:
+ *   the header already carries "Book a call".)
  *
  * The client script (setupChapters) tracks the current chapter, draws the chapter
  * gaps on the line and fills it where CSS scroll timelines aren't supported.
@@ -19,7 +21,6 @@ export function ChapterNav({
   title,
   chapters,
   mode = 'links',
-  cta = null,
 }: {
   title?: string
   chapters: Chapter[]
@@ -29,7 +30,7 @@ export function ChapterNav({
   const first = title ?? chapters[0]?.label ?? ''
   return (
     <div
-      className={`chapnav ${mode === 'label' ? 'chapnav-label-mode' : ''} ${!title && !cta ? 'chapnav-centered' : ''}`}
+      className={`chapnav ${mode === 'label' ? 'chapnav-label-mode' : ''} ${!title ? 'chapnav-centered' : ''}`}
       data-chapnav
       data-chapnav-title={title ?? ''}
     >
@@ -52,7 +53,15 @@ export function ChapterNav({
           </span>
           <ChevronDown className="h-3.5 w-3.5 shrink-0 text-ink-3" aria-hidden />
         </a>
-        {title && <p className="chapnav-title">{title}</p>}
+        {title && (
+          <p className="chapnav-title">
+            <a href={url()} className="chapnav-home" data-track="chapters:home">
+              Home
+            </a>
+            <ChevronRight className="h-3.5 w-3.5 shrink-0 text-ink-4" aria-hidden />
+            <span className="truncate">{title}</span>
+          </p>
+        )}
         <nav className="chapnav-links-wrap" aria-label="On this page">
           <ul className="chapnav-links no-scrollbar" data-pill="hover">
             {chapters.map((c) => (
@@ -64,11 +73,7 @@ export function ChapterNav({
             ))}
           </ul>
         </nav>
-        {cta && (
-          <a href={cta.href} className="btn-primary btn-sm chapnav-cta" data-track={cta.href === site.live.book ? 'book-call:chapters' : 'cta:chapters'}>
-            {cta.label}
-          </a>
-        )}
+        {title && <span className="chapnav-spacer" aria-hidden="true" />}
       </div>
       <div className="chapnav-bar" aria-hidden="true">
         <span className="chapnav-fill" data-chapnav-fill />

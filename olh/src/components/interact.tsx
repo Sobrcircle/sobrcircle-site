@@ -41,7 +41,7 @@ export function Sheet({
             </button>
           </form>
         </div>
-        <div className="dlg-body">
+        <div className="dlg-body" tabIndex={-1} autoFocus>
           <p className="eyebrow">{eyebrow}</p>
           <h2 id={`${id}-title`} className="mt-2 max-w-[40rem] text-display-md">
             {title}

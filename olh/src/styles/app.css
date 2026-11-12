@@ -221,7 +221,7 @@
 /* Narrow phones (under 375px, which is also what 200% zoom gives a small window):
    tighten the header so Start free still fits beside the logo and Menu. */
 @media (max-width: 374px) {
-  .gnav .wrap { padding-inline: 0.875rem; gap: 0.5rem; }
+  .gnav .wrap { padding-inline: 0.875rem; gap: 0.375rem; }
     .gnav .menu-pill { padding-inline: 0.625rem; }
   .gnav .menu-pill-icon { display: none; }
   .gnav .btn-sm { padding-inline: 0.75rem; }
@@ -242,6 +242,9 @@
 }
 .chapnav a { text-decoration: none; }
 .chapnav-row { display: flex; align-items: center; gap: 0.75rem; min-height: 36px; }
+.chapnav-home { @apply text-ink-3 transition-colors duration-200; }
+.chapnav-home:hover { @apply text-brand-text; }
+.chapnav-spacer { display: none; }
 .chapnav-current { display: flex; flex: 1; min-width: 0; align-items: center; gap: 0.5rem; min-height: 36px; font-size: 0.8125rem; color: #424245; }
 .chapnav-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; color: #1d1d1f; }
 .chapnav-count { white-space: nowrap; color: #636368; font-variant-numeric: tabular-nums; }
@@ -249,9 +252,12 @@
 @media (min-width: 834px) {
   .chapnav:not(.chapnav-label-mode) .chapnav-row { min-height: 52px; }
   .chapnav:not(.chapnav-label-mode) .chapnav-current { display: none; }
-  .chapnav:not(.chapnav-label-mode) .chapnav-title { display: block; @apply truncate font-display text-[1.1875rem] font-semibold tracking-[-0.015em]; }
-  .chapnav:not(.chapnav-label-mode) .chapnav-links-wrap { display: block; min-width: 0; margin-left: auto; }
-  .chapnav:not(.chapnav-label-mode) .chapnav-cta { display: inline-flex; }
+  /* Three columns: the crumb, the chapters centred under the main menu, a matching spacer. */
+  .chapnav:not(.chapnav-label-mode):not(.chapnav-centered) .chapnav-row { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); }
+  .chapnav:not(.chapnav-label-mode) .chapnav-title { display: flex; min-width: 0; align-items: center; gap: 0.375rem; @apply font-display text-[1.0625rem] font-semibold tracking-[-0.015em]; }
+  .chapnav:not(.chapnav-label-mode) .chapnav-title .chapnav-home { @apply font-sans text-[0.875rem] font-medium; }
+  .chapnav:not(.chapnav-label-mode) .chapnav-links-wrap { display: block; min-width: 0; }
+  .chapnav:not(.chapnav-label-mode) .chapnav-spacer { display: block; }
 }
 /* The padding (cancelled by the margin) leaves room inside the scroller for the 6px focus ring. */
 .chapnav-links { display: flex; align-items: center; gap: 0.125rem; overflow-x: auto; margin: -0.375rem; padding: 0.375rem; }
@@ -664,6 +670,7 @@ html:not(.js) .stepper { visibility: hidden; }
 .fold > summary { list-style: none; }
 
 /* Rentals strip: a swipeable row of cards, arrows on laptops. */
+.strip::after { content: ''; flex: 0 0 max(1px, calc(var(--gutter) - 1rem)); }
 .strip { display: flex; gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; margin-inline: calc(-1 * var(--gutter)); padding: 0.25rem var(--gutter) 1rem; scroll-padding-inline: var(--gutter); }
 .strip:focus-visible { outline-offset: -3px; }
 .strip-item { flex: 0 0 min(78%, 18.5rem); scroll-snap-align: start; }
@@ -686,7 +693,15 @@ html:not(.js) .stepper { visibility: hidden; }
 .suite-item:hover { @apply text-brand-text; }
 
 /* The logo is artwork, so the narrow-phone header rule shrinks it instead of a wordmark. */
-@media (max-width: 374px) { .gnav .logo-img { width: 88px !important; height: auto; } }
+/* Header lockup: the mark, then OLH over a two-line "Property Management". */
+.logo-lockup { display: inline-flex; align-items: center; gap: 0.5rem; }
+.logo-mark { width: 2.25rem; height: auto; flex-shrink: 0; }
+.logo-type { display: inline-flex; align-items: center; gap: 0.4375rem; }
+.logo-olh { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif; font-size: 1.5rem; font-weight: 800; line-height: 1; letter-spacing: -0.035em; background: linear-gradient(180deg, #1aa3ff 0%, #0a5cf0 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.logo-pm { border-left: 1.5px solid #d3dbe7; padding-left: 0.4375rem; font-size: 0.625rem; font-weight: 700; line-height: 1.12; letter-spacing: 0.07em; text-transform: uppercase; color: #1d1d1f; }
+/* Phones: the mark and OLH; the two-line name comes back with room for it. */
+@media (max-width: 479px) { .logo-pm { display: none; } }
+@media (max-width: 374px) { .logo-mark { width: 1.875rem; } .logo-olh { font-size: 1.3125rem; } }
 
 /* ===========================================================================
    Motion and interaction layer
@@ -783,6 +798,10 @@ html:has(.dlg[open]) { overflow: hidden; }
   transform: translateY(var(--drag, 0px));
 }
 .dlg-panel.is-dragging { transition: none; }
+/* The panel scrolls, but without a chunky bar cutting into its rounded edge. */
+.dlg-panel { scrollbar-width: none; }
+.dlg-panel::-webkit-scrollbar { display: none; }
+.dlg-body:focus { outline: none; }
 .dlg-bar { position: sticky; top: 0; z-index: 3; display: flex; height: 3.25rem; align-items: center; justify-content: flex-end; padding: 0 0.875rem; touch-action: none; background: linear-gradient(#fff 55%, rgba(255, 255, 255, 0)); }
 .dlg-grab { position: absolute; left: 50%; top: 0.5rem; width: 2.5rem; height: 0.3125rem; margin-left: -1.25rem; border-radius: 999px; background: #d3dbe7; }
 .dlg-close { @apply inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#333336] text-white transition-colors duration-200 hover:bg-black; }
@@ -813,7 +832,7 @@ html:has(.dlg[open]) { overflow: hidden; }
 /* ---- Sideways rows ------------------------------------------------------------ */
 /* Full-bleed: the first card lines up with the page column, the rest run off the right edge. */
 .hscroll {
-  --edge: max(var(--gutter), calc((100vw - 75rem) / 2 + var(--gutter)));
+  --edge: max(var(--gutter), calc((100cqw - 75rem) / 2 + var(--gutter)));
   display: flex;
   gap: 1.25rem;
   overflow-x: auto;
@@ -823,6 +842,10 @@ html:has(.dlg[open]) { overflow: hidden; }
   scroll-padding-inline: var(--edge);
 }
 .hscroll:focus-visible, .steprow:focus-visible { outline-offset: -3px; }
+/* The section is the size container, so 100cqw is the page column width without the scrollbar. */
+:where(section, div):has(> .hscroll) { container-type: inline-size; }
+.hscroll::after { content: ''; flex: 0 0 max(1px, calc(var(--edge) - 1.25rem)); }
+.hscroll { padding-right: 0; }
 .paddle { @apply inline-flex h-9 w-9 items-center justify-center rounded-full text-ink transition-all duration-200; background: rgba(0, 0, 0, 0.08); }
 .paddle:hover:not(:disabled) { background: rgba(0, 0, 0, 0.14); }
 .paddle:active:not(:disabled) { transform: scale(0.94); }
@@ -963,3 +986,10 @@ figure.play [data-fill] { display: block; }
 .hero-listing:hover { text-decoration: none; }
 .hero-listing .mock { transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
 @media (hover: hover) { .hero-listing:hover .mock { transform: translateY(-4px) scale(1.02); } }
+
+/* Inside a highlight card the six-step list is tighter, and the art area never
+   pushes up into the title. */
+.hcard-visual { overflow: hidden; }
+.hcard .caselist { gap: 0.375rem; }
+.hcard .caselist li { padding-block: 0.4375rem; font-size: 0.9375rem; }
+@media (min-width: 834px) { .hcard .caselist { gap: 0.4375rem; } .hcard .caselist li { padding-block: 0.5625rem; font-size: 0.9375rem; } }
