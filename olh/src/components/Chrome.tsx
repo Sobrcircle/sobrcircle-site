@@ -1,6 +1,6 @@
 import { ArrowUpRight, ChevronDown, Phone, Search, X } from 'lucide-react'
 import { site, url } from '../site'
-import { footerColumns, plansMenu, resourcesMenu, type NavGroup, type NavLink } from '../content/nav'
+import { footerColumns, resourcesMenu, servicesMenu, type NavGroup, type NavLink } from '../content/nav'
 import { jobs } from '../content/jobs'
 import { Logo } from './Logo'
 
@@ -15,24 +15,23 @@ function isExternal(l: NavLink): boolean {
 function Flyout({ id, groups }: { id: string; groups: NavGroup[] }) {
   return (
     <div id={id} className="flyout" data-open="false" data-flyout-panel>
-      <div className="wrap grid grid-cols-[1.4fr_1fr_1fr] gap-12 pb-14 pt-10">
+      <div className="flyout-inner">
         {groups.map((g) => (
           <div key={g.heading}>
-            <p className="mb-3 text-[0.75rem] font-medium text-ink-3">{g.heading}</p>
-            <ul className={g.large ? 'space-y-2.5' : 'space-y-2'}>
+            <p className="flyout-head">{g.heading}</p>
+            <ul className={g.large ? 'space-y-1.5' : ''}>
               {g.links.map((l) => (
                 <li key={l.label}>
-                  <a
-                    href={linkHref(l)}
-                    className={
-                      g.large
-                        ? 'block font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.02em] text-ink hover:text-brand'
-                        : 'inline-flex items-center gap-1 text-[0.875rem] font-medium text-ink-2 hover:text-brand'
-                    }
-                    {...(isExternal(l) ? { rel: 'noopener' } : {})}
-                  >
+                  <a href={linkHref(l)} className={g.large ? 'flyout-big' : 'flyout-link'} {...(isExternal(l) ? { rel: 'noopener' } : {})}>
                     {l.label}
-                    {isExternal(l) && <ArrowUpRight className="h-3.5 w-3.5 opacity-50" aria-hidden />}
+                    {/* The word joiner keeps the arrow on the same line as the last word. */}
+                    {isExternal(l) && (
+                      <>
+                        {'⁠'}
+                        <ArrowUpRight className="flyout-ext" aria-hidden />
+                      </>
+                    )}
+                    {l.note && <span className="flyout-note">{l.note}</span>}
                   </a>
                 </li>
               ))}
@@ -63,7 +62,10 @@ export function PreviewBar() {
 
 export function GlobalNav({ current }: { current: string }) {
   const top = (path: string) => (current === path ? 'page' : undefined)
-  const inPlans = current === 'landlord-shield/'
+  const services = ['property-management/', 'landlord-shield/', 'owners/', 'buildings/', 'projects/']
+  const resources = ['resources/', 'about/', 'contact/', 'sireg/']
+  const inServices = services.includes(current)
+  const inResources = resources.includes(current) || current.startsWith('guides/')
   return (
     <>
       <nav className="gnav" aria-label="Main">
@@ -74,18 +76,18 @@ export function GlobalNav({ current }: { current: string }) {
           <ul className="hidden items-center gap-0.5 lg:flex" data-pill="hover">
             <li data-flyout-item>
               <a
-                href={url('landlord-shield/')}
+                href={url('property-management/')}
                 className="gnav-link inline-flex items-center gap-1"
                 data-pill-item
-                aria-current={inPlans ? 'page' : undefined}
+                aria-current={inServices ? 'page' : undefined}
                 aria-haspopup="true"
                 aria-expanded="false"
-                aria-controls="fly-plans"
-                data-flyout="fly-plans"
+                aria-controls="fly-services"
+                data-flyout="fly-services"
               >
-                Plans <ChevronDown className="h-3 w-3 opacity-60" aria-hidden />
+                Services <ChevronDown className="h-3 w-3 opacity-60" aria-hidden />
               </a>
-              <Flyout id="fly-plans" groups={plansMenu} />
+              <Flyout id="fly-services" groups={servicesMenu} />
             </li>
             <li>
               <a href={url('pricing/')} className="gnav-link" data-pill-item aria-current={top('pricing/')}>
@@ -104,9 +106,10 @@ export function GlobalNav({ current }: { current: string }) {
             </li>
             <li data-flyout-item>
               <a
-                href={site.live.selfHelp}
+                href={url('resources/')}
                 className="gnav-link inline-flex items-center gap-1"
                 data-pill-item
+                aria-current={inResources ? 'page' : undefined}
                 aria-haspopup="true"
                 aria-expanded="false"
                 aria-controls="fly-resources"
@@ -140,13 +143,13 @@ export function GlobalNav({ current }: { current: string }) {
 
 const goTo: { label: string; path?: string; href?: string }[] = [
   { label: 'Pricing', path: 'pricing/' },
+  { label: 'Property Management', path: 'property-management/' },
   { label: 'Landlord Shield', path: 'landlord-shield/' },
   { label: 'Legal help', path: 'legal/' },
   { label: 'Rentals & leasing', path: 'rentals/' },
-  { label: 'Self-help centre', href: site.live.selfHelp },
-  { label: 'SIREG owners', href: site.live.sireg },
-  { label: 'About OLH', href: site.live.about },
-  { label: 'Log in', href: site.live.login },
+  { label: 'Free resources', path: 'resources/' },
+  { label: 'Why OLH', path: 'about/' },
+  { label: 'Contact', path: 'contact/' },
 ]
 
 /**

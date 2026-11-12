@@ -1,6 +1,12 @@
 /**
- * Menus and footer. `path` is a page of this concept; `href` is a page on the
- * live ontariolandlordhelp.ca (or LandlordEzy), opened as-is.
+ * Menus and footer. `path` is a page of this concept; `href` is a page still on
+ * the live ontariolandlordhelp.ca (or LandlordEzy), opened as-is.
+ *
+ * The header has two menus, each three short columns:
+ *   Services   what we do (plans, who it's for, other services)
+ *   Resources  what we give away (guides, tools, company)
+ * Everything the old site's five menus held is reachable from one of them or
+ * from the footer; nothing is listed twice in the same menu.
  */
 import { site } from '../site'
 
@@ -9,70 +15,71 @@ export type NavGroup = { heading: string; large?: boolean; links: NavLink[] }
 
 const L = site.live
 
-export const plansMenu: NavGroup[] = [
+export const servicesMenu: NavGroup[] = [
   {
     heading: 'Plans',
     large: true,
     links: [
-      { label: 'Pricing calculator', path: 'pricing/' },
-      { label: 'OLH Landlord Shield', path: 'landlord-shield/' },
-      { label: 'Property Management', path: 'pricing/#included' },
+      { label: 'Property Management', path: 'property-management/' },
       { label: 'Legal Guarantee', path: 'legal/#guarantee' },
+      { label: 'Landlord Shield', path: 'landlord-shield/' },
+      { label: 'Compare and price', path: 'pricing/' },
     ],
   },
   {
-    heading: 'Inside Landlord Shield',
+    heading: 'Who it’s for',
     links: [
-      { label: 'From missed rent to a served N4', path: 'landlord-shield/#n4' },
-      { label: 'The LandlordEzy Automation Suite', path: 'landlord-shield/#suite' },
-      { label: 'Equifax rent reporting', path: 'landlord-shield/#reporting' },
-      { label: 'Shield vs Legal Guarantee', path: 'legal/#compare' },
+      { label: 'Condo owners', path: 'owners/#condo' },
+      { label: 'Student rentals', path: 'owners/#students' },
+      { label: 'First-time landlords', path: 'owners/#first-time' },
+      { label: 'Owners outside Ontario', path: 'owners/#non-resident' },
+      { label: 'Apartment buildings', path: 'buildings/' },
+      { label: 'Switching managers', path: 'property-management/#switch' },
+    ],
+  },
+  {
+    heading: 'More services',
+    links: [
+      { label: 'Tenant placement', path: 'rentals/#leasing' },
+      { label: 'Eviction help', path: 'legal/#eviction' },
+      { label: 'Renovations and repairs', path: 'projects/' },
+      { label: 'Emergency restoration', path: 'projects/#restoration' },
       { label: 'Local visits', path: 'pricing/#visits' },
-    ],
-  },
-  {
-    heading: 'Management',
-    links: [
-      { label: 'How management works', href: L.howItWorks },
-      { label: 'Switching managers: free review', href: L.switching },
-      { label: 'Compare OLH with others', href: L.compare },
-      { label: 'Condos', href: L.condos },
-      { label: 'Multifamily & apartment buildings', href: L.multifamily },
-      { label: 'Out-of-province & overseas owners', href: L.nonResident },
+      { label: 'LandlordEzy software', path: 'landlord-shield/#suite' },
     ],
   },
 ]
 
 export const resourcesMenu: NavGroup[] = [
   {
-    heading: 'Legal help',
+    heading: 'Guides',
     large: true,
     links: [
-      { label: 'Eviction help', path: 'legal/#eviction' },
-      { label: 'Licensed paralegals', href: L.paralegal },
-      { label: 'How to evict a tenant', href: L.howToEvict },
-      { label: 'Bill 60 updates', href: L.bill60 },
+      { label: 'Evicting a tenant', path: 'guides/evictions/' },
+      { label: 'LTB forms and notices', path: 'guides/ltb-forms/' },
+      { label: 'Raising the rent', path: 'guides/rent-increases/' },
+      { label: 'Bill 60 changes', path: 'guides/bill-60/' },
     ],
   },
   {
-    heading: 'Free resources',
+    heading: 'Free tools',
     links: [
-      { label: 'Landlord self-help centre', href: L.selfHelp },
-      { label: 'Guides & articles', href: L.guides },
-      { label: 'LTB forms & applications', href: L.ltbForms },
-      { label: 'LTB hearing & Zoom links', href: L.hearingLinks },
+      { label: 'All free resources', path: 'resources/' },
+      { label: 'What is my rental worth?', href: L.rentalWorth },
+      { label: 'LTB judgment database', href: L.judgments },
+      { label: 'Forms and downloads', href: L.downloads },
       { label: 'Ontario law library', href: L.law },
-      { label: 'Ask Ezy, the AI assistant', href: L.askEzy },
+      { label: 'Ask Ezy', href: L.askEzy },
     ],
   },
   {
     heading: 'Company',
     links: [
-      { label: 'About OLH', href: L.about },
-      { label: 'Meet Paul J. Rouillard', href: L.paul },
-      { label: 'SIREG Owner Centre', href: L.sireg },
-      { label: 'All Ontario locations', href: L.locations },
-      { label: 'Contact', href: L.contact },
+      { label: 'Why OLH', path: 'about/' },
+      { label: 'Contact and service areas', path: 'contact/' },
+      { label: 'Homes for rent', path: 'rentals/' },
+      { label: 'SIREG owners', path: 'sireg/' },
+      { label: 'Log in', href: L.login },
     ],
   },
 ]
@@ -81,56 +88,55 @@ export const footerColumns: { heading: string; links: NavLink[] }[] = [
   {
     heading: 'Plans',
     links: [
-      { label: 'Pricing calculator', path: 'pricing/' },
-      { label: 'OLH Landlord Shield', path: 'landlord-shield/' },
-      { label: 'Automation Suite', path: 'landlord-shield/#suite' },
-      { label: 'Equifax rent reporting', path: 'landlord-shield/#reporting' },
-      { label: 'Property Management', path: 'pricing/#included' },
+      { label: 'Compare and price', path: 'pricing/' },
+      { label: 'Property Management', path: 'property-management/' },
       { label: 'Legal Guarantee', path: 'legal/#guarantee' },
+      { label: 'Landlord Shield', path: 'landlord-shield/' },
       { label: 'Local visits', path: 'pricing/#visits' },
+      { label: 'Switching managers', path: 'property-management/#switch' },
     ],
   },
   {
-    heading: 'Leasing',
+    heading: 'Services',
     links: [
-      { label: 'Available rentals', path: 'rentals/' },
+      { label: 'Owners, by situation', path: 'owners/' },
+      { label: 'Apartment buildings', path: 'buildings/' },
       { label: 'Tenant placement', path: 'rentals/#leasing' },
-      { label: 'What is my rental worth?', href: L.rentalWorth },
-      { label: 'Tenant screening', href: L.screening },
-      { label: 'Screening questions', href: L.screeningQuestions },
-      { label: 'LTB judgment database', href: L.judgments },
-    ],
-  },
-  {
-    heading: 'Legal help',
-    links: [
       { label: 'Eviction help', path: 'legal/#eviction' },
-      { label: 'Member legal access', path: 'legal/#compare' },
-      { label: 'Licensed paralegals', href: L.paralegal },
-      { label: 'Rent Guarantee', href: L.rentGuarantee },
-      { label: 'How long an eviction takes', href: L.evictionTime },
-      { label: 'LTB forms', href: L.ltbForms },
+      { label: 'Renovations and restoration', path: 'projects/' },
+      { label: 'Homes for rent', path: 'rentals/' },
     ],
   },
   {
-    heading: 'Resources',
+    heading: 'Guides',
     links: [
-      { label: 'LandlordEzy software', href: L.software },
-      { label: 'Self-help centre', href: L.selfHelp },
-      { label: 'Guides', href: L.guides },
-      { label: 'Forms & downloads', href: L.downloads },
-      { label: 'Video guides', href: L.videos },
-      { label: 'Rent increase guideline', href: L.rentGuideline },
+      { label: 'Evicting a tenant', path: 'guides/evictions/' },
+      { label: 'LTB forms and notices', path: 'guides/ltb-forms/' },
+      { label: 'Raising the rent', path: 'guides/rent-increases/' },
+      { label: 'Bill 60 changes', path: 'guides/bill-60/' },
+      { label: 'All free resources', path: 'resources/' },
+      { label: 'Ontario law library', href: L.law },
     ],
   },
   {
     heading: 'Company',
     links: [
-      { label: 'About OLH', href: L.about },
-      { label: 'Meet Paul', href: L.paul },
-      { label: 'SIREG Owner Centre', href: L.sireg },
-      { label: 'Locations', href: L.locations },
-      { label: 'Contact', href: L.contact },
+      { label: 'Why OLH', path: 'about/' },
+      { label: 'Contact', path: 'contact/' },
+      { label: 'Service areas', path: 'contact/#areas' },
+      { label: 'SIREG owners', path: 'sireg/' },
+      { label: 'LandlordEzy', href: site.ezy.home },
+      { label: 'List It Realty', href: site.listit },
+    ],
+  },
+  {
+    heading: 'Follow',
+    links: [
+      { label: 'YouTube', href: site.social.youtube },
+      { label: 'Landlord community on Facebook', href: site.social.facebookGroup },
+      { label: 'TikTok', href: site.social.tiktok },
+      { label: 'LinkedIn', href: site.social.linkedin },
+      { label: 'Review us on Google', href: site.reviewsUrl },
       { label: 'Log in', href: L.login },
     ],
   },

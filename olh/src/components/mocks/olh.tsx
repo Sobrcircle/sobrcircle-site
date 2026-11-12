@@ -6,6 +6,8 @@
 import type { CSSProperties } from 'react'
 import { BadgeCheck, CalendarClock, Camera, Check, CheckCircle2, FileCheck2, Gavel, Mail, ScrollText, Sparkles, Wallet } from 'lucide-react'
 import { PhoneFrame, SampleTag } from './kit'
+import { url } from '../../site'
+import { listings } from '../../content/listings'
 
 const i = (n: number) => ({ ['--i' as string]: String(n) }) as CSSProperties
 
@@ -295,5 +297,28 @@ export function CaseList({ className = '' }: { className?: string }) {
         </li>
       ))}
     </ol>
+  )
+}
+
+/**
+ * A real home from the rentals snapshot, floated on the hero: the one photograph
+ * among the drawn screens, so the first screen says "real places" as well as
+ * "software". Sized in em and scaled by its container, like the mock-ups.
+ */
+export function HeroListing({ className = '' }: { className?: string }) {
+  const l = listings[0]
+  return (
+    <a href={l.href} className={`hero-listing mock-fit block ${className}`} style={{ ['--em' as string]: '17' }} data-track="hero:listing">
+      <span className="mock block overflow-hidden rounded-[1.1em] bg-white shadow-float ring-1 ring-black/5">
+        <img src={url(`img/listings/${l.img}.webp`)} alt={`${l.street}, ${l.city}`} width={720} height={540} className="aspect-[4/3] w-full object-cover" decoding="async" />
+        <span className="block px-[1em] py-[0.8em]">
+          <span className="flex items-center gap-[0.45em] text-[0.74em] font-semibold text-[#1f7a16]">
+            <span className="h-[0.6em] w-[0.6em] rounded-full bg-[#79d220]" /> Now leasing · {l.city}
+          </span>
+          <span className="mt-[0.25em] block text-[1.15em] font-bold tracking-[-0.02em] text-[#1d1d1f]">{l.price}</span>
+          <span className="block text-[0.78em] text-[#636368]">{l.street}</span>
+        </span>
+      </span>
+    </a>
   )
 }

@@ -6,8 +6,9 @@ import { HighlightCard, ScrollerArrows, TabPanel, TabRow } from '../components/i
 import { GroupRow, ListingStrip, PlanChooser } from '../components/olh'
 import { HighlightSheets, ScopeSheets } from '../components/sheets'
 import { DashboardScreen, OwnerStatementScreen, ReportingScreen } from '../components/mocks/screens'
-import { CaseList, CaseTrack, ConsultCard, LedgerCheck, OlhN4, OlhPhone, VisitReport } from '../components/mocks/olh'
+import { CaseList, CaseTrack, ConsultCard, HeroListing, LedgerCheck, OlhN4, OlhPhone, VisitReport } from '../components/mocks/olh'
 import { homeFaqs } from '../content/faqs'
+import { $ } from '../content/pricing'
 
 const chapters = [
   { id: 'overview', label: 'Overview' },
@@ -20,31 +21,27 @@ const chapters = [
 
 const more: { key: string; label: string; note: string; links: { label: string; href: string }[] }[] = [
   {
-    key: 'management',
-    label: 'Management',
-    note: 'By property and owner',
+    key: 'owners',
+    label: 'Owners',
+    note: 'By situation',
     links: [
-      { label: 'Condos', href: site.live.condos },
-      { label: 'Multifamily & apartment buildings', href: site.live.multifamily },
-      { label: 'Student rentals', href: site.live.students },
-      { label: 'First-time landlords', href: site.live.firstTime },
-      { label: 'Out-of-province & overseas owners', href: site.live.nonResident },
-      { label: 'Switching managers', href: site.live.switching },
-      { label: 'Compare OLH', href: site.live.compare },
-      { label: 'All Ontario locations', href: site.live.locations },
+      { label: 'Condo owners', href: url('owners/#condo') },
+      { label: 'Student rentals', href: url('owners/#students') },
+      { label: 'First-time landlords', href: url('owners/#first-time') },
+      { label: 'Owners outside Ontario', href: url('owners/#non-resident') },
+      { label: 'Switching managers', href: url('property-management/#switch') },
+      { label: 'Service areas', href: url('contact/#areas') },
     ],
   },
   {
-    key: 'projects',
-    label: 'Projects',
+    key: 'buildings',
+    label: 'Buildings and projects',
     note: 'Scoped and quoted separately',
     links: [
-      { label: 'Distressed building stabilization', href: site.live.distressed },
-      { label: 'Renovations & project management', href: site.live.renovation },
-      { label: 'Emergency restoration & repair', href: site.live.restoration },
-      { label: 'Multifamily renovation & rehab', href: site.live.rehab },
-      { label: 'Apartment building maintenance', href: site.live.buildingMaintenance },
-      { label: 'Multifamily lease-up', href: site.live.leaseUp },
+      { label: 'Apartment buildings', href: url('buildings/') },
+      { label: 'Distressed building stabilization', href: url('buildings/#distressed') },
+      { label: 'Renovations and repairs', href: url('projects/') },
+      { label: 'Emergency restoration', href: url('projects/#restoration') },
     ],
   },
   {
@@ -52,28 +49,22 @@ const more: { key: string; label: string; note: string; links: { label: string; 
     label: 'Leasing',
     note: 'Through List It Realty',
     links: [
-      { label: 'Basic & Premium rental listings', href: url('rentals/#leasing') },
-      { label: 'Full-service tenant placement', href: url('rentals/#leasing') },
+      { label: 'Tenant placement', href: url('rentals/#leasing') },
+      { label: 'Homes for rent', href: url('rentals/') },
       { label: 'What is my rental worth?', href: site.live.rentalWorth },
-      { label: 'Screening & credit checks', href: site.live.screening },
-      { label: 'Screening questions', href: site.live.screeningQuestions },
-      { label: 'LTB judgment database', href: site.live.judgments },
-      { label: 'Browse rentals', href: url('rentals/') },
+      { label: 'Tenant screening', href: site.live.screening },
     ],
   },
   {
     key: 'legal',
-    label: 'Legal & resources',
-    note: 'Free help included',
+    label: 'Guides',
+    note: 'Free, in plain words',
     links: [
-      { label: 'Eviction help', href: url('legal/#eviction') },
-      { label: 'Licensed paralegals', href: site.live.paralegal },
-      { label: 'Eviction timelines', href: site.live.evictionTime },
-      { label: 'LTB forms', href: site.live.ltbForms },
-      { label: 'Ontario law library', href: site.live.law },
-      { label: 'Self-help centre & guides', href: site.live.selfHelp },
-      { label: 'Bill 60 updates', href: site.live.bill60 },
-      { label: 'Ask Ezy', href: site.live.askEzy },
+      { label: 'Evicting a tenant', href: url('guides/evictions/') },
+      { label: 'LTB forms and notices', href: url('guides/ltb-forms/') },
+      { label: 'Raising the rent', href: url('guides/rent-increases/') },
+      { label: 'Bill 60 changes', href: url('guides/bill-60/') },
+      { label: 'All free resources', href: url('resources/') },
     ],
   },
 ]
@@ -93,6 +84,7 @@ export function Home() {
             <div className="hero-rise relative">
               <DashboardScreen />
               <OlhPhone className="hero-rise-2 absolute -bottom-6 right-[-1%] w-[27%] min-w-[6rem] max-w-[15rem] min-[375px]:min-w-[7rem] sm:-bottom-10 md:right-[-3%]" />
+              <HeroListing className="hero-rise-2 absolute -bottom-5 left-[-2%] w-[25%] min-w-[5.75rem] max-w-[13rem] sm:-bottom-9 md:left-[-4%]" />
             </div>
           </div>
           <div className="hero-copy">
@@ -110,11 +102,11 @@ export function Home() {
                 secondary={{ label: 'See the plans', href: '#plans' }}
                 note={
                   <>
-                    <strong className="whitespace-nowrap font-semibold text-ink-2">Shield from $49/mo</strong> ·{' '}
-                    <span className="whitespace-nowrap">Management from $99</span>
+                    <strong className="whitespace-nowrap font-semibold text-ink-2">Shield from {$.shield}/mo</strong> ·{' '}
+                    <span className="whitespace-nowrap">Management from {$.management}</span>
                     <span className="hidden sm:inline"> · </span>
                     <br className="sm:hidden" />
-                    <span className="whitespace-nowrap">With Legal Guarantee from $149</span> ·{' '}
+                    <span className="whitespace-nowrap">With Legal Guarantee from {$.guarantee}</span> ·{' '}
                     <span className="whitespace-nowrap">Plus HST</span>
                   </>
                 }
@@ -291,7 +283,7 @@ export function Home() {
                     <li key={l.label}>
                       <a href={l.href} className="morelink spot">
                         <span>{l.label}</span>
-                        <ArrowUpRight className="h-4 w-4 shrink-0 text-brand" aria-hidden />
+                        <ArrowRight className="h-4 w-4 shrink-0 text-brand" aria-hidden />
                       </a>
                     </li>
                   ))}
@@ -300,7 +292,7 @@ export function Home() {
             ))}
           </div>
 
-          <a href={site.live.sireg} className="spot mx-auto mt-10 flex max-w-[68rem] flex-col gap-3 rounded-4xl bg-white p-6 text-ink shadow-card hover:no-underline sm:flex-row sm:items-center sm:justify-between sm:p-7" rel="noopener" data-track="sireg:home">
+          <a href={url('sireg/')} className="spot mx-auto mt-10 flex max-w-[68rem] flex-col gap-3 rounded-4xl bg-white p-6 text-ink shadow-card hover:no-underline sm:flex-row sm:items-center sm:justify-between sm:p-7" rel="noopener" data-track="sireg:home">
             <span className="flex items-start gap-4">
               <span className="icon-badge shrink-0">
                 <MapPin className="h-[22px] w-[22px]" strokeWidth={1.7} aria-hidden />
@@ -326,8 +318,8 @@ export function Home() {
             Good to know before you call.
           </h2>
           <FAQList className="mt-8 md:mt-10" items={homeFaqs} />
-          <a href={site.live.faq} className="link-more mt-8">
-            More questions
+          <a href={url('contact/')} className="link-more mt-8">
+            Ask us anything
           </a>
         </div>
       </Section>

@@ -5,7 +5,7 @@ import { ChapterNav } from '../components/ChapterNav'
 import { Calculator, HowCalculated, PlanCards, ScopeLink } from '../components/olh'
 import { ScopeSheets } from '../components/sheets'
 import { notInAnyPlan, visitPrices } from '../content/scope'
-import { plans } from '../content/pricing'
+import { $, plans } from '../content/pricing'
 import { pricingFaqs } from '../content/faqs'
 
 const chapters = [
@@ -16,18 +16,18 @@ const chapters = [
   { id: 'faq', label: 'Questions' },
 ]
 
-/** Side by side, in Paul's terms. `true` renders a tick. */
+/** Side by side, in Paul's terms, in the same order as the plans (most complete first). `true` renders a tick. */
 const compare: { row: string; cells: [string | true, string | true, string | true] }[] = [
-  { row: 'Who deals with your tenants', cells: ['You do', 'Our team', 'Our team'] },
-  { row: 'LandlordEzy software', cells: ['Your own account', 'Included, with an owner portal', 'Included, with an owner portal'] },
-  { row: 'Rent ledger and statements', cells: ['Checked by our team monthly', 'Run by our team', 'Run by our team'] },
-  { row: 'Late rent and the N4', cells: ['You prepare, sign and serve', 'Arrears follow-up and the N4 process', 'Arrears follow-up and the N4 process'] },
-  { row: 'Maintenance', cells: ['Your own vendors', 'Coordinated for you', 'Coordinated for you'] },
+  { row: 'Who deals with your tenants', cells: ['Our team', 'Our team', 'You do'] },
+  { row: 'A new LTB matter', cells: ['Our paralegals’ fees included', `Member case from ${$.memberCase}`, `Member case from ${$.memberCase}`] },
+  { row: 'Late rent and the N4', cells: ['Arrears follow-up and the N4 process', 'Arrears follow-up and the N4 process', 'You prepare, sign and serve'] },
+  { row: 'Rent ledger and statements', cells: ['Run by our team', 'Run by our team', 'Checked by our team monthly'] },
+  { row: 'Maintenance', cells: ['Coordinated for you', 'Coordinated for you', 'Your own vendors'] },
+  { row: 'LandlordEzy software', cells: ['Included, with an owner portal', 'Included, with an owner portal', 'Your own account'] },
   { row: 'Equifax rent reporting', cells: [true, true, true] },
   { row: 'Monthly paralegal consultation', cells: [true, true, true] },
-  { row: 'A new LTB matter', cells: ['Member case from $995', 'Member case from $995', 'Included, no activation fee'] },
-  { row: 'Standard local visit', cells: ['$75 + HST', '$75 + HST', '$55 + HST'] },
-  { row: 'Term', cells: ['Month-to-month', '90 days, then 30 days’ notice', '90 days, then 30 days’ notice'] },
+  { row: 'Standard local visit', cells: [`${$.visitGuarantee} + HST`, `${$.visit} + HST`, `${$.visit} + HST`] },
+  { row: 'Term', cells: ['90 days, then 30 days’ notice', '90 days, then 30 days’ notice', 'Month-to-month'] },
 ]
 
 export function Pricing() {
@@ -83,8 +83,8 @@ export function Pricing() {
                     <th scope="col">
                       <span className="sr-only">Feature</span>
                     </th>
-                    {plans.map((p) => (
-                      <th key={p.key} scope="col" className={p.recommended ? 'cmp-hi' : ''}>
+                    {plans.map((p, idx) => (
+                      <th key={p.key} scope="col" className={idx === 0 ? 'cmp-hi' : ''}>
                         <span className="block font-display text-[1.0625rem] font-semibold leading-tight tracking-[-0.01em] text-ink">{p.short}</span>
                         <span className="mt-1 block text-[0.8125rem] font-normal text-ink-3">from ${p.from}/mo</span>
                       </th>
@@ -111,8 +111,8 @@ export function Pricing() {
                   ))}
                   <tr className="cmp-foot">
                     <th scope="row">Everything in the plan</th>
-                    {plans.map((p) => (
-                      <td key={p.key} className={p.recommended ? 'cmp-hi' : ''}>
+                    {plans.map((p, idx) => (
+                      <td key={p.key} className={idx === 0 ? 'cmp-hi' : ''}>
                         <ScopeLink plan={p.key} href={url(p.href)} />
                       </td>
                     ))}

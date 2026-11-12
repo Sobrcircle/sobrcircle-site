@@ -21,11 +21,23 @@ type Card = { file: string; eyebrow: string; title: string }
 
 const cards: Card[] = [
   { file: 'default', eyebrow: 'Ontario landlords since 2003', title: 'Self-manage your rentals. With a team behind you.' },
-  { file: 'home', eyebrow: 'OLH Landlord Shield · from $49 a month', title: 'Self-manage your rentals. With a team behind you.' },
+  { file: 'home', eyebrow: 'Property management with legal help · Ontario', title: 'Self-manage your rentals. With a team behind you.' },
   { file: 'pricing', eyebrow: 'Proposed pricing · CAD, plus HST', title: 'One monthly total for your portfolio.' },
   { file: 'landlord-shield', eyebrow: 'OLH Landlord Shield', title: 'From missed rent to a served N4, in your own account.' },
   { file: 'legal', eyebrow: 'Legal help on the same team', title: 'Licensed paralegals, before you need them.' },
   { file: 'rentals', eyebrow: 'Rentals & leasing', title: 'Homes on our platforms.' },
+  { file: 'property-management', eyebrow: 'Property Management', title: 'We run the tenancy. You get the statement.' },
+  { file: 'owners', eyebrow: 'For every kind of owner', title: 'Condos, students, first-timers and owners abroad.' },
+  { file: 'buildings', eyebrow: 'Apartment buildings', title: 'A structured takeover, not a hopeful handover.' },
+  { file: 'projects', eyebrow: 'Renovations and restoration', title: 'We manage the project. Licensed trades do the work.' },
+  { file: 'about', eyebrow: 'Why OLH', title: 'The people managing your property are the people who defend it.' },
+  { file: 'contact', eyebrow: 'Contact', title: 'A 15-minute call, anywhere in Ontario.' },
+  { file: 'resources', eyebrow: 'Free help for Ontario landlords', title: 'Guides, forms and tools, in plain words.' },
+  { file: 'sireg', eyebrow: 'SIREG and Simple Investor owners', title: 'Your Owner Centre, in one place.' },
+  { file: 'guide-evictions', eyebrow: 'Ontario landlord guide', title: 'Evicting a tenant in Ontario, step by step.' },
+  { file: 'guide-ltb-forms', eyebrow: 'Ontario landlord guide', title: 'LTB forms and notices, in plain words.' },
+  { file: 'guide-rent-increases', eyebrow: 'Ontario landlord guide', title: 'Raising the rent in Ontario.' },
+  { file: 'guide-bill-60', eyebrow: 'Ontario landlord guide', title: 'Bill 60: what changed for Ontario landlords.' },
 ]
 
 function wrap(ctx: SKRSContext2D, text: string, max: number): string[] {

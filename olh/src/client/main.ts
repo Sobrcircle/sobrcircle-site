@@ -482,13 +482,8 @@ function setupMobileCta() {
 }
 
 /* ---- portfolio calculator (pricing page) ---------------------------------- */
-type Tariff = {
-  min: number
-  max: number
-  shield: { first: number; additional: number }
-  management: Record<string, { first: number; additional: number; noun: string }>
-  legalBands: [number, number, number][]
-}
+type Rate = { first: number; additional: number }
+type Tariff = { min: number; max: number; shield: Rate; management: Rate; legal: Rate }
 
 function setupCalc() {
   const box = document.querySelector<HTMLElement>('[data-calc]')
@@ -503,7 +498,6 @@ function setupCalc() {
   const out = box.querySelector<HTMLElement>('[data-units-out]')
   const word = box.querySelector<HTMLElement>('[data-units-word]')
   const steps = Array.from(box.querySelectorAll<HTMLButtonElement>('[data-step]'))
-  const cats = Array.from(box.querySelectorAll<HTMLInputElement>('input[data-cat]'))
   const how = document.querySelector<HTMLElement>('[data-how-body]')
   if (!range || !out) return
   const fmt = (n: number) => '$' + n.toLocaleString('en-CA')
@@ -549,31 +543,26 @@ function setupCalc() {
     return tr
   }
 
-  // Remembered choices win over the browser's own form restoration, which can
-  // land after this script runs (reload, Back), so they're applied again on pageshow.
+  // A remembered count wins over the browser's own form restoration, which can
+  // land after this script runs (reload, Back), so it's applied again on pageshow.
   const restore = () => {
     const saved = Number(store.get('olh-units'))
     if (saved >= t.min && saved <= t.max) range.value = String(saved)
-    const savedCat = store.get('olh-type')
-    if (savedCat && cats.some((c) => c.value === savedCat)) cats.forEach((c) => (c.checked = c.value === savedCat))
   }
   restore()
 
   const render = () => {
     const n = Math.min(t.max, Math.max(t.min, Number(range.value) || 1))
-    const cat = cats.find((c) => c.checked)?.value ?? 'condo'
-    const c = t.management[cat]
-    const shield = t.shield.first + (n - 1) * t.shield.additional
-    const mgmt = c.first + (n - 1) * c.additional
-    const bands = t.legalBands
-      .map(([from, to, rate]) => ({ from, to: Math.min(n, to), count: Math.max(0, Math.min(n, to) - from + 1), rate }))
-      .filter((b) => b.count > 0)
-    const legal = bands.reduce((sum, b) => sum + b.count * b.rate, 0)
+    const extra = n - 1
+    const sum = (r: Rate) => r.first + extra * r.additional
+    const shield = sum(t.shield)
+    const mgmt = sum(t.management)
+    const legal = sum(t.legal)
     const plus = mgmt + legal
     const unit = n === 1 ? 'tenancy' : 'tenancies'
 
     if (out.textContent !== String(n)) out.textContent = String(n)
-    if (word) word.textContent = `${c.noun} ${unit}`
+    if (word) word.textContent = unit
     range.setAttribute('aria-valuetext', `${n} ${unit}`)
     range.style.setProperty('--pct', `${((n - t.min) / (t.max - t.min)) * 100}%`)
     steps.forEach((b) => {
@@ -585,25 +574,23 @@ function setupCalc() {
     roll('[data-out="management"]', mgmt)
     roll('[data-out="guarantee"]', plus)
     rolled = true
-    const chain = (first: number, add: number, total: number) => (n === 1 ? `${fmt(first)} first tenancy` : `${fmt(first)} + ${n - 1} × ${fmt(add)} = ${fmt(total)}`)
-    set('[data-math="shield"]', chain(t.shield.first, t.shield.additional, shield))
-    set('[data-math="management"]', chain(c.first, c.additional, mgmt))
+    const chain = (r: Rate, total: number) => (n === 1 ? `${fmt(r.first)} first tenancy` : `${fmt(r.first)} + ${extra} × ${fmt(r.additional)} = ${fmt(total)}`)
+    set('[data-math="shield"]', chain(t.shield, shield))
+    set('[data-math="management"]', chain(t.management, mgmt))
     set('[data-math="guarantee"]', `${fmt(mgmt)} management + ${fmt(legal)} legal`)
     set('[data-avg="shield"]', avg(shield, n), n > 1)
     set('[data-avg="management"]', avg(mgmt, n), n > 1)
     set('[data-avg="guarantee"]', avg(plus, n), n > 1)
 
     if (how) {
-      const rows: HTMLTableRowElement[] = [row('Landlord Shield', '', 'calc-grp'), row('First tenancy', fmt(t.shield.first))]
-      if (n > 1) rows.push(row(`${n - 1} additional × ${fmt(t.shield.additional)}`, fmt((n - 1) * t.shield.additional)))
-      rows.push(row('Landlord Shield total', fmt(shield), 'calc-tot'))
-      rows.push(row(`Property Management (${c.noun})`, '', 'calc-grp'), row('First tenancy', fmt(c.first)))
-      if (n > 1) rows.push(row(`${n - 1} additional × ${fmt(c.additional)}`, fmt((n - 1) * c.additional)))
-      rows.push(row('Property Management total', fmt(mgmt), 'calc-tot'))
-      rows.push(row('Legal Guarantee (added to Property Management)', '', 'calc-grp'))
-      bands.forEach((b) => rows.push(row(`Unit${b.count > 1 ? 's' : ''} ${b.from}${b.to > b.from ? '–' + b.to : ''} · ${b.count} × ${fmt(b.rate)}`, fmt(b.count * b.rate))))
-      rows.push(row('Property Management + Legal Guarantee', fmt(plus), 'calc-tot'))
-      how.replaceChildren(...rows)
+      const block = (name: string, r: Rate, total: number) => {
+        const rows = [row(name, '', 'calc-grp'), row('First tenancy', fmt(r.first))]
+        if (extra) rows.push(row(`${extra} additional × ${fmt(r.additional)}`, fmt(extra * r.additional)))
+        rows.push(row('Total', fmt(total), 'calc-tot'))
+        return rows
+      }
+      const both: Rate = { first: t.management.first + t.legal.first, additional: t.management.additional + t.legal.additional }
+      how.replaceChildren(...block('Property Management + Legal Guarantee', both, plus), ...block('Property Management', t.management, mgmt), ...block('Landlord Shield', t.shield, shield))
     }
   }
 
@@ -616,12 +603,6 @@ function setupCalc() {
       range.value = String(Number(range.value) + Number(b.dataset.step))
       render()
       store.set('olh-units', range.value)
-    }),
-  )
-  cats.forEach((c) =>
-    c.addEventListener('change', () => {
-      render()
-      store.set('olh-type', c.value)
     }),
   )
   render()
@@ -791,6 +772,20 @@ function setupTabs() {
     // A link can arrive with a tab chosen: /olh/?plan=guarantee
     const wanted = new URLSearchParams(location.search).get(name)
     if (wanted && tabs.some((t) => t.dataset.tab === wanted)) select(wanted)
+
+    // Or with a #hash that points inside a tab panel (/olh/owners/#students):
+    // open that tab, then bring the panel into view.
+    const fromHash = (scroll: boolean) => {
+      const id = decodeURIComponent(location.hash.slice(1))
+      if (!id) return
+      const target = document.getElementById(id)
+      const panel = target?.closest<HTMLElement>('[data-tab-panel]')
+      if (!target || !panel || !root.contains(panel)) return
+      select(panel.dataset.tabPanel!)
+      if (scroll) requestAnimationFrame(() => target.scrollIntoView({ behavior: scrollBehavior, block: 'start' }))
+    }
+    fromHash(false)
+    window.addEventListener('hashchange', () => fromHash(true))
   })
 }
 

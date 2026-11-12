@@ -10,7 +10,7 @@ export type JobKey = 'shield' | 'manage' | 'problem' | 'tenant' | 'price' | 'ren
 
 export const jobs: { key: JobKey; label: string; path: string; icon: IconType }[] = [
   { key: 'shield', label: 'Self-manage, with backup', path: 'landlord-shield/', icon: ShieldCheck },
-  { key: 'manage', label: 'Hand over the day-to-day', path: 'pricing/#included', icon: Users },
+  { key: 'manage', label: 'Hand over the day-to-day', path: 'property-management/', icon: Users },
   { key: 'problem', label: 'Tenant not paying', path: 'legal/#eviction', icon: Gavel },
   { key: 'price', label: 'Price my portfolio', path: 'pricing/', icon: Calculator },
   { key: 'tenant', label: 'Find a tenant', path: 'rentals/#leasing', icon: KeyRound },

@@ -27,15 +27,28 @@ for reduced motion, and none of it is needed to read or use the site.
 
 ## Pages
 
-| Path | What | Paul's preview sections it covers |
-| --- | --- | --- |
-| `/olh/` | Home: hero, plan chooser, highlights row, rentals, how it works, FAQ | Hero, three plans, N4, Legal Guarantee, rentals, how we work, FAQ |
-| `/olh/pricing/` | Portfolio calculator, what's included, local visits, terms, FAQ | Pricing, Visits, Terms |
-| `/olh/landlord-shield/` | Landlord Shield: N4/N1, the Automation Suite, rent handling, rent reporting, scope | Shield explained, Automation Suite, Rent reporting |
-| `/olh/legal/` | Member legal access vs Legal Guarantee, member case rules, 12-month example, eviction help | Shield vs Guarantee, Legal |
-| `/olh/rentals/` | Listings snapshot and leasing packages | Available properties, Listing services |
+Seventeen pages replace about 200 on the old site. Every old page's substance is on one of them,
+or linked to the live page where it is reference material (the RTA library, downloads, help centre).
 
-Everything else in Paul's menus links to the live ontariolandlordhelp.ca or landlordezy.ca page.
+| Path | What |
+| --- | --- |
+| `/olh/` | Home: hero, plan chooser, highlights, rentals, how it works, FAQ |
+| `/olh/pricing/` | The calculator, the three plans side by side, visits, terms |
+| `/olh/property-management/` | The middle plan in full; switching managers |
+| `/olh/landlord-shield/` | The self-manage plan: N4/N1, the software, rent reporting |
+| `/olh/legal/` | Member legal access vs the Legal Guarantee; eviction help |
+| `/olh/rentals/` | Listings and tenant placement |
+| `/olh/owners/` | Condo, student, first-time and non-resident owners (tabs) |
+| `/olh/buildings/` | Apartment buildings and multifamily |
+| `/olh/projects/` | Renovations, repairs and emergency restoration |
+| `/olh/about/` | Why OLH, the founder, reviews, Realtor referrals |
+| `/olh/contact/` | Ways to reach us and the 49 service-area cities (tabs) |
+| `/olh/resources/` | The free-help hub |
+| `/olh/guides/evictions/`, `/ltb-forms/`, `/rent-increases/`, `/bill-60/` | The four guides |
+| `/olh/sireg/` | One careful hub that links into the live SIREG Owner Centre |
+
+`STYLE.md` is the house style (voice, banned phrases, how a page is built). `VERIFY.md` lists
+what Paul or a paralegal must confirm before anything goes live.
 
 ## Where things are
 
@@ -74,7 +87,7 @@ sends the same `X-Robots-Tag` for `/olh/*`, it isn't in the sitemap or `llms.txt
 
 ## Open items for Paul
 
-1. Every price is his proposal, copied as-is. Confirm before anything goes live.
+1. Prices are the $59 / $149 / $199 ladder in `src/content/pricing.ts` (see VERIFY.md).
 2. The rentals strip is a November 11, 2026 snapshot; on the real site it should be fed live.
 3. The logo is his raster artwork; a vector would be sharper.
 4. No testimonials are shown, on purpose: add real, permissioned quotes when there are some.

@@ -20,6 +20,17 @@ export const site = {
   email: 'info@olhgroup.ca',
   since: 2003,
   founder: 'Paul J. Rouillard',
+  address: { street: '794 Ouellette Ave', city: 'Windsor', region: 'ON', postal: 'N9A 1C2' },
+  hours: 'Monday to Friday, 10 a.m. to 4 p.m. ET',
+  /** Proof points as the live site states them (November 2026). Update together. */
+  proof: { rating: '4.9', reviews: '121+', community: '31,000+', ltbOrders: '84,000+', videos: '140+' },
+  reviewsUrl: 'https://g.page/r/CRHSrMvWv2c7EBM/review',
+  social: {
+    facebookGroup: 'https://www.facebook.com/groups/InvestorLandlord',
+    youtube: 'https://www.youtube.com/@PaulJRouillard',
+    tiktok: 'https://www.tiktok.com/@pauljrouillard',
+    linkedin: 'https://www.linkedin.com/in/paul-j-rouillard-18076118',
+  },
   // Everything that "does something" lives on the real sites. The concept links
   // straight into them so every button on the page goes somewhere real.
   live: {
@@ -92,6 +103,11 @@ export const site = {
   /** The LandlordEzy concept on this same site, for "Explore LandlordEzy" links. */
   ezyConcept: '/landlordezy/',
 } as const
+
+/** A page on the live ontariolandlordhelp.ca: live('/ltb-forms'). */
+export function live(path = '/'): string {
+  return 'https://ontariolandlordhelp.ca' + path
+}
 
 /** Site-relative URL, base-aware: url('pricing/') → '/olh/pricing/'. */
 export function url(path = ''): string {

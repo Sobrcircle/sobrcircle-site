@@ -4,24 +4,25 @@
  */
 import type { QA } from '../components/ui'
 import { site, url } from '../site'
+import { $ } from './pricing'
 
 export const homeFaqs: QA[] = [
   {
     q: 'What do I get each month?',
-    a: 'OLH Landlord Shield (from $49): the LandlordEzy Automation Suite in your own account, with N4 and N1 notices, Equifax rent reporting, screening, leases and inspections, plus a rent ledger our team checks every month and a 15-minute paralegal consultation each month, while you manage your tenants. Property Management (from $99): rent administration and statements, arrears follow-up and the N4 process, tenant communication and routine maintenance coordination. Property Management + Legal Guarantee (from $149): all of that, plus our licensed paralegal team on eligible new Landlord and Tenant Board matters for every enrolled unit, with no activation fee. Prices are monthly, plus HST.',
+    a: `Property Management + Legal Guarantee (from ${$.guarantee}): we run the tenancy, and our licensed paralegals’ professional fees on eligible new Landlord and Tenant Board matters are included for every enrolled unit, with no activation fee. Property Management (from ${$.management}): rent administration and statements, arrears follow-up and the N4 process, tenant communication and routine maintenance coordination. OLH Landlord Shield (from ${$.shield}): the LandlordEzy Automation Suite in your own account, with N4 and N1 notices, Equifax rent reporting, screening, leases and inspections, plus a rent ledger our team checks every month, while you manage your tenants. Every plan includes a 15-minute paralegal consultation each month. Prices are monthly, plus HST.`,
   },
   {
     q: 'How is the monthly price worked out?',
     a: (
       <>
-        Your first tenancy has a first-unit rate and every additional tenancy of the same type costs less. We count separately
+        Your first tenancy has a first-unit rate and every additional tenancy costs less. We count separately
         rented tenancies, not street addresses, so a duplex is two tenancies. The first-unit rate applies once per owner
         account, not once per city. <a href={url('pricing/')}>The calculator</a> prices 1 to 10 tenancies; mixed or larger
         portfolios are quoted.
       </>
     ),
     aText:
-      'Your first tenancy has a first-unit rate and every additional tenancy of the same type costs less. We count separately rented tenancies, not street addresses, so a duplex is two tenancies. The first-unit rate applies once per owner account, not once per city. The calculator prices 1 to 10 tenancies; mixed or larger portfolios are quoted.',
+      'Your first tenancy has a first-unit rate and every additional tenancy costs less. We count separately rented tenancies, not street addresses, so a duplex is two tenancies. The first-unit rate applies once per owner account, not once per city. The calculator prices 1 to 10 tenancies; mixed or larger portfolios are quoted.',
   },
   {
     q: 'Does LandlordEzy serve or file notices for me?',
@@ -67,7 +68,7 @@ export const homeFaqs: QA[] = [
 export const pricingFaqs: QA[] = [
   {
     q: 'Is the price per unit?',
-    a: 'No. The calculator shows a monthly total for your whole portfolio. The first tenancy has a first-unit rate and each additional tenancy of the same type costs less.',
+    a: 'No. The calculator shows a monthly total for your whole portfolio. The first tenancy has a first-unit rate and each additional tenancy costs less.',
   },
   {
     q: 'I own a condo in Toronto and another in Ottawa. Do I pay the first-unit rate twice?',
@@ -75,7 +76,7 @@ export const pricingFaqs: QA[] = [
   },
   {
     q: 'Why a flat monthly fee instead of a percentage of rent?',
-    a: 'Our plans are flat monthly prices, so your fee doesn’t rise when your rent does. As a share of rent it depends on the rent: $149 for a whole house renting at $2,000 a month is about 7.45%, or about 5.96% at $2,500. We don’t bill a percentage, and we don’t claim to be the lowest price.',
+    a: `Our plans are flat monthly prices, so your fee doesn’t rise when your rent does. As a share of rent it depends on the rent: ${$.guarantee} with the Legal Guarantee on a $2,500 rental is about 8%, and that includes our paralegals’ fees on eligible new LTB matters, which most managers bill separately. We don’t bill a percentage, and we don’t claim to be the lowest price.`,
   },
   {
     q: 'Why can’t I price a house and a condo together here?',

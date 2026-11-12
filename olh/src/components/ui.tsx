@@ -110,6 +110,46 @@ export function Actions({
   )
 }
 
+/**
+ * The top of an interior page: eyebrow, one h1, one sentence, one or two actions.
+ * Anything passed as children sits under the actions (a picture, cards, a strip).
+ */
+export function PageHero({
+  id = 'overview',
+  eyebrow,
+  title,
+  lead,
+  primary = { label: 'Book a 15-minute call', href: site.live.book },
+  secondary,
+  note,
+  tone = 'white',
+  children,
+}: {
+  id?: string
+  eyebrow: ReactNode
+  title: ReactNode
+  lead: ReactNode
+  primary?: { label: string; href: string } | null
+  secondary?: { label: string; href: string }
+  note?: ReactNode
+  tone?: 'white' | 'alt'
+  children?: ReactNode
+}) {
+  return (
+    <section id={id} data-hero aria-labelledby={`${id}-h1`} className={`${tone === 'alt' ? 'bg-canvas-alt' : 'bg-white'} pb-14 pt-10 sm:pb-20 sm:pt-16`}>
+      <div className="wrap">
+        <Heading as="h1" id={`${id}-h1`} size="lg" eyebrow={eyebrow} title={title} lead={lead} />
+        {(primary || secondary) && (
+          <div className="mt-8">
+            <Actions primary={primary} secondary={secondary} note={note} />
+          </div>
+        )}
+        {children}
+      </div>
+    </section>
+  )
+}
+
 export function CheckList({ items, dark = false, className = '' }: { items: ReactNode[]; dark?: boolean; className?: string }) {
   return (
     <ul className={`space-y-3 ${className}`}>

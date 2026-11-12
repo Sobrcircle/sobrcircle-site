@@ -1,8 +1,9 @@
 /**
  * OLH design tokens: the same system as the LandlordEzy concept (../landlordezy).
  *
- * Neutrals follow Apple's marketing palette (ink #1d1d1f on white / #f5f5f7)
- * so the product visuals carry the colour. The brand hues carry over unchanged
+ * Text is Apple's ink (#1d1d1f) on white. Surfaces are a pale, cool "mist"
+ * (#f6f9fc, #eaf0f8) rather than grey: lighter on the eyes, and it sits with
+ * the OLH blue instead of fighting it. The product visuals carry the colour. The brand hues carry over unchanged
  * because the OLH logo uses the same family: the Ontario map in blue (#096ef9
  * to a deeper #1a4fff) with a green check (#79d220), on a navy-to-ink type.
  * `brand.text` is a darker blue used for links on white, because the logo blue
@@ -32,12 +33,12 @@ export default {
         },
         canvas: {
           DEFAULT: '#ffffff',
-          alt: '#f5f5f7',
-          deep: '#e8e8ed',
+          alt: '#f6f9fc',
+          deep: '#eaf0f8',
         },
         line: {
-          DEFAULT: '#d2d2d7',
-          soft: '#e5e5ea',
+          DEFAULT: '#d3dbe7',
+          soft: '#e3e9f1',
         },
         brand: {
           DEFAULT: '#096ef9',

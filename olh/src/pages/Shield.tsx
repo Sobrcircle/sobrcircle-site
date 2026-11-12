@@ -8,6 +8,7 @@ import { ScopeSheets } from '../components/sheets'
 import { CollectCard, ReportingScreen } from '../components/mocks/screens'
 import { OlhN4, OlhPhone } from '../components/mocks/olh'
 import { shieldFaqs } from '../content/faqs'
+import { $ } from '../content/pricing'
 import { n4Steps, rentSteps, reportingSteps, shieldIncluded, shieldYours, suite, suiteFinePrint } from '../content/scope'
 
 const chapters = [
@@ -29,7 +30,7 @@ export function Shield() {
       <section id="overview" data-hero className="relative overflow-hidden bg-white pb-14 pt-8 sm:pt-14 lg:pb-20">
         <div className="wrap grid items-center gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
           <div className="text-center lg:text-left">
-            <p className="eyebrow">OLH Landlord Shield · from $49 a month</p>
+            <p className="eyebrow">OLH Landlord Shield · from {$.shield} a month</p>
             <h1 className="mt-3 text-display-xl">Self-manage, with a team behind you.</h1>
             <p className="mx-auto mt-5 max-w-[38rem] text-lead text-ink-3 lg:mx-0">
               For owners who look after their own tenants. The full LandlordEzy Automation Suite, Equifax rent reporting, a rent ledger
@@ -40,7 +41,7 @@ export function Shield() {
                 align="split"
                 primary={{ label: 'Book a 15-minute call', href: site.live.book }}
                 secondary={{ label: 'Price my portfolio', href: url('pricing/') }}
-                note="$49 first tenancy · $29 each additional · Any property type · Plus HST"
+                note={`${$.shield} first tenancy · ${$.shieldMore} each additional · Any property type · Plus HST`}
               />
             </div>
           </div>
@@ -54,7 +55,7 @@ export function Shield() {
               { Icon: MonitorSmartphone, t: 'The Automation Suite', b: 'Self Management software in your own account, for your enrolled tenancies. No separate software bill.' },
               { Icon: BadgeCheck, t: 'Ledger checked monthly', b: 'Payments matched by the software and checked by our team, with a monthly statement.' },
               { Icon: Scale, t: 'A paralegal to talk to', b: 'One 15-minute consultation per owner account each month, by appointment. Advice, not representation.' },
-              { Icon: Landmark, t: 'Member case from $995', b: 'One qualifying new non-payment case through one hearing, in any rolling 12 months. No waiting period.' },
+              { Icon: Landmark, t: `Member case from ${$.memberCase}`, b: 'One qualifying new non-payment case through one hearing, in any rolling 12 months. No waiting period.' },
             ].map(({ Icon, t, b }) => (
               <li key={t} className="tile spot p-6" data-reveal>
                 <span className="icon-badge">

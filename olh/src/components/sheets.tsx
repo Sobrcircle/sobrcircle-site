@@ -22,6 +22,7 @@ import {
   suiteFinePrint,
   visitPrices,
 } from '../content/scope'
+import { $ } from '../content/pricing'
 
 function Numbered({ steps }: { steps: { t: string; b: string }[] }) {
   return (
@@ -244,7 +245,7 @@ export function HighlightSheets() {
 export function ScopeSheets() {
   return (
     <>
-      <Sheet id="scope-shield" eyebrow="OLH Landlord Shield · from $49 a month" title="Full scope: you manage, we back you up." more={{ label: 'Everything about Landlord Shield', href: url('landlord-shield/') }}>
+      <Sheet id="scope-shield" eyebrow={`OLH Landlord Shield · from ${$.shield} a month`} title="Full scope: you manage, we back you up." more={{ label: 'Everything about Landlord Shield', href: url('landlord-shield/') }}>
         <h3 className="mt-8 font-display text-[1.125rem] font-semibold">Included</h3>
         <Ticks items={shieldIncluded} />
         <h3 className="mt-8 font-display text-[1.125rem] font-semibold">Yours to handle, or quoted</h3>
@@ -262,7 +263,7 @@ export function ScopeSheets() {
         </SheetTile>
       </Sheet>
 
-      <Sheet id="scope-management" eyebrow="Property Management · from $99 a month" title="Full scope: we run the day-to-day." more={{ label: 'Price it for your portfolio', href: url('pricing/') }}>
+      <Sheet id="scope-management" eyebrow={`Property Management · from ${$.management} a month`} title="Full scope: we run the day-to-day." more={{ label: 'Price it for your portfolio', href: url('pricing/') }}>
         <SheetTile lead="Day-to-day management by our Ontario team," className="mt-7">
           documented in LandlordEzy, with your own owner portal.
         </SheetTile>
@@ -273,7 +274,7 @@ export function ScopeSheets() {
         <Small>A 90-day initial service period, then month-to-month; either side can end with 30 calendar days’ written notice.</Small>
       </Sheet>
 
-      <Sheet id="scope-guarantee" eyebrow="Property Management + Legal Guarantee · from $149 a month" title="Full scope: managed, with LTB work arranged." more={{ label: 'How the Legal Guarantee works', href: url('legal/#guarantee') }}>
+      <Sheet id="scope-guarantee" eyebrow={`Property Management + Legal Guarantee · from ${$.guarantee} a month`} title="Full scope: managed, with LTB work arranged." more={{ label: 'How the Legal Guarantee works', href: url('legal/#guarantee') }}>
         <SheetTile lead="Everything in Property Management," className="mt-7">
           plus professional legal work on eligible new LTB matters for all enrolled units.
         </SheetTile>

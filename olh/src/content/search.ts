@@ -15,6 +15,18 @@ const words: Record<string, { t: string; k: string }> = {
   'landlord-shield/': { t: 'OLH Landlord Shield', k: 'shield self manage self-manage diy software team behind you 49 month-to-month' },
   'legal/': { t: 'Legal help and the Legal Guarantee', k: 'legal paralegal guarantee ltb board hearing eviction evict lawyer member case representation' },
   'rentals/': { t: 'Rentals and leasing', k: 'rentals rent apartment house condo listings available find tenant placement mls realtor list it' },
+  'property-management/': { t: 'Property Management', k: 'property management manager full service run day to day rent collection maintenance switch switching owner portal' },
+  'owners/': { t: 'Owners, by situation', k: 'condo student students guarantor first time first-time new landlord overseas abroad non-resident nr4 nr6 out of province' },
+  'buildings/': { t: 'Apartment buildings', k: 'apartment building multifamily multi-unit distressed stabilization lease-up agi above guideline due diligence' },
+  'projects/': { t: 'Renovations and restoration', k: 'renovation repair repairs project contractor emergency restoration flood fire water damage permit' },
+  'about/': { t: 'Why OLH', k: 'about company paul rouillard founder reviews compare why licensed paralegal brokerage realtor referral' },
+  'contact/': { t: 'Contact and service areas', k: 'contact phone call email book hours address windsor cities locations service areas toronto ottawa london hamilton' },
+  'resources/': { t: 'Free resources', k: 'resources free help guides forms downloads videos law library tools community' },
+  'sireg/': { t: 'SIREG owners', k: 'sireg simple investor owner centre registry condominium' },
+  'guides/evictions/': { t: 'Evicting a tenant in Ontario', k: 'evict eviction tenant not paying how long process steps l1 l2 sheriff hearing' },
+  'guides/ltb-forms/': { t: 'LTB forms and notices', k: 'ltb forms form notice n4 n5 n12 n13 n1 l1 l2 t2 which form serve' },
+  'guides/rent-increases/': { t: 'Raising the rent', k: 'rent increase raise guideline n1 2027 above guideline l5 deposit interest' },
+  'guides/bill-60/': { t: 'Bill 60 changes', k: 'bill 60 changes new rules 2026 7 day n4 n12 compensation' },
 }
 
 const sections: Entry[] = [
@@ -25,12 +37,10 @@ const sections: Entry[] = [
   { t: 'Shield vs Legal Guarantee', u: url('legal/#compare'), k: 'compare member case difference shield guarantee which', d: 'Member legal access, or the Legal Guarantee.', y: 'Section' },
   { t: 'Standalone eviction help', u: url('legal/#eviction'), k: 'eviction evict existing problem already tenant not paying l1 1495', d: 'From $1,495 + HST and disbursements, through one hearing.', y: 'Section' },
   { t: 'Local visits', u: url('pricing/#visits'), k: 'visit visits site visit inspection attend local care photos urgent after-hours', d: 'Booked when you need them, at a set price.', y: 'Section' },
-  { t: 'What’s included in Property Management', u: url('pricing/#included'), k: 'property management included full service manage day to day', d: 'Rent, statements, arrears, tenants and maintenance.', y: 'Section' },
+  { t: 'Compare the three plans', u: url('pricing/#included'), k: 'property management included full service manage day to day', d: 'Rent, statements, arrears, tenants and maintenance.', y: 'Section' },
   { t: 'Terms in plain words', u: url('pricing/#terms'), k: 'cancel cancellation contract term notice 90 days vacant leaving price hold', d: 'Month-to-month, or 90 days then 30 days’ notice.', y: 'Section' },
   { t: 'Tenant placement prices', u: url('rentals/#leasing'), k: 'tenant placement listing mls realtor 549 749 full service find tenant', d: 'Basic, Premium and full-service placement.', y: 'Section' },
-  { t: 'Eviction timelines', u: site.live.evictionTime, k: 'how long eviction take timeline', d: 'On ontariolandlordhelp.ca.', y: 'Live site' },
-  { t: 'LTB forms', u: site.live.ltbForms, k: 'ltb forms l1 n12 n5 forms applications', d: 'On ontariolandlordhelp.ca.', y: 'Live site' },
-  { t: 'SIREG Owner Centre', u: site.live.sireg, k: 'sireg simple investor owner centre registry town hall', d: 'Dated updates, videos and the free owner registry.', y: 'Live site' },
+      { t: 'SIREG Owner Centre (live)', u: site.live.sireg, k: 'sireg simple investor owner centre registry town hall', d: 'Dated updates, videos and the free owner registry.', y: 'Live site' },
   { t: 'Meet Paul J. Rouillard', u: site.live.paul, k: 'paul rouillard founder about who', d: 'On ontariolandlordhelp.ca.', y: 'Live site' },
 ]
 

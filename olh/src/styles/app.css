@@ -5,7 +5,7 @@
 /* ---------------------------------------------------------------------------
    OLH — the LandlordEzy concept's design system, reused as-is (../landlordezy)
    Apple-style marketing: system type (SF Pro on Apple devices, zero font
-   downloads), white and #f5f5f7 canvases, brand colour reserved for actions
+   downloads), white and pale mist (#f6f9fc) canvases, brand colour reserved for actions
    and product moments. Every page renders fully without JavaScript; the client
    script only adds motion and interactivity on top.
 --------------------------------------------------------------------------- */
@@ -160,42 +160,58 @@
 .gnav-link:hover, .gnav-link[aria-expanded='true'] { @apply text-ink; }
 .gnav-link[aria-current='page'] { @apply text-ink; }
 
+/* Flyouts open like a drawer under the bar: the panel unrolls downward and the
+   page behind dims a little. Closing is the same motion, quicker. */
 .flyout {
   position: absolute;
   left: 0;
   right: 0;
   top: var(--nav-h);
-  background: rgba(255, 255, 255, 0.97);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.18);
-  opacity: 0;
+  background: rgba(255, 255, 255, 0.985);
+  border-bottom: 1px solid rgba(15, 27, 45, 0.07);
+  box-shadow: 0 28px 50px -30px rgba(15, 27, 45, 0.28);
   visibility: hidden;
-  transform: translateY(-8px);
-  transition: opacity 0.24s cubic-bezier(0.28, 0.11, 0.32, 1), transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear 0.32s;
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 0.26s cubic-bezier(0.4, 0, 0.7, 1), visibility 0s linear 0.26s;
 }
 .flyout[data-open='true'] {
-  opacity: 1;
   visibility: visible;
-  transform: none;
-  transition-delay: 0s;
+  clip-path: inset(0 0 -80px 0);
+  transition: clip-path 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s;
 }
 .flyout a { color: inherit; }
 .flyout a:hover { text-decoration: none; }
+/* Three even columns, centred on the page like the menu above them. */
+.flyout-inner {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 3rem;
+  width: 100%;
+  max-width: 60rem;
+  margin-inline: auto;
+  padding: 2.25rem var(--gutter) 2.75rem;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.16s ease, transform 0.26s cubic-bezier(0.4, 0, 0.7, 1);
+}
+.flyout[data-open='true'] .flyout-inner { opacity: 1; transform: none; transition: opacity 0.4s ease 0.06s, transform 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.02s; }
+.flyout-head { @apply mb-3 text-[0.75rem] font-medium text-ink-3; }
+.flyout-big { @apply block py-0.5 font-display text-[1.375rem] font-semibold leading-tight tracking-[-0.02em] text-ink transition-colors duration-200; }
+.flyout-link { @apply block py-[0.3125rem] text-[0.875rem] font-medium text-ink-2 transition-colors duration-200; }
+.flyout-big:hover, .flyout-link:hover { @apply text-brand-text; }
+.flyout-note { @apply mt-0.5 block text-[0.75rem] font-normal text-ink-4; }
+.flyout-ext { @apply ml-1 inline h-3 w-3 opacity-45; vertical-align: baseline; }
 
 .scrim {
   position: fixed;
   inset: var(--nav-h) 0 0 0;
-  background: rgba(232, 232, 237, 0.4);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
+  background: rgba(15, 27, 45, 0.16);
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+  transition: opacity 0.26s ease, visibility 0s linear 0.26s;
   z-index: 40;
 }
-.scrim[data-open='true'] { opacity: 1; visibility: visible; transition-delay: 0s; }
+.scrim[data-open='true'] { opacity: 1; visibility: visible; transition: opacity 0.4s ease, visibility 0s; }
 
 /* Menu button: a word on it, not an icon (people use what they can see). */
 .menu-pill {
@@ -241,7 +257,7 @@
 .chapnav-links { display: flex; align-items: center; gap: 0.125rem; overflow-x: auto; margin: -0.375rem; padding: 0.375rem; }
 .chapnav-link { @apply block whitespace-nowrap rounded-full px-3 py-1.5 text-[0.75rem] text-ink-2 transition-colors duration-200; }
 .chapnav-link:hover { @apply text-ink; }
-.chapnav-link[aria-current] { @apply bg-canvas-alt font-semibold text-ink; }
+.chapnav-link[aria-current] { @apply font-semibold text-ink; background: #eef3fa; }
 .chapnav-centered .chapnav-links-wrap { margin-inline: auto; }
 .chapnav-bar { position: relative; height: 3px; overflow: hidden; background: rgba(0, 0, 0, 0.07); }
 .chapnav-fill {
@@ -287,7 +303,7 @@
   .sheet[data-open='true'] .sheet-panel, .sheet:target .sheet-panel { transform: translate(-50%, var(--drag, 0px)); }
 }
 .sheet-grab { display: flex; justify-content: center; padding: 0.5rem 0 0.25rem; touch-action: none; cursor: grab; }
-.sheet-grab span { width: 2.5rem; height: 0.3125rem; border-radius: 999px; background: #d2d2d7; }
+.sheet-grab span { width: 2.5rem; height: 0.3125rem; border-radius: 999px; background: #d3dbe7; }
 .sheet-head { display: flex; align-items: center; justify-content: space-between; padding: 0.125rem 0.75rem 0.125rem 1.25rem; touch-action: none; }
 .sheet-close { @apply inline-flex h-11 w-11 items-center justify-center rounded-full text-ink-2 transition-colors hover:bg-canvas-alt; }
 /* Top padding and scroll padding keep focus rings whole at both edges of the scroll area. */
@@ -467,7 +483,7 @@ html:not(.js) .play [data-ring] { stroke-dashoffset: var(--ring-to, 0); }
 .glow-blue { background: radial-gradient(60% 60% at 50% 40%, rgba(76, 155, 255, 0.35), rgba(76, 155, 255, 0) 70%); }
 
 /* Range input (pricing slider) */
-.range { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 999px; background: linear-gradient(to right, #096ef9 var(--pct, 10%), #d2d2d7 var(--pct, 10%)); outline: none; }
+.range { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 999px; background: linear-gradient(to right, #096ef9 var(--pct, 10%), #d9e2ee var(--pct, 10%)); outline: none; }
 .range::-webkit-slider-thumb { -webkit-appearance: none; width: 28px; height: 28px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 0.5px rgba(0,0,0,0.04), 0 3px 8px rgba(0,0,0,0.15), 0 3px 1px rgba(0,0,0,0.06); cursor: grab; }
 .range::-moz-range-thumb { width: 28px; height: 28px; border: 0; border-radius: 50%; background: #fff; box-shadow: 0 3px 8px rgba(0,0,0,0.2); cursor: grab; }
 
@@ -703,12 +719,12 @@ html:not(.js) .stepper { visibility: hidden; }
 .segmented.pill-on button[aria-pressed='true'] { background: transparent; box-shadow: none; }
 .seg.pill-on .seg-option input:checked + span { background: transparent; box-shadow: none; }
 .seg .pill-ind { border-radius: 0.75rem; }
-.chapnav-links .pill-ind { background: #f0f0f3; box-shadow: none; }
+.chapnav-links .pill-ind { background: #eef3fa; box-shadow: none; }
 .chapnav-links.pill-on .chapnav-link[aria-current] { background: transparent; }
 .gnav .pill-ind { background: rgba(0, 0, 0, 0.055); box-shadow: none; }
 
 /* ---- Pill tabs that swap a panel in place ---------------------------------- */
-.tabrow { display: flex; width: fit-content; max-width: 100%; gap: 0.125rem; overflow-x: auto; border-radius: 999px; background: #e8e8ed; padding: 0.25rem; }
+.tabrow { display: flex; width: fit-content; max-width: 100%; gap: 0.125rem; overflow-x: auto; border-radius: 999px; background: #eaf0f8; padding: 0.25rem; }
 .tabrow-tab { @apply min-h-[40px] shrink-0 whitespace-nowrap rounded-full px-4 text-[0.9375rem] font-medium text-ink-2 transition-colors duration-200; }
 .tabrow-tab:hover { @apply text-ink; }
 .tabrow-tab[aria-selected='true'] { @apply text-ink; }
@@ -720,7 +736,7 @@ html:not(.js) .stepper { visibility: hidden; }
 @keyframes panel-in { from { opacity: 0; transform: translateY(12px); } }
 
 /* ---- The plan chooser: one oversized segmented control --------------------- */
-.chooser { display: grid; gap: 0.25rem; border-radius: 1.75rem; background: #ececf0; padding: 0.375rem; }
+.chooser { display: grid; gap: 0.25rem; border-radius: 1.75rem; background: #eaf0f8; padding: 0.375rem; }
 .chooser-opt { display: flex; min-height: 60px; cursor: pointer; align-items: center; justify-content: space-between; gap: 1rem; border-radius: 1.375rem; padding: 0.75rem 1.125rem; text-align: left; transition: background-color 0.25s ease; }
 .chooser-need { @apply font-display text-[1.0625rem] font-semibold leading-tight tracking-[-0.015em] text-ink; }
 .chooser-meta { @apply shrink-0 text-right text-[0.8125rem] text-ink-3; }
@@ -737,7 +753,7 @@ html:not(.js) .stepper { visibility: hidden; }
   .chooser-name { display: inline; }
   .chooser .pill-ind { border-radius: 1.625rem; }
 }
-.chooser-panel { margin-top: 0.875rem; border-radius: 2rem; background: #f5f5f7; padding: 1.75rem 1.5rem 2rem; }
+.chooser-panel { margin-top: 0.875rem; border-radius: 2rem; background: linear-gradient(180deg, #f3f7fd 0%, #f9fbfe 100%); padding: 1.75rem 1.5rem 2rem; }
 .chooser-visual { display: none; }
 @media (min-width: 640px) { .chooser-panel { padding: 2.5rem; } .chooser-visual { display: block; } }
 @media (min-width: 1068px) { .chooser-panel { display: grid; min-height: 35.5rem; align-items: center; border-radius: 2.5rem; padding: 3.5rem; } }
@@ -768,7 +784,7 @@ html:has(.dlg[open]) { overflow: hidden; }
 }
 .dlg-panel.is-dragging { transition: none; }
 .dlg-bar { position: sticky; top: 0; z-index: 3; display: flex; height: 3.25rem; align-items: center; justify-content: flex-end; padding: 0 0.875rem; touch-action: none; background: linear-gradient(#fff 55%, rgba(255, 255, 255, 0)); }
-.dlg-grab { position: absolute; left: 50%; top: 0.5rem; width: 2.5rem; height: 0.3125rem; margin-left: -1.25rem; border-radius: 999px; background: #d2d2d7; }
+.dlg-grab { position: absolute; left: 50%; top: 0.5rem; width: 2.5rem; height: 0.3125rem; margin-left: -1.25rem; border-radius: 999px; background: #d3dbe7; }
 .dlg-close { @apply inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#333336] text-white transition-colors duration-200 hover:bg-black; }
 .dlg-body { padding: 0.25rem 1.5rem 2.25rem; }
 @media (min-width: 834px) {
@@ -878,7 +894,7 @@ html:has(.dlg[open]) { overflow: hidden; }
   @media (prefers-reduced-motion: no-preference) {
     .scroll-fill { view-timeline: --fill block; }
     .scroll-fill > span {
-      background: linear-gradient(90deg, #1d1d1f 50%, #b4b4ba 50%) 100% 0 / 200% 100% no-repeat;
+      background: linear-gradient(90deg, #1d1d1f 50%, #b6c0cf 50%) 100% 0 / 200% 100% no-repeat;
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
@@ -911,8 +927,8 @@ html:has(.dlg[open]) { overflow: hidden; }
 .cmp-scroll { position: relative; overflow-x: auto; margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); scroll-padding-inline: var(--gutter); }
 .cmp-scroll:focus-visible { outline-offset: -3px; }
 .cmp { width: 100%; min-width: 43rem; border-spacing: 0; border-collapse: separate; text-align: center; font-size: 0.9375rem; }
-.cmp th, .cmp td { border-bottom: 1px solid #e5e5ea; padding: 1rem 0.875rem; vertical-align: middle; color: #424245; }
-.cmp thead th { border-bottom-color: #d2d2d7; padding-block: 1.25rem; vertical-align: bottom; }
+.cmp th, .cmp td { border-bottom: 1px solid #e3e9f1; padding: 1rem 0.875rem; vertical-align: middle; color: #424245; }
+.cmp thead th { border-bottom-color: #d3dbe7; padding-block: 1.25rem; vertical-align: bottom; }
 .cmp tbody th { width: 24%; text-align: left; font-weight: 600; color: #1d1d1f; padding-left: 0; }
 /* The first column stays put while the plans slide under it. */
 .cmp th:first-child { position: sticky; left: 0; z-index: 1; background: #fff; }
@@ -942,3 +958,8 @@ figure.play [data-fill] { display: block; }
 .fold-plain > summary { cursor: pointer; }
 .fold-plain[open] .fold-icon { transform: rotate(180deg); }
 @media (min-width: 834px) { .fold-plain > summary { cursor: default; } }
+
+/* The hero's one real photograph. */
+.hero-listing:hover { text-decoration: none; }
+.hero-listing .mock { transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+@media (hover: hover) { .hero-listing:hover .mock { transform: translateY(-4px) scale(1.02); } }

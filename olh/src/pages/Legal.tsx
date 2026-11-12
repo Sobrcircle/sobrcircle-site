@@ -5,6 +5,7 @@ import { ChapterNav } from '../components/ChapterNav'
 import { LegalRates } from '../components/olh'
 import { CaseTrack } from '../components/mocks/olh'
 import { legalFaqs } from '../content/faqs'
+import { $, fees, planTotal } from '../content/pricing'
 import { guaranteeFacts } from '../content/scope'
 
 const chapters = [
@@ -17,11 +18,12 @@ const chapters = [
   { id: 'faq', label: 'Questions' },
 ]
 
-/** One condo, 12 months, one qualifying new non-payment case (Paul's worked example). */
+/** One tenancy, 12 months, one qualifying new non-payment case (Paul's worked example, at the current prices). */
+const year = (key: 'shield' | 'management' | 'guarantee') => planTotal(key, 1) * 12
 const example = [
-  { plan: 'Landlord Shield', fees: 588, legal: 995, total: 1583, note: 'You manage the tenancy yourself.' },
-  { plan: 'Property Management + Legal Guarantee', fees: 1788, legal: 0, total: 1788, note: 'Case fee included; eligible new matters still covered afterwards.', hi: true },
-  { plan: 'Property Management', fees: 1188, legal: 995, total: 2183, note: 'Plus the member case.' },
+  { plan: 'Landlord Shield', fees: year('shield'), legal: fees.memberCase, total: year('shield') + fees.memberCase, note: 'You manage the tenancy yourself.' },
+  { plan: 'Property Management + Legal Guarantee', fees: year('guarantee'), legal: 0, total: year('guarantee'), note: 'Case fee included; eligible new matters still covered afterwards.', hi: true },
+  { plan: 'Property Management', fees: year('management'), legal: fees.memberCase, total: year('management') + fees.memberCase, note: 'Plus the member case.' },
 ]
 
 export function Legal() {
@@ -73,7 +75,7 @@ export function Legal() {
               <p className="text-[0.8125rem] font-semibold text-ink-3">Landlord Shield and Property Management</p>
               <h3 className="mt-2 text-headline">Member legal access</h3>
               <p className="mt-2 font-display text-[1.375rem] font-semibold tabular-nums">
-                Member case from $995 <span className="text-[0.875rem] font-medium text-ink-3">+ HST and disbursements</span>
+                Member case from {$.memberCase} <span className="text-[0.875rem] font-medium text-ink-3">+ HST and disbursements</span>
               </p>
               <dl className="mt-6 space-y-5 text-[0.9375rem]">
                 <div>
