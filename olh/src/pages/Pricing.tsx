@@ -19,16 +19,17 @@ export function Pricing() {
       <ChapterNav title="Pricing" chapters={chapters} cta={{ label: 'Book a call', href: site.live.book }} />
 
       {/* ---- Calculator + plans ------------------------------------------ */}
-      <section id="calculator" data-hero aria-labelledby="pricing-title" className="bg-canvas-alt pb-16 pt-10 sm:pb-24 sm:pt-14">
+      <section id="calculator" data-hero aria-labelledby="pricing-title" className="bg-canvas-alt pb-16 pt-8 sm:pb-24 sm:pt-10">
         <div className="wrap">
           <Heading
             as="h1"
             id="pricing-title"
             eyebrow="Proposed pricing · CAD, plus HST"
             title="One monthly total for your portfolio."
-            lead="Choose your property type and how many tenancies you have. Every plan is priced for your whole portfolio, not per unit."
+            lead="Choose your property type and how many tenancies. Every plan is priced for your whole portfolio, not per unit."
+            size="md"
           />
-          <div className="mt-9" aria-labelledby="calc-title">
+          <div className="mt-7" aria-labelledby="calc-title">
             <Calculator />
           </div>
           <PlanCards live className="mx-auto mt-6 max-w-[72rem] lg:mt-8" />

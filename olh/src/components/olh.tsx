@@ -31,11 +31,10 @@ export function PlanCards({ live = false, className = '' }: { live?: boolean; cl
               Recommended for self-managing owners
             </p>
           )}
-          <h3 id={`plan-${p.key}`} className="text-title">
+          <h3 id={`plan-${p.key}`} className="text-title lg:min-h-[3.75rem]">
             {p.name}
           </h3>
-          <p className="mt-1 text-[0.9375rem] text-ink-3">{p.who}</p>
-          <p className="mt-5 flex items-baseline gap-1.5">
+          <p className="mt-3 flex items-baseline gap-1.5">
             {!live && <span className="text-[0.9375rem] font-medium text-ink-3">from</span>}
             <span className="font-display text-[3rem] font-bold leading-none tracking-[-0.035em] tabular-nums">
               $<span data-out={live ? p.key : undefined}>{p.from}</span>
@@ -50,7 +49,8 @@ export function PlanCards({ live = false, className = '' }: { live?: boolean; cl
           ) : (
             <p className="mt-2 text-[0.875rem] text-ink-3">plus HST · {p.fromNote}</p>
           )}
-          <p className="mt-5 inline-flex w-fit items-center rounded-full bg-canvas-alt px-3 py-1 text-[0.8125rem] font-medium text-ink-2">{p.term}</p>
+          <p className="mt-4 text-[0.9375rem] font-medium text-ink-2">{p.who}</p>
+          <p className="mt-3 inline-flex w-fit items-center rounded-full bg-canvas-alt px-3 py-1 text-[0.8125rem] font-medium text-ink-2">{p.term}</p>
           <ul className="mt-5 space-y-2.5 text-[0.9375rem]">
             {p.points.map((t) => (
               <li key={t} className="flex gap-2.5">
